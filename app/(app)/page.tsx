@@ -1,6 +1,8 @@
+import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 import { CaretIcon, ChevronIcon, HouseIcon, SearchIcon, SlidersIcon } from '@/components/ui/icons';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
+import { catalogueHealth } from '@/lib/db/health';
 import { mealTimeAt } from '@/lib/engine/time';
 import { formatNaira } from '@/lib/i18n/money';
 
@@ -21,7 +23,13 @@ export default async function DecidePage() {
 
   return (
     <main className="mx-auto flex min-h-dvh max-w-app flex-col px-4 pb-6">
-      <p className="-mx-4 bg-ink px-4 py-2 type-caption text-cream">{t('preview.m0')}</p>
+      <p className="-mx-4 bg-ink px-4 py-2 type-caption text-cream">
+        {t('preview.m0')}
+        {/* Streams in after the page, so a slow database never delays the first paint. */}
+        <Suspense fallback={null}>
+          <DatabaseStatus />
+        </Suspense>
+      </p>
 
       <header className="flex min-h-14 items-center justify-between gap-2">
         <span className="type-title-l">{C.APP_NAME}</span>
@@ -80,4 +88,9 @@ export default async function DecidePage() {
       </div>
     </main>
   );
+}
+
+async function DatabaseStatus() {
+  const [health, t] = await Promise.all([catalogueHealth(), getTranslations('preview')]);
+  return health && <span className="block">{t('db', { ingredients: health.ingredients, published: health.published })}</span>;
 }

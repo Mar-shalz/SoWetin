@@ -92,6 +92,13 @@ function insert(table: string, cols: string[], rows: unknown[][]): string {
   return `insert into ${table} (${cols.join(', ')}) values\n${rows.map((r) => `  (${r.map(lit).join(', ')})`).join(',\n')}\non conflict do nothing;\n`;
 }
 
+// Each pair is sorted by the database itself: Supabase compares text with en_US rules, not character codes,
+// and the component_a < component_b check uses the database's rules.
+function insertPairs(rows: unknown[][]): string {
+  if (!rows.length) return '';
+  return `insert into pairings (component_a, component_b, score, note, status)\nselect least(a, b), greatest(a, b), score, note, status from (values\n${rows.map((r) => `  (${r.map(lit).join(', ')})`).join(',\n')}\n) as v(a, b, score, note, status)\non conflict do nothing;\n`;
+}
+
 // After the first import the database and admin are the source of truth, so rows that exist are never overwritten.
 export function seedSql(cat: CatalogueSeed, ing: IngredientsSeed, area = { id: 'lagos', name: 'Lagos', state: 'Lagos' }): string {
   return [
@@ -186,14 +193,7 @@ export function seedSql(cat: CatalogueSeed, ing: IngredientsSeed, area = { id: '
       ['type_a', 'type_b', 'score'],
       cat.pairing_defaults.map((d) => [d.a, d.b, d.score]),
     ),
-    insert(
-      'pairings',
-      ['component_a', 'component_b', 'score', 'note', 'status'],
-      cat.pairings.map((p) => {
-        const [a, b] = [p.a, p.b].sort();
-        return [a, b, p.score, p.note, p.status];
-      }),
-    ),
+    insertPairs(cat.pairings.map((p) => [p.a, p.b, p.score, p.note, p.status])),
     insert(
       'classic_plates',
       ['plate_key', 'sort'],

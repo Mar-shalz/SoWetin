@@ -4,7 +4,8 @@
     "description": "So, wetin I go chop? Real food. Honest prices. Decided."
   },
   "preview": {
-    "m0": "Preview build: na only the look e dey show. Nothing dey work yet."
+    "m0": "Preview build: na only the look e dey show. Nothing dey work yet.",
+    "db": "Database don connect: {ingredients} ingredients, {published, plural, =0 {no food don publish yet} one {# food don publish} other {# food don publish}}."
   },
   "areas": {
     "lagos": "Lagos"
