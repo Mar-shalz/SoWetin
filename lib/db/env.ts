@@ -13,3 +13,6 @@ export const pictureUrl = (path: string | null) => {
   const env = supabaseEnv();
   return path && env ? `${env.url}/storage/v1/object/public/illustrations/${path}` : null;
 };
+
+// The public address for canonical links and the sitemap: Vercel's production domain, or the local server.
+export const siteUrl = () => (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : 'http://localhost:3000');

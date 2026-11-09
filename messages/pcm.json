@@ -54,7 +54,8 @@
       },
       "estimate": "Rough estimate",
       "uses": "This plate go use about {amount}",
-      "pot": "E go cook one pot of {component} for {servings}. E go cover {more, plural, one {# more meal} other {# more meals}} · about {perPlate} for one plate"
+      "pot": "E go cook one pot of {component} for {servings}. E go cover {more, plural, one {# more meal} other {# more meals}} · about {perPlate} for one plate",
+      "label": "Estimate"
     },
     "badge": {
       "over": "E pass small"
@@ -113,7 +114,9 @@
     },
     "price": {
       "sources": "E come from {count, plural, one {# price report} other {# price reports}} · we check am {relative}"
-    }
+    },
+    "goesWith": "E go well with",
+    "howWePrice": "How una take price am"
   },
   "recipe": {
     "title": "How to cook am",
@@ -128,7 +131,8 @@
     "mistakes": "No do this",
     "storage": "E go last",
     "serve": "Chop am with",
-    "notYet": "The written method for this one never ready."
+    "notYet": "The written method for this one never ready.",
+    "equipment": "Wetin you go need"
   },
   "market": {
     "title": "Market list",
@@ -161,7 +165,8 @@
   },
   "recipes": {
     "note": {
-      "line": "SoWetin write am, and home cooks don test am. The measure and time na guide."
+      "line": "SoWetin write am, and home cooks don test am. The measure and time na guide.",
+      "full": "SoWetin people dey write our recipe, AI dey help with the first draft, then person wey grow up with that food go cook am for real kitchen before we put am out. We no dey copy recipe from website or video. Cooker, pot and foodstuff no be the same everywhere, so take the measure and time as guide, and follow wetin you see, smell and taste."
     }
   },
   "filters": {
@@ -243,5 +248,48 @@
         "added": "I don add am. Next time I go find wetin go with am."
       }
     }
+  },
+  "videos": {
+    "note": {
+      "full": "We dey pick these videos one by one from YouTube creators. No be we get dem, and we no control dem. Some people cook am small different from our own steps, and e no bad. Every Naija kitchen get their own style. If video no dey again or e no match the food, tell us."
+    }
+  },
+  "ai": {
+    "note": {
+      "full": "SoWetin dey use AI understand wetin you type, answer cooking question, help draft recipe and read price report wey dem publish. AI no dey set price by himself. Our code dey check every price wey e read against where e get am, and our people dey go market check. AI fit make mistake, so e no get last word for allergy or health matter. We no dey send your name, email or phone number go the AI service."
+    }
+  },
+  "allergy": {
+    "note": {
+      "full": "When you set allergy, we go hide any food wey get am for the recipe, even if na extra or \"e fit get am\" like seasoning cube. But na only our own recipe we fit see. Seller, restaurant or brand fit use another thing, so always check label and ask before you chop. If your allergy strong well well, follow wetin your doctor talk pass anything for this app."
+    }
+  },
+  "partner": {
+    "note": {
+      "full": "When you order through Chopbaze, na Chopbaze and the vendor get the price, delivery money and whether food dey. No be SoWetin estimate. E fit change before you pay. Your order na between you, Chopbaze and the vendor."
+    }
+  },
+  "legal": {
+    "sources": {
+      "title": "Where all this one come from",
+      "intro": "Some things wey you see for SoWetin come from outside: price report, YouTube video and partner menu. Some na we make am: recipe, plate idea and how we take combine price. See which one be which, and how far you fit trust each one.",
+      "prices": "Price",
+      "recipes": "Recipe",
+      "videos": "Video",
+      "ai": "AI answer",
+      "allergies": "Allergy",
+      "partners": "Partner price"
+    },
+    "updated": "We update am last for {date}"
+  },
+  "howWePrice": {
+    "body": "Every week, our AI dey read plenty market price report wey dem publish, and our code dey check every number against the page wey e come from. Every month, our people dey go Lagos market by themselves. We dey take the middle of all those prices, so one odd price no go scatter am, then we show range because price dey move and every seller different. The date go show you how fresh e be. E include the smallest amount wey seller go sell give you. Na estimate, no be final price, so your market fit different."
+  },
+  "dish": {
+    "title": "{name}: how to cook am and today cost for {area}",
+    "cta": {
+      "pick": "Hunger dey catch you? Make SoWetin pick for you"
+    },
+    "price": "Estimate for {people} for {area}: {range}"
   }
 }

@@ -54,7 +54,8 @@
       },
       "estimate": "Rough estimate",
       "uses": "This plate uses about {amount}",
-      "pot": "Cooks a pot of {component} for {servings}. It covers {more, plural, one {# more meal} other {# more meals}} · about {perPlate} a plate"
+      "pot": "Cooks a pot of {component} for {servings}. It covers {more, plural, one {# more meal} other {# more meals}} · about {perPlate} a plate",
+      "label": "Estimate"
     },
     "badge": {
       "over": "A little over"
@@ -113,7 +114,9 @@
     },
     "price": {
       "sources": "Based on {count, plural, one {# price report} other {# price reports}} · checked {relative}"
-    }
+    },
+    "goesWith": "Goes well with",
+    "howWePrice": "How we price"
   },
   "recipe": {
     "title": "How to cook it",
@@ -128,7 +131,8 @@
     "mistakes": "Don't do this",
     "storage": "Keeps for",
     "serve": "Serve with",
-    "notYet": "The written method for this one is still on its way."
+    "notYet": "The written method for this one is still on its way.",
+    "equipment": "You'll need"
   },
   "market": {
     "title": "Market list",
@@ -161,7 +165,8 @@
   },
   "recipes": {
     "note": {
-      "line": "Written by SoWetin and tested by home cooks. Amounts and times are a guide."
+      "line": "Written by SoWetin and tested by home cooks. Amounts and times are a guide.",
+      "full": "Our recipes are written by the SoWetin team, with AI help on first drafts, and cooked in a real kitchen by someone who grew up with the dish before we publish. We don't copy recipes from websites or videos. Cookers, pots and ingredients differ, so treat amounts and times as a guide and trust the cues: how it looks, smells and tastes."
     }
   },
   "filters": {
@@ -243,5 +248,48 @@
         "added": "Added. I'll find what goes with it next time."
       }
     }
+  },
+  "videos": {
+    "note": {
+      "full": "We pick these videos by hand from YouTube creators. We don't own or control them. Some cook the dish a little differently from our written steps, and that's fine. Every Nigerian kitchen has its own way. If a video is gone or doesn't match the dish, tell us."
+    }
+  },
+  "ai": {
+    "note": {
+      "full": "SoWetin uses AI to understand what you type, answer cooking questions, help draft recipes and read published price reports. AI never sets a price on its own. Every price it reads is checked against its source by our code, and our team checks markets in person. AI can make mistakes, so it never has the final word on allergies or health. We don't send your name, email or phone number to the AI service."
+    }
+  },
+  "allergy": {
+    "note": {
+      "full": "When you set an allergy, we hide any dish whose recipe includes it, even as an optional extra or a \"may contain\" ingredient like seasoning cubes. But we can only see our own recipes. A seller, a restaurant or a brand may use something different, so always check labels and ask before you eat. If you have a severe allergy, follow your doctor's advice over anything in this app."
+    }
+  },
+  "partner": {
+    "note": {
+      "full": "When you order through Chopbaze, the price, delivery fee and availability come from Chopbaze and its vendors, not from SoWetin's estimates. They can change before you pay. Your order is with Chopbaze and the vendor."
+    }
+  },
+  "legal": {
+    "sources": {
+      "title": "Where this comes from",
+      "intro": "Some of what you see in SoWetin comes from outside: price reports, YouTube videos and partner menus. Some we make ourselves: recipes, plate ideas and the way we combine prices. Here's which is which, and how far to trust each one.",
+      "prices": "Prices",
+      "recipes": "Recipes",
+      "videos": "Videos",
+      "ai": "AI answers",
+      "allergies": "Allergies",
+      "partners": "Partner prices"
+    },
+    "updated": "Last updated {date}"
+  },
+  "howWePrice": {
+    "body": "Every week, our AI reads many published market price reports, and our code checks every number against the page it came from. Every month, our team visits Lagos markets in person. We take the middle of all those prices, so one odd price doesn't throw it off, then show a range because prices move and every seller is different. The date tells you how fresh it is. It includes the smallest amount sellers will sell you. It's an estimate, not a quote, so your market may be different."
+  },
+  "dish": {
+    "title": "{name}: recipe and today's cost in {area}",
+    "cta": {
+      "pick": "Hungry now? Let SoWetin pick for you"
+    },
+    "price": "Estimate for {people} in {area}: {range}"
   }
 }

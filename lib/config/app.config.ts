@@ -93,6 +93,8 @@ export const APP_CONFIG = {
   PICTURE_MAX_BYTES: 900000, // under the 1 MB server action body limit; a 1024 px WebP is usually 100 to 300 KB
   IMPORT_FLAG_CHANGE_PCT: 40, // doc 04, section 7: a market check row this far from the current mid is flagged
   PRICE_FIRST_NOTE_ENABLED: true,
+  DISH_PAGE_PEOPLE: 2, // doc 05, section 8: dish pages show amounts and the price for 2
+  SOURCES_PAGE_UPDATED: '2026-11-09', // "Last updated" on /legal/sources (doc 11, section 6.9); change it with the copy
   PRICE_WIDE_SPREAD: 0.2, // S-023 names the moving ingredients when the plate's range is wider than this (doc 02)
   USE_COST_LINE_THRESHOLD: 0.75,
   LEFTOVER_SHOW_PCT: 25,
