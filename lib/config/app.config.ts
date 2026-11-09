@@ -89,6 +89,14 @@ export const APP_CONFIG = {
   SCOUT_MAX_SEARCHES_PER_RUN: 40,
   SCOUT_MAX_OBSERVATION_AGE_DAYS: 45,
   SCOUT_MOVE_ALERT_PCT: 20,
+  // Free-tier scout (D-31, D-35): admins paste this week's report pages; the fetcher reads them politely (doc 04, 6.2).
+  SCOUT_MAX_PAGES_PER_RUN: 3, // fits one 300-second function: fetch, a 5-second pause and one AI read per page
+  SCOUT_DELAY_MS: 5000,
+  SCOUT_FETCH_TIMEOUT_MS: 15000,
+  SCOUT_AI_TIMEOUT_MS: 60000,
+  SCOUT_PAGE_MAX_BYTES: 2000000,
+  SCOUT_USER_AGENT: 'SoWetinPriceScout/1.0 (+https://sowetin.com/bot)',
+  SCOUT_SOURCE_WEIGHTS: { press_survey: 0.7, official_stats: 0.5, online_store: 0.4 },
   PRICE_SOURCES_SHOWN_MAX: 6,
   PICTURE_MAX_BYTES: 900000, // under the 1 MB server action body limit; a 1024 px WebP is usually 100 to 300 KB
   IMPORT_FLAG_CHANGE_PCT: 40, // doc 04, section 7: a market check row this far from the current mid is flagged

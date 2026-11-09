@@ -153,3 +153,25 @@ describe('price rules in the database (A-04)', () => {
     expect(logged).toBe(2);
   });
 });
+
+describe('scout rules in the database (A-04)', () => {
+  const ADMIN = '00000000-0000-4000-8000-000000000003';
+  const admin: Who = { sub: ADMIN, aal: 'aal2' };
+  it('lets only an admin manage sources and see scout runs', async () => {
+    const add = (who: Who) =>
+      as(
+        who,
+        `insert into price_sources (name, domain, kind, weight, terms_checked_at) values ('Market report, Example', 'example.com', 'press_survey', 0.7, '2026-11-09')`,
+      );
+    await expect(add(editor)).rejects.toThrow(/row-level security/);
+    await expect(add('anon')).rejects.toThrow(/row-level security/);
+    await add(admin);
+    expect(await count(editor, 'price_sources')).toBe(0);
+    expect(await count('anon', 'price_sources')).toBe(0);
+    expect(await count(admin, 'price_sources')).toBe(1);
+    await expect(as(editor, `insert into scout_runs default values`)).rejects.toThrow(/row-level security/);
+    await as(admin, `insert into scout_runs default values`);
+    expect(await count(admin, 'scout_runs')).toBe(1);
+    expect(await count(editor, 'scout_runs')).toBe(0);
+  });
+});

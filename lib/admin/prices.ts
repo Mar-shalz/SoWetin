@@ -1,6 +1,6 @@
 import type { AppConfig } from '@/lib/config/app.config';
 import { derivePricePoint } from '@/lib/pricing/pricePoints';
-import type { Observation } from '@/lib/pricing/types';
+import type { Observation, SourceKind } from '@/lib/pricing/types';
 
 // Market check import (doc 04, section 7) and price point rows (section 3). Pure: the admin action does the IO.
 export const CSV_HEADER = ['observed_on', 'area_slug', 'market', 'ingredient_slug', 'unit_label', 'unit_canonical_qty', 'price_ngn', 'source', 'notes'];
@@ -116,16 +116,39 @@ function suggest(slug: string, known: Known): string | undefined {
 export type ObservationRow = {
   price_ngn: number;
   unit_canonical_qty: number | null;
+  unit_label?: string;
   observed_on: string;
   market: string | null;
   source: string;
+  source_id?: string | null;
   confirmed_outlier: boolean;
+  price_sources?: { name: string; kind: string; weight: number; bias_factor: number } | null;
 };
 
-// Market checks weigh 1.0 and each market counts as its own source (doc 04, section 3, step 6).
-// shortcut: only market checks become price points; scout and partner rows join when the price scout lands.
+// Bags, kegs, baskets and the like are bulk buys, priced down to retail with the retail factor (doc 04, section 3, step 3).
+const isBulk = (label: string | undefined, qty: number) => qty >= 10_000 || /\b(bag|keg|basket|sack|crate|carton|drum|paint bucket)\b/i.test(label ?? '');
+
+// Market checks weigh 1.0 and each market counts as its own source; scout rows carry their source's kind, weight and
+// bias factor (doc 04, section 3, steps 3 to 6). Partner and admin rows don't make price points.
 export function toObservation(r: ObservationRow): Observation | null {
-  if (!(SOURCES as readonly string[]).includes(r.source) || !r.unit_canonical_qty) return null;
+  if (!r.unit_canonical_qty) return null;
+  if (r.source === 'ai_scout') {
+    const s = r.price_sources;
+    if (!s || !r.source_id) return null;
+    return {
+      priceNgn: r.price_ngn,
+      unitQty: Number(r.unit_canonical_qty),
+      observedOn: r.observed_on,
+      kind: s.kind as SourceKind,
+      sourceId: `src:${r.source_id}`,
+      sourceName: s.name,
+      sourceWeight: Number(s.weight),
+      wholesale: isBulk(r.unit_label, Number(r.unit_canonical_qty)),
+      biasFactor: Number(s.bias_factor) || 1,
+      confirmedOutlier: r.confirmed_outlier,
+    };
+  }
+  if (!(SOURCES as readonly string[]).includes(r.source)) return null;
   const market = r.market || 'Lagos';
   return {
     priceNgn: r.price_ngn,
