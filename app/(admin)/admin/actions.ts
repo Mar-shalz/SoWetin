@@ -14,8 +14,10 @@ import { db, type Db } from '@/lib/db/server';
 // Admin server actions. Every input is checked with Zod. Dish actions start with requireStaff, and the database
 // checks the role and second factor again; the sign-in steps only ever touch the caller's own session.
 
-export type SignInState = { email?: string; sent?: string; error?: string };
+export type SignInState = { error?: string };
 
+// shortcut: email and password while Victor tests (9 November 2026, D-33). Doc 13 wants emailed codes, so switch back
+// before other staff join. The authenticator step after this is unchanged, and the database still demands it.
 export async function signIn(_: SignInState, form: FormData): Promise<SignInState> {
   const supabase = await db();
   if (!supabase) return { error: t('signIn.notConfigured') };
@@ -27,20 +29,17 @@ export async function signIn(_: SignInState, form: FormData): Promise<SignInStat
         .trim()
         .toLowerCase(),
     );
-  if (!email.success) return { error: t('signIn.emailInvalid') };
-  const sent = { email: email.data, sent: t('signIn.sent', { email: email.data }) };
-  const code = form.get('code');
-  if (code === null) {
-    // shortcut: anyone who can open this page can create an account with no role; add Turnstile (doc 13) before the site is public.
-    const { error } = await supabase.auth.signInWithOtp({ email: email.data, options: { shouldCreateUser: true } });
-    if (!error) return sent;
+  const password = z
+    .string()
+    .min(8)
+    .max(200)
+    .safeParse(String(form.get('password') ?? ''));
+  if (!email.success || !password.success) return { error: t('signIn.wrong') };
+  const { error } = await supabase.auth.signInWithPassword({ email: email.data, password: password.data });
+  if (error) {
     console.error('signIn', error.status, error.code);
-    return { error: error.status === 429 ? t('signIn.wait') : t('signIn.sendFailed') };
+    return { error: error.status === 429 ? t('signIn.wait') : t('signIn.wrong') };
   }
-  const token = String(code).replace(/\s/g, '');
-  if (!/^\d{6,10}$/.test(token)) return { ...sent, error: t('signIn.codeInvalid') };
-  const { error } = await supabase.auth.verifyOtp({ email: email.data, token, type: 'email' });
-  if (error) return { ...sent, error: t('signIn.codeWrong') };
   redirect('/admin/mfa');
 }
 

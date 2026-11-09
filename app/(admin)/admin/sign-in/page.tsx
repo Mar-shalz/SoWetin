@@ -9,11 +9,9 @@ export default function SignInPage() {
       <SignInForm
         l={{
           email: t('signIn.email'),
-          send: t('signIn.send'),
-          sending: t('signIn.sending'),
-          code: t('signIn.code'),
-          verify: t('signIn.verify'),
-          verifying: t('signIn.verifying'),
+          password: t('signIn.password'),
+          submit: t('signIn.submit'),
+          submitting: t('signIn.submitting'),
         }}
       />
     </main>

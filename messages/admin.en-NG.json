@@ -1,22 +1,22 @@
 {
-  "meta": { "title": "SoWetin admin" },
-  "nav": { "dishes": "Dishes", "signOut": "Sign out", "signedInAs": "Signed in as {email}" },
+  "meta": {
+    "title": "SoWetin admin"
+  },
+  "nav": {
+    "dishes": "Dishes",
+    "signOut": "Sign out",
+    "signedInAs": "Signed in as {email}"
+  },
   "signIn": {
     "title": "Sign in to the admin",
-    "intro": "Staff only. We email you a 6-digit code. No passwords.",
+    "intro": "Staff only. Sign in with your email and password, then the code from your authenticator app.",
     "email": "Email",
-    "send": "Email me a code",
-    "sending": "Sending…",
-    "sent": "We sent a code to {email}. It works for 10 minutes.",
-    "code": "6-digit code",
-    "verify": "Sign in",
-    "verifying": "Checking…",
+    "password": "Password",
+    "submit": "Sign in",
+    "submitting": "Signing in…",
     "notConfigured": "Sign-in isn't set up on this copy of the app.",
-    "emailInvalid": "That email doesn't look right. Check it and try again.",
-    "wait": "Too many codes asked for. Wait a minute, then try again.",
-    "sendFailed": "We couldn't send the code. Try again in a minute.",
-    "codeInvalid": "Type the 6 digits from the email.",
-    "codeWrong": "That code didn't work. It may have expired, so ask for a new one."
+    "wrong": "That email and password don't match. Try again.",
+    "wait": "Too many tries. Wait a minute, then try again."
   },
   "mfa": {
     "title": "Enter your authenticator code",
@@ -51,7 +51,12 @@
     "waiting": "Waiting for review",
     "ready": "Ready to publish"
   },
-  "status": { "draft": "Draft", "in_review": "In review", "published": "Published", "retired": "Retired" },
+  "status": {
+    "draft": "Draft",
+    "in_review": "In review",
+    "published": "Published",
+    "retired": "Retired"
+  },
   "blockers": {
     "local_names": "local names",
     "illustration": "picture",
@@ -132,9 +137,28 @@
     "testedMarking": "Saving…",
     "testedSaved": "Kitchen test recorded."
   },
-  "heat": { "low": "Low", "medium": "Medium", "high": "High" },
-  "groups": { "base": "Base", "protein": "Protein", "vegetable": "Vegetable", "seasoning": "Seasoning", "oil": "Oil", "garnish": "Garnish" },
-  "langs": { "yo": "Yoruba", "ig": "Igbo", "ha": "Hausa", "ef": "Efik", "ed": "Edo", "urh": "Urhobo", "tw": "Twi" },
+  "heat": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High"
+  },
+  "groups": {
+    "base": "Base",
+    "protein": "Protein",
+    "vegetable": "Vegetable",
+    "seasoning": "Seasoning",
+    "oil": "Oil",
+    "garnish": "Garnish"
+  },
+  "langs": {
+    "yo": "Yoruba",
+    "ig": "Igbo",
+    "ha": "Hausa",
+    "ef": "Efik",
+    "ed": "Edo",
+    "urh": "Urhobo",
+    "tw": "Twi"
+  },
   "checklist": {
     "1": "The name is the common Lagos name. Local names are spelled the way native speakers write them.",
     "2": "Ingredients are what a Lagos home cook buys, with realistic amounts per serving.",

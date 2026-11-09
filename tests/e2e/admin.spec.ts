@@ -12,6 +12,7 @@ test('admin pages need sign-in, keep the strict policy and stay out of search', 
   }
   await expect(page.getByRole('heading', { name: 'Sign in to the admin' })).toBeVisible();
   await expect(page.getByLabel('Email')).toBeVisible();
+  await expect(page.getByLabel('Password')).toHaveAttribute('type', 'password');
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
 
   const axe = await new AxeBuilder({ page }).analyze();
