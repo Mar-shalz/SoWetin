@@ -14,5 +14,5 @@ export async function requireStaff() {
   if (aal?.currentLevel !== 'aal2') redirect('/admin/mfa');
   const { data: staff } = await supabase.from('user_roles').select('role').eq('user_id', user.id).maybeSingle();
   if (!staff) redirect('/admin/no-access');
-  return { supabase, user };
+  return { supabase, user, role: staff.role as 'admin' | 'editor' };
 }

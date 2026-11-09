@@ -4,7 +4,7 @@
     "description": "So, wetin I go chop? Real food. Honest prices. Decided."
   },
   "preview": {
-    "m0": "Preview build: na only the look e dey show. Nothing dey work yet.",
+    "m0": "Preview build: Pick for me go work once food get measure and price. The rest dey come.",
     "db": "Database don connect: {ingredients} ingredients, {published, plural, =0 {no food don publish yet} one {# food don publish} other {# food don publish}}."
   },
   "areas": {
@@ -42,5 +42,92 @@
   },
   "craving": {
     "find": "Find am"
+  },
+  "plate": {
+    "price": {
+      "range": "{low} to {high}",
+      "today": "wey you go spend for market today",
+      "meta": {
+        "fresh": "Estimate · {area} · we check am {relative}",
+        "ageing": "Estimate · {area} · price from {date}"
+      },
+      "estimate": "Rough estimate",
+      "uses": "This plate go use about {amount}",
+      "pot": "E go cook one pot of {component} for {servings}. E go cover {more, plural, one {# more meal} other {# more meals}} · about {perPlate} for one plate"
+    },
+    "badge": {
+      "over": "E pass small"
+    },
+    "why": {
+      "time": "{minutes} min",
+      "fits": "E fit {budget}, {spare} go remain"
+    },
+    "cta": {
+      "go": "Oya, make we go",
+      "notThis": "No be this one"
+    },
+    "skip": {
+      "none": "Na every plate wey fit be dis for now. Change the filter or budget make you see more."
+    },
+    "title": {
+      "single": "Your plate",
+      "deck": "Three plates"
+    },
+    "basis": "For {budget} · {people}"
+  },
+  "deck": {
+    "tight": {
+      "title": "{budget} for {people} dey tight for today price.",
+      "subtitle": "See the plates wey near am pass.",
+      "gap": "{amount} more"
+    },
+    "empty": "No food ready to suggest yet. Food go show once e get measure and market price.",
+    "buyLater": "To buy cooked food go come later. Change am to cook am, make I find plate for you.",
+    "staffPreview": "Staff preview: some food here never publish."
+  },
+  "reveal": {
+    "slow": "E dey take small time… your network dey slow."
+  },
+  "error": {
+    "generic": "Something spoil for our side. Try again?"
+  },
+  "detail": {
+    "back": "Go back",
+    "cta": {
+      "market": "Market list"
+    },
+    "price": {
+      "sources": "E come from {count, plural, one {# price report} other {# price reports}} · we check am {relative}"
+    }
+  },
+  "recipe": {
+    "title": "How to cook am",
+    "ingredients": "Ingredients for {people, plural, one {# person} other {# people}}",
+    "steps": "Steps",
+    "heat": {
+      "low": "Low heat",
+      "medium": "Medium heat",
+      "high": "High heat"
+    },
+    "tips": "Tips",
+    "mistakes": "No do this",
+    "storage": "E go last",
+    "serve": "Chop am with",
+    "notYet": "The written method for this one never ready."
+  },
+  "market": {
+    "title": "Market list",
+    "total": "Total: about {low} to {high}",
+    "footer": "Price na estimate for {area}, we check am {date}. Your market fit different small."
+  },
+  "prices": {
+    "note": {
+      "line": "We check plenty price report take estimate am. Price for your market fit different."
+    }
+  },
+  "recipes": {
+    "note": {
+      "line": "SoWetin write am, and home cooks don test am. The measure and time na guide."
+    }
   }
 }

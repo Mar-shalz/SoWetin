@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ActionForm } from '@/components/admin/action-form';
@@ -8,7 +9,8 @@ import { GROUPS, HEATS, LANGS } from '@/lib/admin/method';
 import { t, type Blocker } from '@/lib/admin/t';
 import type { T3Draft } from '@/lib/ai/t3';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
-import { acceptDraft, markTested, rejectDraft, requestDraft, saveMethod, setStatus } from '../../actions';
+import { pictureUrl } from '@/lib/db/env';
+import { acceptDraft, markTested, rejectDraft, requestDraft, saveMethod, setStatus, uploadPicture } from '../../actions';
 
 // AI drafts run inside this page's actions.
 export const maxDuration = 120;
@@ -38,13 +40,14 @@ type Dish = {
   storage: string | null;
   serving_note: string | null;
   tested_at: string | null;
+  illustration_path: string | null;
   publish_blockers: Blocker[];
   component_ingredients: Line[];
   component_steps: Step[];
 };
 
 const DISH =
-  'id, name, status, updated_at, local_names, aliases, description, prep_minutes, total_minutes, tips, mistakes, storage, serving_note, tested_at, publish_blockers, component_ingredients(ingredient_id, qty_per_serving, grp, optional, note, sort, ingredients(name, canonical_unit)), component_steps(step_no, text, cue, heat, timer_seconds, tip)';
+  'id, name, status, updated_at, local_names, aliases, description, prep_minutes, total_minutes, tips, mistakes, storage, serving_note, tested_at, illustration_path, publish_blockers, component_ingredients(ingredient_id, qty_per_serving, grp, optional, note, sort, ingredients(name, canonical_unit)), component_steps(step_no, text, cue, heat, timer_seconds, tip)';
 // Checklist items (doc 05, 5.3) the database can tick by itself, from publish_blockers. The rest need a person.
 const ITEMS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', 'picture'] as const;
 const AUTO: Partial<Record<(typeof ITEMS)[number], Blocker[]>> = {
@@ -271,6 +274,30 @@ export default async function ReviewPage({ params }: { params: Promise<{ id: str
             </ActionForm>
           </section>
         )}
+
+        <section className={card} aria-labelledby="picture">
+          <h2 id="picture" className={h2}>
+            {t('review.pictureTitle')}
+          </h2>
+          {dish.illustration_path ? (
+            <Image
+              src={pictureUrl(dish.illustration_path)!}
+              alt={dish.name}
+              width={320}
+              height={240}
+              className="mt-3 rounded-md border border-line object-cover"
+            />
+          ) : (
+            <p className="mt-2">{t('review.pictureNone')}</p>
+          )}
+          {!live && (
+            <ActionForm action={uploadPicture} submit={t('review.pictureUpload')} pending={t('review.pictureUploading')} className="mt-3">
+              {idField}
+              <p className="mb-2 text-ink-2">{t('review.pictureHint')}</p>
+              <Input label={t('review.pictureFile')} type="file" name="picture" required accept="image/webp,image/png,image/jpeg,image/avif" />
+            </ActionForm>
+          )}
+        </section>
 
         <section className={card} aria-labelledby="tested">
           <h2 id="tested" className={h2}>

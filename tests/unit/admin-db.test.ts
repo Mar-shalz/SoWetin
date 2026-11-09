@@ -122,3 +122,34 @@ describe('admin rules in the database', () => {
     await expect(call({ sub: STRANGER, aal: 'aal2' }, STRANGER)).rejects.toThrow(/row-level security/);
   });
 });
+
+describe('price rules in the database (A-04)', () => {
+  const ADMIN = '00000000-0000-4000-8000-000000000003';
+  const admin: Who = { sub: ADMIN, aal: 'aal2' };
+  const observe = (who: Who, by: string) =>
+    as(
+      who,
+      `insert into price_observations (ingredient_id, area_id, unit_label, unit_canonical_qty, price_ngn, observed_on, source, created_by)
+       values ('palm-oil', 'lagos', '1 litre', 1000, 2500, '2026-11-20', 'retail_survey', $1)`,
+      [by],
+    );
+
+  it('lets only an admin with the second factor import and rebuild prices', async () => {
+    await db.exec(`insert into auth.users (id) values ('${ADMIN}'); insert into user_roles values ('${ADMIN}', 'admin');`);
+    await expect(observe(editor, EDITOR)).rejects.toThrow(/row-level security/);
+    await expect(observe({ sub: ADMIN, aal: 'aal1' }, ADMIN)).rejects.toThrow(/row-level security/);
+    await expect(observe(admin, EDITOR)).rejects.toThrow(/row-level security/);
+    await observe(admin, ADMIN);
+    expect(await count(editor, 'price_observations')).toBe(0);
+    expect(await count(admin, 'price_observations')).toBe(1);
+    const point = `insert into price_points (ingredient_id, area_id, per_unit_low, per_unit_mid, per_unit_high, confidence, as_of, oldest, sample_count, source_count)
+                   values ('palm-oil', 'lagos', 2, 2.5, 3, 'low', '2026-11-20', '2026-11-20', 1, 1)`;
+    await expect(as(editor, point)).rejects.toThrow(/row-level security/);
+    await as(admin, point);
+    expect(await count('anon', 'price_points')).toBe(1);
+    const logged = (
+      await db.query<{ n: number }>(`select count(*)::int as n from audit_log where entity in ('price_observations', 'price_points') and actor = $1`, [ADMIN])
+    ).rows[0].n;
+    expect(logged).toBe(2);
+  });
+});

@@ -4,7 +4,7 @@
     "description": "So, wetin I go chop? Real food. Honest prices. Decided."
   },
   "preview": {
-    "m0": "Preview build: this shows the look only. Nothing works yet.",
+    "m0": "Preview build: Pick for me works once dishes have amounts and prices. The rest is coming.",
     "db": "Database connected: {ingredients} ingredients, {published, plural, =0 {no dishes published yet} one {# dish published} other {# dishes published}}."
   },
   "areas": {
@@ -42,5 +42,92 @@
   },
   "craving": {
     "find": "Find"
+  },
+  "plate": {
+    "price": {
+      "range": "{low} to {high}",
+      "today": "to spend at the market today",
+      "meta": {
+        "fresh": "Estimate · {area} · checked {relative}",
+        "ageing": "Estimate · {area} · prices from {date}"
+      },
+      "estimate": "Rough estimate",
+      "uses": "This plate uses about {amount}",
+      "pot": "Cooks a pot of {component} for {servings}. It covers {more, plural, one {# more meal} other {# more meals}} · about {perPlate} a plate"
+    },
+    "badge": {
+      "over": "A little over"
+    },
+    "why": {
+      "time": "{minutes} min",
+      "fits": "Fits {budget} with {spare} spare"
+    },
+    "cta": {
+      "go": "Let's go",
+      "notThis": "Not this"
+    },
+    "skip": {
+      "none": "That's every plate that fits right now. Change the filters or budget for more."
+    },
+    "title": {
+      "single": "Your plate",
+      "deck": "Three plates"
+    },
+    "basis": "For {budget} · {people}"
+  },
+  "deck": {
+    "tight": {
+      "title": "{budget} for {people} is tight at today's prices.",
+      "subtitle": "Here are the closest plates.",
+      "gap": "{amount} more"
+    },
+    "empty": "No dishes are ready to suggest yet. Dishes show up once they have amounts and market prices.",
+    "buyLater": "Buying cooked food comes later. Switch to cook it and I'll find you a plate.",
+    "staffPreview": "Staff preview: this includes dishes that aren't published yet."
+  },
+  "reveal": {
+    "slow": "Taking a moment… your network is slow."
+  },
+  "error": {
+    "generic": "Something broke on our side. Try again?"
+  },
+  "detail": {
+    "back": "Back",
+    "cta": {
+      "market": "Market list"
+    },
+    "price": {
+      "sources": "Based on {count, plural, one {# price report} other {# price reports}} · checked {relative}"
+    }
+  },
+  "recipe": {
+    "title": "How to cook it",
+    "ingredients": "Ingredients for {people, plural, one {# person} other {# people}}",
+    "steps": "Steps",
+    "heat": {
+      "low": "Low heat",
+      "medium": "Medium heat",
+      "high": "High heat"
+    },
+    "tips": "Tips",
+    "mistakes": "Don't do this",
+    "storage": "Keeps for",
+    "serve": "Serve with",
+    "notYet": "The written method for this one is still on its way."
+  },
+  "market": {
+    "title": "Market list",
+    "total": "Total: about {low} to {high}",
+    "footer": "Prices are estimates for {area}, checked {date}. Your market may be a bit different."
+  },
+  "prices": {
+    "note": {
+      "line": "Estimate from many price reports. Prices in your market may be different."
+    }
+  },
+  "recipes": {
+    "note": {
+      "line": "Written by SoWetin and tested by home cooks. Amounts and times are a guide."
+    }
   }
 }

@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { body, display } from '@/app/fonts/fonts';
 import tokens from '@/design/tokens.json';
@@ -16,7 +17,9 @@ export const viewport: Viewport = { width: 'device-width', initialScale: 1, view
 export default async function AppLayout({ children }: LayoutProps<'/'>) {
   return (
     <html lang={await getLocale()} className={`${display.variable} ${body.variable}`}>
-      <body>{children}</body>
+      <body>
+        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+      </body>
     </html>
   );
 }

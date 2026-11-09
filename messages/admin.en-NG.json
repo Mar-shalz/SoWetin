@@ -5,7 +5,8 @@
   "nav": {
     "dishes": "Dishes",
     "signOut": "Sign out",
-    "signedInAs": "Signed in as {email}"
+    "signedInAs": "Signed in as {email}",
+    "prices": "Prices"
   },
   "signIn": {
     "title": "Sign in to the admin",
@@ -80,7 +81,7 @@
     "frozen": "Published dishes can't be edited. Unpublish it, edit it, then publish it again.",
     "publishTitle": "Publish",
     "needs": "Before you can publish: {list}.",
-    "pictureLater": "Picture upload comes in the next update, so no dish can be published until then.",
+    "pictureLater": "Every dish needs a picture before it can be published.",
     "publish": "Publish",
     "publishing": "Publishing…",
     "unpublish": "Unpublish",
@@ -135,7 +136,16 @@
     "testedDate": "Date cooked",
     "testedMark": "We cooked it from these steps",
     "testedMarking": "Saving…",
-    "testedSaved": "Kitchen test recorded."
+    "testedSaved": "Kitchen test recorded.",
+    "pictureTitle": "Picture",
+    "pictureNone": "No picture yet. Upload one that shows the actual dish.",
+    "pictureHint": "WebP, PNG, JPEG or AVIF, under 900 KB. Check it shows the real dish before you upload (doc 05, section 6).",
+    "pictureFile": "Picture file",
+    "pictureUpload": "Upload picture",
+    "pictureUploading": "Uploading…",
+    "pictureSaved": "Picture saved.",
+    "pictureTooBig": "That picture is over 900 KB. Export it smaller and try again.",
+    "pictureType": "That file isn’t a WebP, PNG, JPEG or AVIF picture."
   },
   "heat": {
     "low": "Low",
@@ -178,5 +188,53 @@
     "notReady": "This dish isn't ready to publish yet. Fill in what's listed under Publish.",
     "frozen": "Unpublish this dish before editing it.",
     "save": "Something broke on our side. Try again?"
+  },
+  "prices": {
+    "title": "Prices in Lagos",
+    "intro": "{count, plural, =0 {No prices yet. Import the first market check below.} one {# ingredient has a price.} other {# ingredients have a price.}}",
+    "adminOnly": "Only admins can import prices.",
+    "importTitle": "Import a market check",
+    "importHint": "Upload the filled-in sheet as CSV, or paste it. Check it first, then publish.",
+    "sheet": "Download the survey sheet",
+    "file": "CSV file",
+    "paste": "Or paste the CSV here",
+    "check": "Check the sheet",
+    "checking": "Checking…",
+    "rows": "Rows ready to publish: {n}",
+    "problems": "These rows were left out:",
+    "flagged": "These moved a lot from the current price. Check them before you publish:",
+    "publish": "Publish {n} rows",
+    "publishing": "Publishing…",
+    "published": "Published {rows} rows. {points, plural, one {# price} other {# prices}} rebuilt.",
+    "rebuild": "Rebuild all prices",
+    "rebuilding": "Rebuilding…",
+    "rebuilt": "{points, plural, =0 {No prices to rebuild yet.} one {Rebuilt # price.} other {Rebuilt # prices.}}",
+    "empty": "Choose a CSV file or paste the sheet first.",
+    "tooBig": "That file is too big. Split it into smaller sheets.",
+    "nothing": "No rows are ready to publish. Fix the rows listed above.",
+    "flag": "Row {line}: {ingredient} is {pct}% away from the current price.",
+    "problem": {
+      "columns": "Row {line}: some columns are missing.",
+      "date": "Row {line}: the date must look like 2026-11-20 and not be in the future.",
+      "area": "Row {line}: unknown area.",
+      "ingredient": "Row {line}: unknown ingredient. Did you mean {hint}?",
+      "unit": "Row {line}: unknown unit. Units we know: {hint}.",
+      "qty": "Row {line}: the weighed amount must be a number above 0.",
+      "price": "Row {line}: the price must be a whole number of naira above 0.",
+      "source": "Row {line}: source must be retail_survey or wholesale_survey.",
+      "ingredientNone": "Row {line}: unknown ingredient.",
+      "unitNone": "Row {line}: unknown unit, and this ingredient has no units in this area yet."
+    },
+    "colIngredient": "Ingredient",
+    "colRange": "Price range",
+    "colConfidence": "Confidence",
+    "colAsOf": "Newest price",
+    "colSources": "Sources",
+    "range": "{unit}: {low} to {high}",
+    "confidence": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    }
   }
 }

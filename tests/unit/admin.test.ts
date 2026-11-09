@@ -159,3 +159,16 @@ describe('T3 drafts on Gemini (doc 03, 7.3)', () => {
     expect(draftSchema().safeParse(good).success).toBe(true);
   });
 });
+
+describe('dish pictures (BR-41)', () => {
+  it('knows a picture by its first bytes and refuses anything else', async () => {
+    const { pictureType } = await import('@/lib/admin/picture');
+    const bytes = (...xs: (number | string)[]) => new Uint8Array(xs.flatMap((x) => (typeof x === 'string' ? [...x].map((c) => c.charCodeAt(0)) : [x])));
+    expect(pictureType(bytes(0x89, 'PNG', 0x0d, 0x0a))).toBe('image/png');
+    expect(pictureType(bytes(0xff, 0xd8, 0xff, 0xe0))).toBe('image/jpeg');
+    expect(pictureType(bytes('RIFF', 0, 0, 0, 0, 'WEBPVP8 '))).toBe('image/webp');
+    expect(pictureType(bytes(0, 0, 0, 0x20, 'ftypavif'))).toBe('image/avif');
+    expect(pictureType(bytes('<svg xmlns="http://www.w3.org/2000/svg">'))).toBeNull();
+    expect(pictureType(bytes('<html><script>'))).toBeNull();
+  });
+});

@@ -7,3 +7,9 @@ export function supabaseEnv(env: Record<string, string | undefined> = process.en
 
 // Session cookies stay out of reach of page scripts (doc 13: HttpOnly, Secure, SameSite=Lax).
 export const SESSION_COOKIE = { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', path: '/' } as const;
+
+// Public address of a dish picture in the illustrations bucket (migration 20261109040000).
+export const pictureUrl = (path: string | null) => {
+  const env = supabaseEnv();
+  return path && env ? `${env.url}/storage/v1/object/public/illustrations/${path}` : null;
+};

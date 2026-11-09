@@ -90,6 +90,8 @@ export const APP_CONFIG = {
   SCOUT_MAX_OBSERVATION_AGE_DAYS: 45,
   SCOUT_MOVE_ALERT_PCT: 20,
   PRICE_SOURCES_SHOWN_MAX: 6,
+  PICTURE_MAX_BYTES: 900000, // under the 1 MB server action body limit; a 1024 px WebP is usually 100 to 300 KB
+  IMPORT_FLAG_CHANGE_PCT: 40, // doc 04, section 7: a market check row this far from the current mid is flagged
   PRICE_FIRST_NOTE_ENABLED: true,
   USE_COST_LINE_THRESHOLD: 0.75,
   LEFTOVER_SHOW_PCT: 25,

@@ -6,6 +6,7 @@ import { z } from 'zod';
 import type { Msg } from '@/components/admin/action-form';
 import { requireStaff } from '@/lib/admin/guard';
 import { DISH_ID, methodFromForm } from '@/lib/admin/method';
+import { PICTURE_EXT, pictureType } from '@/lib/admin/picture';
 import { t } from '@/lib/admin/t';
 import { methodFromDraft, t3Draft, T3_PROMPT_VERSION, type T3Dish } from '@/lib/ai/t3';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
@@ -218,4 +219,26 @@ export async function rejectDraft(_: Msg, form: FormData): Promise<Msg> {
 
 function lagosToday() {
   return new Intl.DateTimeFormat('en-CA', { timeZone: C.TIMEZONE }).format(new Date());
+}
+
+// BR-41 needs a picture of the actual dish. Stored under a new name each time, so nothing cached ever shows an old one.
+export async function uploadPicture(_: Msg, form: FormData): Promise<Msg> {
+  const { supabase } = await requireStaff();
+  const id = DISH_ID.safeParse(form.get('id'));
+  const file = form.get('picture');
+  if (!id.success || !(file instanceof File) || !file.size) return invalid(t('review.pictureFile'));
+  if (file.size > C.PICTURE_MAX_BYTES) return { error: t('review.pictureTooBig') };
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  const type = pictureType(bytes);
+  if (!type) return { error: t('review.pictureType') };
+  const path = `${id.data}/${Date.now()}.${PICTURE_EXT[type]}`;
+  const up = await supabase.storage.from('illustrations').upload(path, bytes, { contentType: type, upsert: false });
+  if (up.error) {
+    console.error('uploadPicture', up.error.message);
+    return { error: t('errors.save') };
+  }
+  const { error } = await supabase.from('components').update({ illustration_path: path }).eq('id', id.data);
+  if (error) return failed(error);
+  revalidatePath(`/admin/dishes/${id.data}`);
+  return { ok: t('review.pictureSaved') };
 }

@@ -4,8 +4,8 @@ import { refreshSession } from '@/lib/db/session';
 // Strict Content Security Policy with a fresh nonce per request (doc 13, section 7; Next.js CSP guide).
 // Next.js reads the request header and puts the nonce on its own scripts. Dev needs 'unsafe-eval' for React's error overlay.
 export async function proxy(request: NextRequest) {
-  // Admin sign-ins refresh here, before the page renders (Supabase SSR). Other pages never touch auth.
-  const fresh = request.nextUrl.pathname.startsWith('/admin') ? await refreshSession(request) : [];
+  // Sign-ins refresh here, before the page renders (Supabase SSR). Visitors without a session cookie skip it.
+  const fresh = request.cookies.getAll().some((c) => c.name.startsWith('sb-')) ? await refreshSession(request) : [];
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
   const dev = process.env.NODE_ENV === 'development';
   const csp = [
