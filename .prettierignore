@@ -1,0 +1,11 @@
+docs/
+data/
+design/
+supabase/
+app/tokens.css
+pnpm-lock.yaml
+CHANGELOG.md
+README.md
+CLAUDE.md
+AGENTS.md
+.claude/

@@ -1,0 +1,20 @@
+@import 'tailwindcss';
+@import './tokens.css';
+
+html {
+  background: var(--color-cream);
+}
+
+body {
+  margin: 0;
+  background: var(--color-cream);
+  color: var(--color-ink);
+  -webkit-tap-highlight-color: transparent;
+  @apply type-body-m;
+}
+
+/* 3 px enamel ring with a 2 px gap, never removed (doc 12, section 1). */
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}

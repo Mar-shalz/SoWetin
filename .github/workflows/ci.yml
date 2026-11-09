@@ -1,0 +1,32 @@
+# Doc 06, section 11. Runs on every pull request and on main.
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+# Least privilege for the workflow token: CI only reads the code.
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm format:check
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm i18n:check
+      - run: pnpm seed:validate
+      # Unit tests include the migrations and seed on a fresh in-memory Postgres.
+      - run: pnpm test
+      - run: pnpm build
+      - run: pnpm exec playwright install --with-deps chromium webkit
+      # Mobile profiles plus axe, against the production build. Point E2E_BASE_URL at the Vercel preview once it's connected.
+      - run: pnpm test:e2e
+      - run: pnpm lhci

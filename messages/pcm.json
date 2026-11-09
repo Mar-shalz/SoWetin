@@ -1,0 +1,45 @@
+{
+  "meta": {
+    "title": "SoWetin",
+    "description": "So, wetin I go chop? Real food. Honest prices. Decided."
+  },
+  "preview": {
+    "m0": "Preview build: na only the look e dey show. Nothing dey work yet."
+  },
+  "areas": {
+    "lagos": "Lagos"
+  },
+  "home": {
+    "greeting": {
+      "breakfast": "Morning o. So, wetin we go chop for breakfast?",
+      "lunch": "Lunch don reach. So, wetin we go chop?",
+      "dinner": "Evening don reach. So, wetin we go chop tonight?",
+      "late_night": "Hunger dey catch you this night? So, wetin we go chop?"
+    },
+    "sentence": {
+      "_": "I get {budget} for {people}, and I go {mode}.",
+      "people": "{count, plural, one {# person} other {# people}}",
+      "cook": "cook am",
+      "buy": "buy am",
+      "hint": "Tap any word wey get colour to change am.",
+      "edit": "{value}. Change am"
+    },
+    "house": {
+      "empty": "Wetin dey house? Tap wetin you get."
+    },
+    "craving": {
+      "placeholder": "You dey crave something? Type am…"
+    },
+    "cta": {
+      "pick": "Pick am for me",
+      "show3Instead": "Show me 3 instead",
+      "filters": "Filters"
+    },
+    "filters": {
+      "on": "Filters, {count} dey on"
+    }
+  },
+  "craving": {
+    "find": "Find am"
+  }
+}

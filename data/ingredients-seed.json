@@ -1,0 +1,4030 @@
+{
+ "meta": {
+  "version": "0.1-draft",
+  "note": "Market unit sizes are placeholders to be replaced by weighing during the first Lagos survey (doc 04 section 6). reference_observations come from public reports and are sanity checks only, never shown to users as prices."
+ },
+ "ingredients": [
+  {
+   "slug": "rice-local-parboiled",
+   "name": "Local rice (parboiled)",
+   "category": "grains_flours",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "derica",
+     "canonical_qty": 750,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "paint bucket",
+     "canonical_qty": 4000,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "50 kg bag",
+     "canonical_qty": 50000,
+     "is_minimum": false,
+     "sellable": false,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [
+    {
+     "price_ngn": 112000,
+     "per": "50 kg bag",
+     "area": "national",
+     "observed": "2026-03",
+     "kind": "national_average_bulk",
+     "source": "NBS Selected Food Price Watch, March 2026 (as reported by Vanguard and Guardian)"
+    }
+   ],
+   "seed_price": null,
+   "house_group": "foodstuff"
+  },
+  {
+   "slug": "rice-foreign-parboiled",
+   "name": "Foreign long-grain rice (parboiled)",
+   "category": "grains_flours",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "derica",
+     "canonical_qty": 750,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "paint bucket",
+     "canonical_qty": 4000,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "50 kg bag",
+     "canonical_qty": 50000,
+     "is_minimum": false,
+     "sellable": false,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [
+    {
+     "price_ngn": 133975,
+     "per": "50 kg bag",
+     "area": "national",
+     "observed": "2026-03",
+     "kind": "national_average_bulk",
+     "source": "NBS Selected Food Price Watch, March 2026 (as reported by Vanguard and Guardian)"
+    }
+   ],
+   "seed_price": null,
+   "house_group": "foodstuff"
+  },
+  {
+   "slug": "ofada-rice",
+   "name": "Ofada rice",
+   "category": "grains_flours",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "derica",
+     "canonical_qty": 700,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "paint bucket",
+     "canonical_qty": 3800,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "foodstuff"
+  },
+  {
+   "slug": "garri-white",
+   "name": "White garri",
+   "category": "grains_flours",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "yo": "gaari funfun"
+   },
+   "market_units": [
+    {
+     "label": "cup",
+     "canonical_qty": 250,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "paint bucket",
+     "canonical_qty": 3000,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "50 kg bag",
+     "canonical_qty": 50000,
+     "is_minimum": false,
+     "sellable": false,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [
+    {
+     "price_ngn": 808.96,
+     "per": "kg",
+     "area": "national",
+     "observed": "2026-04",
+     "kind": "retail_national_average",
+     "source": "NBS Selected Food Price Watch, spring 2026 (as reported by the press)"
+    },
+    {
+     "price_ngn": 19500,
+     "per": "50 kg bag",
+     "area": "lagos",
+     "observed": "2026-09",
+     "kind": "wholesale",
+     "source": "Nairametrics Lagos food price survey, September 2026"
+    }
+   ],
+   "seed_price": null,
+   "house_group": "foodstuff"
+  },
+  {
+   "slug": "garri-yellow",
+   "name": "Yellow garri",
+   "category": "grains_flours",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "cup",
+     "canonical_qty": 250,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "paint bucket",
+     "canonical_qty": 3000,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "50 kg bag",
+     "canonical_qty": 50000,
+     "is_minimum": false,
+     "sellable": false,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [
+    {
+     "price_ngn": 18000,
+     "per": "50 kg bag",
+     "area": "lagos",
+     "observed": "2026-09",
+     "kind": "wholesale",
+     "source": "Nairametrics Lagos food price survey, September 2026"
+    }
+   ],
+   "seed_price": null,
+   "house_group": "foodstuff"
+  },
+  {
+   "slug": "yam-flour",
+   "name": "Yam flour (elubo)",
+   "category": "grains_flours",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "yo": "elubo"
+   },
+   "market_units": [
+    {
+     "label": "cup",
+     "canonical_qty": 200,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "1 kg pack",
+     "canonical_qty": 1000,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "foodstuff"
+  },
+  {
+   "slug": "cassava-flour",
+   "name": "Cassava flour (lafun)",
+   "category": "grains_flours",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "yo": "lafun"
+   },
+   "market_units": [
+    {
+     "label": "cup",
+     "canonical_qty": 200,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "1 kg pack",
+     "canonical_qty": 1000,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "semolina",
+   "name": "Semolina (semo)",
+   "category": "grains_flours",
+   "canonical_unit": "g",
+   "allergens": [
+    "gluten"
+   ],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "1 kg pack",
+     "canonical_qty": 1000,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "2 kg pack",
+     "canonical_qty": 2000,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "foodstuff"
+  },
+  {
+   "slug": "wheat-meal",
+   "name": "Wheat meal (for swallow)",
+   "category": "grains_flours",
+   "canonical_unit": "g",
+   "allergens": [
+    "gluten"
+   ],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "1 kg pack",
+     "canonical_qty": 1000,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "5 kg pack",
+     "canonical_qty": 5000,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [
+    {
+     "price_ngn": 6220,
+     "per": "5 kg pack",
+     "area": "lagos",
+     "observed": "2026-09",
+     "kind": "wholesale",
+     "source": "Nairametrics Lagos food price survey, September 2026 (branded wheat meal, 5 kg)"
+    }
+   ],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "fufu-cassava",
+   "name": "Cassava fufu paste (akpu)",
+   "category": "grains_flours",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "ig": "akpu",
+    "yo": "fufu"
+   },
+   "market_units": [
+    {
+     "label": "wrap",
+     "canonical_qty": 400,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "plantain-flour",
+   "name": "Unripe plantain flour",
+   "category": "grains_flours",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "1 kg pack",
+     "canonical_qty": 1000,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "maize-dry",
+   "name": "Dry maize (corn)",
+   "category": "grains_flours",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "ha": "masara"
+   },
+   "market_units": [
+    {
+     "label": "cup",
+     "canonical_qty": 220,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "50 kg bag",
+     "canonical_qty": 50000,
+     "is_minimum": false,
+     "sellable": false,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [
+    {
+     "price_ngn": 40000,
+     "per": "50 kg bag",
+     "area": "lagos",
+     "observed": "2026-09",
+     "kind": "wholesale",
+     "source": "Nairametrics Lagos food price survey, September 2026"
+    }
+   ],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "maize-flour",
+   "name": "Maize flour",
+   "category": "grains_flours",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "1 kg pack",
+     "canonical_qty": 1000,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "millet",
+   "name": "Millet",
+   "category": "grains_flours",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "ha": "gero"
+   },
+   "market_units": [
+    {
+     "label": "cup",
+     "canonical_qty": 220,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "rice-flour",
+   "name": "Rice flour / short-grain rice for tuwo",
+   "category": "grains_flours",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "derica",
+     "canonical_qty": 750,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "ogi-paste",
+   "name": "Pap paste (ogi / akamu)",
+   "category": "grains_flours",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "yo": "ogi",
+    "ig": "akamu",
+    "ha": "koko"
+   },
+   "market_units": [
+    {
+     "label": "wrap",
+     "canonical_qty": 300,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "agidi-wrap",
+   "name": "Agidi (eko)",
+   "category": "grains_flours",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "yo": "eko"
+   },
+   "market_units": [
+    {
+     "label": "wrap",
+     "canonical_qty": 150,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "wheat-flour",
+   "name": "Wheat flour",
+   "category": "grains_flours",
+   "canonical_unit": "g",
+   "allergens": [
+    "gluten"
+   ],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "1 kg pack",
+     "canonical_qty": 1000,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "cup",
+     "canonical_qty": 130,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "cassava-starch",
+   "name": "Cassava starch (usi)",
+   "category": "grains_flours",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "urh": "usi"
+   },
+   "market_units": [
+    {
+     "label": "cup",
+     "canonical_qty": 200,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "oats",
+   "name": "Rolled oats",
+   "category": "grains_flours",
+   "canonical_unit": "g",
+   "allergens": [
+    "gluten"
+   ],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "500 g pack",
+     "canonical_qty": 500,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "foodstuff"
+  },
+  {
+   "slug": "custard-powder",
+   "name": "Custard powder",
+   "category": "packaged",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "400 g tin",
+     "canonical_qty": 400,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "foodstuff"
+  },
+  {
+   "slug": "teff-flour",
+   "name": "Teff flour",
+   "category": "grains_flours",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "1 kg pack",
+     "canonical_qty": 1000,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "couscous-attieke",
+   "name": "Attiéké (cassava couscous)",
+   "category": "grains_flours",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "500 g pack",
+     "canonical_qty": 500,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "maize-meal-white",
+   "name": "White maize meal",
+   "category": "grains_flours",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "1 kg pack",
+     "canonical_qty": 1000,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "spaghetti",
+   "name": "Spaghetti",
+   "category": "packaged",
+   "canonical_unit": "g",
+   "allergens": [
+    "gluten"
+   ],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "500 g pack",
+     "canonical_qty": 500,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "foodstuff"
+  },
+  {
+   "slug": "macaroni",
+   "name": "Macaroni",
+   "category": "packaged",
+   "canonical_unit": "g",
+   "allergens": [
+    "gluten"
+   ],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "500 g pack",
+     "canonical_qty": 500,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "foodstuff"
+  },
+  {
+   "slug": "instant-noodles",
+   "name": "Instant noodles",
+   "category": "packaged",
+   "canonical_unit": "piece",
+   "allergens": [
+    "gluten"
+   ],
+   "may_contain": [
+    "soy"
+   ],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "pack",
+     "canonical_qty": 1,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "carton",
+     "canonical_qty": 40,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "foodstuff"
+  },
+  {
+   "slug": "agege-bread",
+   "name": "Agege bread",
+   "category": "packaged",
+   "canonical_unit": "piece",
+   "allergens": [
+    "gluten"
+   ],
+   "may_contain": [
+    "egg",
+    "dairy"
+   ],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "small loaf",
+     "canonical_qty": 1,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "foodstuff"
+  },
+  {
+   "slug": "tomato-paste",
+   "name": "Tomato paste",
+   "category": "packaged",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "sachet",
+     "canonical_qty": 70,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "tin",
+     "canonical_qty": 210,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "basic"
+  },
+  {
+   "slug": "corned-beef",
+   "name": "Corned beef (tinned)",
+   "category": "packaged",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "tin",
+     "canonical_qty": 340,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "sardines",
+   "name": "Sardines (tinned)",
+   "category": "packaged",
+   "canonical_unit": "g",
+   "allergens": [
+    "fish"
+   ],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "tin",
+     "canonical_qty": 125,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "sweet-corn-tin",
+   "name": "Sweet corn (tinned)",
+   "category": "packaged",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "tin",
+     "canonical_qty": 340,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "baked-beans",
+   "name": "Baked beans (tinned)",
+   "category": "packaged",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "tin",
+     "canonical_qty": 400,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "mayonnaise",
+   "name": "Mayonnaise",
+   "category": "packaged",
+   "canonical_unit": "g",
+   "allergens": [
+    "egg"
+   ],
+   "may_contain": [
+    "soy",
+    "dairy"
+   ],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "small jar",
+     "canonical_qty": 250,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "baking-powder",
+   "name": "Baking powder",
+   "category": "packaged",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "sachet",
+     "canonical_qty": 10,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "yeast",
+   "name": "Dry yeast",
+   "category": "packaged",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "sachet",
+     "canonical_qty": 10,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "sugar",
+   "name": "Sugar",
+   "category": "packaged",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "cup",
+     "canonical_qty": 200,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "1 kg pack",
+     "canonical_qty": 1000,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "basic"
+  },
+  {
+   "slug": "tea-bags",
+   "name": "Tea bags",
+   "category": "packaged",
+   "canonical_unit": "piece",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "pack of 26",
+     "canonical_qty": 26,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "milk-evaporated",
+   "name": "Evaporated milk",
+   "category": "dairy_eggs",
+   "canonical_unit": "ml",
+   "allergens": [
+    "dairy"
+   ],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "tin",
+     "canonical_qty": 160,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "basic"
+  },
+  {
+   "slug": "milk-powder",
+   "name": "Milk powder",
+   "category": "dairy_eggs",
+   "canonical_unit": "g",
+   "allergens": [
+    "dairy"
+   ],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "sachet",
+     "canonical_qty": 16,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "400 g tin",
+     "canonical_qty": 400,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "basic"
+  },
+  {
+   "slug": "fresh-cheese-wara",
+   "name": "Wara (local soft cheese)",
+   "category": "dairy_eggs",
+   "canonical_unit": "g",
+   "allergens": [
+    "dairy"
+   ],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {
+    "yo": "wara",
+    "ha": "cuku"
+   },
+   "market_units": [
+    {
+     "label": "piece",
+     "canonical_qty": 150,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "nono",
+   "name": "Nono (fermented milk)",
+   "category": "dairy_eggs",
+   "canonical_unit": "ml",
+   "allergens": [
+    "dairy"
+   ],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {
+    "ha": "nono"
+   },
+   "market_units": [
+    {
+     "label": "bottle",
+     "canonical_qty": 500,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "butter-margarine",
+   "name": "Margarine",
+   "category": "oils_fats",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [
+    "dairy",
+    "soy"
+   ],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "250 g tub",
+     "canonical_qty": 250,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "basic"
+  },
+  {
+   "slug": "beans-brown",
+   "name": "Brown beans (oloyin)",
+   "category": "legumes",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "yo": "ewa oloyin"
+   },
+   "market_units": [
+    {
+     "label": "cup",
+     "canonical_qty": 250,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "derica",
+     "canonical_qty": 750,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "paint bucket",
+     "canonical_qty": 3800,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "50 kg bag",
+     "canonical_qty": 50000,
+     "is_minimum": false,
+     "sellable": false,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [
+    {
+     "price_ngn": 1344.93,
+     "per": "kg",
+     "area": "national",
+     "observed": "2026-05",
+     "kind": "retail_national_average",
+     "source": "NBS Selected Food Price Watch, May 2026 (as reported by the press)"
+    },
+    {
+     "price_ngn": 105000,
+     "per": "50 kg bag",
+     "area": "lagos",
+     "observed": "2026-09",
+     "kind": "wholesale",
+     "source": "Nairametrics Lagos food price survey, September 2026"
+    }
+   ],
+   "seed_price": null,
+   "house_group": "foodstuff"
+  },
+  {
+   "slug": "beans-white",
+   "name": "White beans (black-eyed)",
+   "category": "legumes",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "yo": "ewa funfun"
+   },
+   "market_units": [
+    {
+     "label": "cup",
+     "canonical_qty": 250,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "derica",
+     "canonical_qty": 750,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "paint bucket",
+     "canonical_qty": 3800,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "foodstuff"
+  },
+  {
+   "slug": "egusi-ground",
+   "name": "Ground egusi (melon seed)",
+   "category": "nuts_seeds",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "yo": "egusi",
+    "ig": "egwusi",
+    "ha": "agushi"
+   },
+   "market_units": [
+    {
+     "label": "cup",
+     "canonical_qty": 150,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "derica",
+     "canonical_qty": 400,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "ogbono-ground",
+   "name": "Ground ogbono",
+   "category": "nuts_seeds",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "yo": "apon",
+    "ig": "ogbono"
+   },
+   "market_units": [
+    {
+     "label": "₦ cup",
+     "canonical_qty": 80,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "groundnuts",
+   "name": "Groundnuts (peanuts)",
+   "category": "nuts_seeds",
+   "canonical_unit": "g",
+   "allergens": [
+    "groundnut"
+   ],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "yo": "epa",
+    "ha": "gyada"
+   },
+   "market_units": [
+    {
+     "label": "cup",
+     "canonical_qty": 150,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "groundnut-paste",
+   "name": "Groundnut paste",
+   "category": "nuts_seeds",
+   "canonical_unit": "g",
+   "allergens": [
+    "groundnut"
+   ],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "jar",
+     "canonical_qty": 340,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "tiger-nuts",
+   "name": "Tiger nuts",
+   "category": "nuts_seeds",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "ha": "aya",
+    "yo": "imumu"
+   },
+   "market_units": [
+    {
+     "label": "cup",
+     "canonical_qty": 150,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "ukwa-breadfruit",
+   "name": "African breadfruit (ukwa)",
+   "category": "legumes",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "ig": "ukwa"
+   },
+   "market_units": [
+    {
+     "label": "cup",
+     "canonical_qty": 200,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "ugba",
+   "name": "Ugba (oil bean slices)",
+   "category": "nuts_seeds",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "ig": "ugba"
+   },
+   "market_units": [
+    {
+     "label": "wrap",
+     "canonical_qty": 100,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "palm-nut",
+   "name": "Palm nuts / palm fruit concentrate",
+   "category": "oils_fats",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "ig": "akwu",
+    "urh": "amiedi"
+   },
+   "market_units": [
+    {
+     "label": "tin concentrate",
+     "canonical_qty": 800,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "cup fresh nuts",
+     "canonical_qty": 300,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "coconut",
+   "name": "Coconut",
+   "category": "fruits",
+   "canonical_unit": "piece",
+   "allergens": [
+    "coconut"
+   ],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "piece",
+     "canonical_qty": 1,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "sesame-seeds",
+   "name": "Sesame seeds",
+   "category": "nuts_seeds",
+   "canonical_unit": "g",
+   "allergens": [
+    "sesame"
+   ],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "small pack",
+     "canonical_qty": 100,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "yam",
+   "name": "Yam",
+   "category": "tubers_plantain",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "yo": "isu",
+    "ig": "ji",
+    "ha": "doya"
+   },
+   "market_units": [
+    {
+     "label": "small tuber",
+     "canonical_qty": 1200,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "medium tuber",
+     "canonical_qty": 2000,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "foodstuff"
+  },
+  {
+   "slug": "water-yam",
+   "name": "Water yam (ewura)",
+   "category": "tubers_plantain",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "yo": "ewura",
+    "ig": "mbala"
+   },
+   "market_units": [
+    {
+     "label": "tuber",
+     "canonical_qty": 1500,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "plantain-ripe",
+   "name": "Ripe plantain",
+   "category": "tubers_plantain",
+   "canonical_unit": "piece",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "yo": "dodo",
+    "ig": "ogede"
+   },
+   "market_units": [
+    {
+     "label": "finger",
+     "canonical_qty": 1,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "bunch",
+     "canonical_qty": 12,
+     "is_minimum": false,
+     "sellable": false,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "foodstuff"
+  },
+  {
+   "slug": "plantain-unripe",
+   "name": "Unripe plantain",
+   "category": "tubers_plantain",
+   "canonical_unit": "piece",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "finger",
+     "canonical_qty": 1,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "foodstuff"
+  },
+  {
+   "slug": "sweet-potato",
+   "name": "Sweet potato",
+   "category": "tubers_plantain",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "ha": "dankali"
+   },
+   "market_units": [
+    {
+     "label": "heap",
+     "canonical_qty": 1500,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "foodstuff"
+  },
+  {
+   "slug": "irish-potato",
+   "name": "Irish potatoes",
+   "category": "tubers_plantain",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "heap",
+     "canonical_qty": 1200,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "foodstuff"
+  },
+  {
+   "slug": "cocoyam",
+   "name": "Cocoyam",
+   "category": "tubers_plantain",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "ig": "ede",
+    "yo": "koko"
+   },
+   "market_units": [
+    {
+     "label": "heap",
+     "canonical_qty": 1000,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "cassava-abacha",
+   "name": "Dried shredded cassava (abacha)",
+   "category": "tubers_plantain",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "ig": "abacha"
+   },
+   "market_units": [
+    {
+     "label": "wrap",
+     "canonical_qty": 300,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "fresh-corn",
+   "name": "Fresh corn on the cob",
+   "category": "vegetables_fresh",
+   "canonical_unit": "piece",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "cob",
+     "canonical_qty": 1,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "ube-pear",
+   "name": "African pear (ube)",
+   "category": "fruits",
+   "canonical_unit": "piece",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "ig": "ube",
+    "yo": "elemi"
+   },
+   "market_units": [
+    {
+     "label": "heap of 6",
+     "canonical_qty": 6,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "tomato-fresh",
+   "name": "Fresh tomatoes",
+   "category": "pepper_tomato_onion",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "yo": "tomati"
+   },
+   "market_units": [
+    {
+     "label": "heap",
+     "canonical_qty": 900,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "kg",
+     "canonical_qty": 1000,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "big basket",
+     "canonical_qty": 25000,
+     "is_minimum": false,
+     "sellable": false,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [
+    {
+     "price_ngn": 1560.56,
+     "per": "kg",
+     "area": "national",
+     "observed": "2026-05",
+     "kind": "retail_national_average",
+     "source": "NBS Selected Food Price Watch, May 2026 (as reported by the press)"
+    }
+   ],
+   "seed_price": null,
+   "house_group": "basic"
+  },
+  {
+   "slug": "tatashe",
+   "name": "Red bell pepper (tatashe)",
+   "category": "pepper_tomato_onion",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "yo": "tatashe"
+   },
+   "market_units": [
+    {
+     "label": "heap",
+     "canonical_qty": 600,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "basic"
+  },
+  {
+   "slug": "scotch-bonnet",
+   "name": "Scotch bonnet pepper (ata rodo)",
+   "category": "pepper_tomato_onion",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "yo": "ata rodo",
+    "ig": "ose"
+   },
+   "market_units": [
+    {
+     "label": "₦ mix",
+     "canonical_qty": 120,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "basic"
+  },
+  {
+   "slug": "green-pepper-ayamase",
+   "name": "Green bell pepper and green scotch bonnet",
+   "category": "pepper_tomato_onion",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "heap",
+     "canonical_qty": 600,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "onion",
+   "name": "Onions",
+   "category": "pepper_tomato_onion",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "yo": "alubosa",
+    "ha": "albasa"
+   },
+   "market_units": [
+    {
+     "label": "piece",
+     "canonical_qty": 150,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "heap of 5",
+     "canonical_qty": 750,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [
+    {
+     "price_ngn": 1164.39,
+     "per": "kg",
+     "area": "national",
+     "observed": "2026-04",
+     "kind": "retail_national_average",
+     "source": "NBS Selected Food Price Watch, April 2026 (as reported by the press)"
+    }
+   ],
+   "seed_price": null,
+   "house_group": "basic"
+  },
+  {
+   "slug": "garlic",
+   "name": "Garlic",
+   "category": "pepper_tomato_onion",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "bulb",
+     "canonical_qty": 40,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "basic"
+  },
+  {
+   "slug": "ginger",
+   "name": "Ginger",
+   "category": "pepper_tomato_onion",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "₦ piece",
+     "canonical_qty": 80,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [
+    {
+     "price_ngn": 5581.82,
+     "per": "kg",
+     "area": "national",
+     "observed": "2026-04",
+     "kind": "retail_national_average",
+     "source": "NBS Selected Food Price Watch, April 2026 (as reported by the press)"
+    }
+   ],
+   "seed_price": null,
+   "house_group": "basic"
+  },
+  {
+   "slug": "spring-onion",
+   "name": "Spring onions",
+   "category": "vegetables_fresh",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "bunch",
+     "canonical_qty": 100,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "carrot",
+   "name": "Carrots",
+   "category": "vegetables_fresh",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "heap",
+     "canonical_qty": 500,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "cabbage",
+   "name": "Cabbage",
+   "category": "vegetables_fresh",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "small head",
+     "canonical_qty": 800,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "cucumber",
+   "name": "Cucumber",
+   "category": "vegetables_fresh",
+   "canonical_unit": "piece",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "piece",
+     "canonical_qty": 1,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "green-beans",
+   "name": "Green beans",
+   "category": "vegetables_fresh",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "heap",
+     "canonical_qty": 300,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "lettuce",
+   "name": "Lettuce",
+   "category": "vegetables_fresh",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "head",
+     "canonical_qty": 300,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "garden-egg",
+   "name": "Garden egg",
+   "category": "vegetables_fresh",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "yo": "igba",
+    "ig": "anara"
+   },
+   "market_units": [
+    {
+     "label": "heap",
+     "canonical_qty": 500,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "okra",
+   "name": "Okra",
+   "category": "vegetables_fresh",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "yo": "ila",
+    "ig": "okwuru",
+    "ha": "kubewa"
+   },
+   "market_units": [
+    {
+     "label": "heap",
+     "canonical_qty": 400,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "pumpkin",
+   "name": "Pumpkin",
+   "category": "vegetables_fresh",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "ha": "kabewa"
+   },
+   "market_units": [
+    {
+     "label": "slice",
+     "canonical_qty": 600,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "peas-green",
+   "name": "Green peas",
+   "category": "vegetables_fresh",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "cup",
+     "canonical_qty": 150,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "ugu",
+   "name": "Ugu (fluted pumpkin leaves)",
+   "category": "leaves_herbs",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "ig": "ugu",
+    "yo": "efo elegede"
+   },
+   "market_units": [
+    {
+     "label": "bunch",
+     "canonical_qty": 250,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "efo-shoko-tete",
+   "name": "Efo shoko / tete (spinach, amaranth)",
+   "category": "leaves_herbs",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "yo": "efo shoko"
+   },
+   "market_units": [
+    {
+     "label": "bunch",
+     "canonical_qty": 300,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "bitterleaf",
+   "name": "Bitterleaf (washed)",
+   "category": "leaves_herbs",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "ig": "onugbu",
+    "yo": "ewuro"
+   },
+   "market_units": [
+    {
+     "label": "wrap",
+     "canonical_qty": 150,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "waterleaf",
+   "name": "Waterleaf",
+   "category": "leaves_herbs",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "bunch",
+     "canonical_qty": 300,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "ewedu-leaves",
+   "name": "Ewedu (jute leaves)",
+   "category": "leaves_herbs",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "yo": "ewedu"
+   },
+   "market_units": [
+    {
+     "label": "bunch",
+     "canonical_qty": 250,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "oha-leaves",
+   "name": "Oha leaves",
+   "category": "leaves_herbs",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "ig": "oha"
+   },
+   "market_units": [
+    {
+     "label": "wrap",
+     "canonical_qty": 150,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "afang-leaves",
+   "name": "Afang (okazi) leaves, sliced",
+   "category": "leaves_herbs",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "ef": "afang",
+    "ig": "okazi"
+   },
+   "market_units": [
+    {
+     "label": "wrap",
+     "canonical_qty": 150,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "uziza-leaves",
+   "name": "Uziza leaves",
+   "category": "leaves_herbs",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "ig": "uziza"
+   },
+   "market_units": [
+    {
+     "label": "bunch",
+     "canonical_qty": 50,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "scent-leaf",
+   "name": "Scent leaf",
+   "category": "leaves_herbs",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "yo": "efinrin",
+    "ig": "nchanwu",
+    "ha": "daidoya"
+   },
+   "market_units": [
+    {
+     "label": "bunch",
+     "canonical_qty": 60,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "utazi",
+   "name": "Utazi leaves",
+   "category": "leaves_herbs",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "ig": "utazi"
+   },
+   "market_units": [
+    {
+     "label": "bunch",
+     "canonical_qty": 30,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "atama-leaves",
+   "name": "Atama (beletete) leaves",
+   "category": "leaves_herbs",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "ef": "atama"
+   },
+   "market_units": [
+    {
+     "label": "wrap",
+     "canonical_qty": 150,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "baobab-leaf-powder",
+   "name": "Baobab leaf powder (kuka)",
+   "category": "leaves_herbs",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "ha": "kuka"
+   },
+   "market_units": [
+    {
+     "label": "cup",
+     "canonical_qty": 60,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "ndole-leaves",
+   "name": "Bitterleaf for ndolé",
+   "category": "leaves_herbs",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "wrap",
+     "canonical_qty": 150,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "eru-leaves",
+   "name": "Eru (okazi) leaves, shredded",
+   "category": "leaves_herbs",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "wrap",
+     "canonical_qty": 150,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "kale-sukuma",
+   "name": "Kale (sukuma wiki)",
+   "category": "leaves_herbs",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "bunch",
+     "canonical_qty": 300,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "thyme",
+   "name": "Dried thyme",
+   "category": "seasoning_spices",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "sachet",
+     "canonical_qty": 10,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "basic"
+  },
+  {
+   "slug": "bay-leaves",
+   "name": "Bay leaves",
+   "category": "seasoning_spices",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "sachet",
+     "canonical_qty": 5,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "basic"
+  },
+  {
+   "slug": "hibiscus-zobo",
+   "name": "Dried hibiscus (zobo leaves)",
+   "category": "leaves_herbs",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "ha": "yakuwa"
+   },
+   "market_units": [
+    {
+     "label": "cup",
+     "canonical_qty": 60,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "palm-oil",
+   "name": "Palm oil",
+   "category": "oils_fats",
+   "canonical_unit": "ml",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "yo": "epo pupa",
+    "ig": "mmanu nri"
+   },
+   "market_units": [
+    {
+     "label": "75 cl bottle",
+     "canonical_qty": 750,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "1 litre",
+     "canonical_qty": 1000,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "5 litre",
+     "canonical_qty": 5000,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [
+    {
+     "price_ngn": 8500,
+     "per": "5 litre",
+     "area": "lagos",
+     "observed": "2026-09",
+     "kind": "wholesale",
+     "source": "Nairametrics Lagos food price survey, September 2026 (local palm oil)"
+    }
+   ],
+   "seed_price": null,
+   "house_group": "basic"
+  },
+  {
+   "slug": "vegetable-oil",
+   "name": "Vegetable oil",
+   "category": "oils_fats",
+   "canonical_unit": "ml",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "75 cl bottle",
+     "canonical_qty": 750,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "1 litre",
+     "canonical_qty": 1000,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "5 litre",
+     "canonical_qty": 5000,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [
+    {
+     "price_ngn": 11000,
+     "per": "5 litre",
+     "area": "lagos",
+     "observed": "2026-09",
+     "kind": "wholesale",
+     "source": "Nairametrics Lagos food price survey, September 2026 (local vegetable oil)"
+    }
+   ],
+   "seed_price": null,
+   "house_group": "basic"
+  },
+  {
+   "slug": "salt",
+   "name": "Salt",
+   "category": "seasoning_spices",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "500 g pack",
+     "canonical_qty": 500,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "basic"
+  },
+  {
+   "slug": "seasoning-cube",
+   "name": "Seasoning cubes",
+   "category": "seasoning_spices",
+   "canonical_unit": "piece",
+   "allergens": [],
+   "may_contain": [
+    "gluten",
+    "soy"
+   ],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "piece",
+     "canonical_qty": 1,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "pack of 50",
+     "canonical_qty": 50,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "basic"
+  },
+  {
+   "slug": "curry-powder",
+   "name": "Curry powder",
+   "category": "seasoning_spices",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "sachet",
+     "canonical_qty": 10,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "basic"
+  },
+  {
+   "slug": "iru",
+   "name": "Iru (locust beans)",
+   "category": "seasoning_spices",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "yo": "iru",
+    "ig": "ogiri okpei",
+    "ha": "dawadawa"
+   },
+   "market_units": [
+    {
+     "label": "wrap",
+     "canonical_qty": 40,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "ogiri",
+   "name": "Ogiri (fermented seasoning)",
+   "category": "seasoning_spices",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "ig": "ogiri"
+   },
+   "market_units": [
+    {
+     "label": "wrap",
+     "canonical_qty": 30,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "crayfish",
+   "name": "Ground crayfish",
+   "category": "seasoning_spices",
+   "canonical_unit": "g",
+   "allergens": [
+    "crustacean"
+   ],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {
+    "yo": "ede",
+    "ig": "ayu"
+   },
+   "market_units": [
+    {
+     "label": "₦500 wrap",
+     "canonical_qty": 30,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "cup",
+     "canonical_qty": 80,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "basic"
+  },
+  {
+   "slug": "ehuru",
+   "name": "Calabash nutmeg (ehuru)",
+   "category": "seasoning_spices",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "ig": "ehuru",
+    "yo": "ariwo"
+   },
+   "market_units": [
+    {
+     "label": "wrap",
+     "canonical_qty": 15,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "uziza-seeds",
+   "name": "Uziza seeds",
+   "category": "seasoning_spices",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "wrap",
+     "canonical_qty": 15,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "pepper-soup-spice",
+   "name": "Pepper soup spice mix",
+   "category": "seasoning_spices",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "sachet",
+     "canonical_qty": 30,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "suya-spice",
+   "name": "Suya spice (yaji)",
+   "category": "seasoning_spices",
+   "canonical_unit": "g",
+   "allergens": [
+    "groundnut"
+   ],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "ha": "yaji"
+   },
+   "market_units": [
+    {
+     "label": "wrap",
+     "canonical_qty": 50,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "dried-pepper",
+   "name": "Dry ground pepper (cameroon pepper)",
+   "category": "seasoning_spices",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "wrap",
+     "canonical_qty": 30,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "basic"
+  },
+  {
+   "slug": "nutmeg",
+   "name": "Nutmeg",
+   "category": "seasoning_spices",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "piece",
+     "canonical_qty": 5,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "ofada-spice",
+   "name": "Ofada and nsala spices (uda, uziza)",
+   "category": "seasoning_spices",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "wrap",
+     "canonical_qty": 20,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "potash-akanwu",
+   "name": "Potash (akanwu / kaun)",
+   "category": "seasoning_spices",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {
+    "ig": "akanwu",
+    "yo": "kaun"
+   },
+   "market_units": [
+    {
+     "label": "lump",
+     "canonical_qty": 10,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "shito",
+   "name": "Shito (Ghanaian pepper sauce)",
+   "category": "seasoning_spices",
+   "canonical_unit": "g",
+   "allergens": [
+    "fish",
+    "crustacean"
+   ],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "jar",
+     "canonical_qty": 250,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "berbere",
+   "name": "Berbere spice",
+   "category": "seasoning_spices",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "pack",
+     "canonical_qty": 100,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "chilli-chakalaka-spice",
+   "name": "Curry and chilli mix",
+   "category": "seasoning_spices",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "sachet",
+     "canonical_qty": 20,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "lemon",
+   "name": "Lemon or lime",
+   "category": "fruits",
+   "canonical_unit": "piece",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "piece",
+     "canonical_qty": 1,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "cloves-ginger-mix",
+   "name": "Cloves and ginger (for zobo, kunu)",
+   "category": "seasoning_spices",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "wrap",
+     "canonical_qty": 20,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "pineapple",
+   "name": "Pineapple",
+   "category": "fruits",
+   "canonical_unit": "piece",
+   "allergens": [],
+   "may_contain": [],
+   "animal": false,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "piece",
+     "canonical_qty": 1,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "beef",
+   "name": "Beef",
+   "category": "meat",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {
+    "yo": "eran malu",
+    "ha": "naman sa"
+   },
+   "market_units": [
+    {
+     "label": "₦2,000 portion",
+     "canonical_qty": 250,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "kg",
+     "canonical_qty": 1000,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "goat-meat-raw",
+   "name": "Goat meat",
+   "category": "meat",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {
+    "yo": "eran ewure",
+    "ig": "anu ewu"
+   },
+   "market_units": [
+    {
+     "label": "₦2,500 portion",
+     "canonical_qty": 250,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "kg",
+     "canonical_qty": 1000,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "goat-head",
+   "name": "Goat head (cut)",
+   "category": "meat",
+   "canonical_unit": "piece",
+   "allergens": [],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "head",
+     "canonical_qty": 1,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "cow-foot",
+   "name": "Cow foot (nkwobi cut)",
+   "category": "meat",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {
+    "ig": "nkwobi"
+   },
+   "market_units": [
+    {
+     "label": "₦ portion",
+     "canonical_qty": 500,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "shaki-tripe",
+   "name": "Shaki (tripe)",
+   "category": "meat",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {
+    "yo": "shaki"
+   },
+   "market_units": [
+    {
+     "label": "₦ portion",
+     "canonical_qty": 250,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "ponmo-cowskin",
+   "name": "Ponmo (cow skin)",
+   "category": "meat",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {
+    "yo": "ponmo",
+    "ig": "kpomo"
+   },
+   "market_units": [
+    {
+     "label": "piece",
+     "canonical_qty": 120,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "chicken",
+   "name": "Chicken (cut)",
+   "category": "poultry",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "piece",
+     "canonical_qty": 200,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "kg",
+     "canonical_qty": 1000,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "whole bird",
+     "canonical_qty": 1500,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "turkey",
+   "name": "Turkey (cut)",
+   "category": "poultry",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "piece",
+     "canonical_qty": 250,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "kg",
+     "canonical_qty": 1000,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "gizzard",
+   "name": "Chicken gizzard",
+   "category": "poultry",
+   "canonical_unit": "g",
+   "allergens": [],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "₦ portion",
+     "canonical_qty": 250,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "kg",
+     "canonical_qty": 1000,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "eggs",
+   "name": "Eggs",
+   "category": "dairy_eggs",
+   "canonical_unit": "piece",
+   "allergens": [
+    "egg"
+   ],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "piece",
+     "canonical_qty": 1,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "crate of 30",
+     "canonical_qty": 30,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": "foodstuff"
+  },
+  {
+   "slug": "snail",
+   "name": "Snails (cleaned)",
+   "category": "meat",
+   "canonical_unit": "piece",
+   "allergens": [
+    "mollusc"
+   ],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {
+    "yo": "igbin",
+    "ig": "ejula"
+   },
+   "market_units": [
+    {
+     "label": "piece",
+     "canonical_qty": 1,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "fish-titus",
+   "name": "Titus (mackerel)",
+   "category": "fish_seafood",
+   "canonical_unit": "piece",
+   "allergens": [
+    "fish"
+   ],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {
+    "yo": "eja kika"
+   },
+   "market_units": [
+    {
+     "label": "piece",
+     "canonical_qty": 1,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "fish-croaker",
+   "name": "Croaker fish",
+   "category": "fish_seafood",
+   "canonical_unit": "piece",
+   "allergens": [
+    "fish"
+   ],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "piece",
+     "canonical_qty": 1,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "catfish-fresh",
+   "name": "Fresh catfish",
+   "category": "fish_seafood",
+   "canonical_unit": "g",
+   "allergens": [
+    "fish"
+   ],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {
+    "yo": "eja aro"
+   },
+   "market_units": [
+    {
+     "label": "small fish",
+     "canonical_qty": 800,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    },
+    {
+     "label": "kg",
+     "canonical_qty": 1000,
+     "is_minimum": false,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "catfish-smoked",
+   "name": "Smoked catfish",
+   "category": "fish_seafood",
+   "canonical_unit": "piece",
+   "allergens": [
+    "fish"
+   ],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "piece",
+     "canonical_qty": 1,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "stockfish",
+   "name": "Stockfish",
+   "category": "fish_seafood",
+   "canonical_unit": "g",
+   "allergens": [
+    "fish"
+   ],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {
+    "yo": "panla",
+    "ig": "okporoko"
+   },
+   "market_units": [
+    {
+     "label": "₦ portion",
+     "canonical_qty": 80,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "dried-fish",
+   "name": "Dried fish",
+   "category": "fish_seafood",
+   "canonical_unit": "g",
+   "allergens": [
+    "fish"
+   ],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "₦ portion",
+     "canonical_qty": 80,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "tilapia",
+   "name": "Tilapia",
+   "category": "fish_seafood",
+   "canonical_unit": "piece",
+   "allergens": [
+    "fish"
+   ],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "piece",
+     "canonical_qty": 1,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "prawns",
+   "name": "Prawns / shrimps",
+   "category": "fish_seafood",
+   "canonical_unit": "g",
+   "allergens": [
+    "crustacean"
+   ],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "cup",
+     "canonical_qty": 150,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "periwinkle",
+   "name": "Periwinkle",
+   "category": "fish_seafood",
+   "canonical_unit": "g",
+   "allergens": [
+    "mollusc"
+   ],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {
+    "ef": "mfi"
+   },
+   "market_units": [
+    {
+     "label": "cup",
+     "canonical_qty": 150,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "clams",
+   "name": "Clams (ngolo)",
+   "category": "fish_seafood",
+   "canonical_unit": "g",
+   "allergens": [
+    "mollusc"
+   ],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "cup",
+     "canonical_qty": 150,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "crab",
+   "name": "Crab",
+   "category": "fish_seafood",
+   "canonical_unit": "piece",
+   "allergens": [
+    "crustacean"
+   ],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "piece",
+     "canonical_qty": 1,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  },
+  {
+   "slug": "bush-meat-smoked",
+   "name": "Smoked meat or fish for soups",
+   "category": "fish_seafood",
+   "canonical_unit": "g",
+   "allergens": [
+    "fish"
+   ],
+   "may_contain": [],
+   "animal": true,
+   "pork": false,
+   "local_names": {},
+   "market_units": [
+    {
+     "label": "₦ portion",
+     "canonical_qty": 100,
+     "is_minimum": true,
+     "sellable": true,
+     "placeholder": true
+    }
+   ],
+   "reference_observations": [],
+   "seed_price": null,
+   "house_group": null
+  }
+ ]
+}

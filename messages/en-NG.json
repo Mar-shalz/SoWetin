@@ -1,0 +1,45 @@
+{
+  "meta": {
+    "title": "SoWetin",
+    "description": "So, wetin I go chop? Real food. Honest prices. Decided."
+  },
+  "preview": {
+    "m0": "Preview build: this shows the look only. Nothing works yet."
+  },
+  "areas": {
+    "lagos": "Lagos"
+  },
+  "home": {
+    "greeting": {
+      "breakfast": "Morning o. So, what's for breakfast?",
+      "lunch": "Lunch o. So, what are we eating?",
+      "dinner": "Evening. So, what's for dinner?",
+      "late_night": "Late-night belle? So, what are we eating?"
+    },
+    "sentence": {
+      "_": "I have {budget} for {people}, and I'll {mode}.",
+      "people": "{count, plural, one {# person} other {# people}}",
+      "cook": "cook it",
+      "buy": "buy it",
+      "hint": "Tap a highlighted word to change it.",
+      "edit": "{value}. Change it"
+    },
+    "house": {
+      "empty": "What's in the house? Tap what you have."
+    },
+    "craving": {
+      "placeholder": "Craving something? Type am…"
+    },
+    "cta": {
+      "pick": "Pick for me",
+      "show3Instead": "Show me 3 instead",
+      "filters": "Filters"
+    },
+    "filters": {
+      "on": "Filters, {count} on"
+    }
+  },
+  "craving": {
+    "find": "Find"
+  }
+}

@@ -1,0 +1,183 @@
+/* Generated from design/tokens.json by scripts/tokens-css.mjs. Don't edit: change the tokens and run pnpm tokens. */
+
+/* Spacing: the token space scale (2, 4, 8 ... 64 px) sits on Tailwind's 4 px scale, so p-0.5 = 2 px, p-4 = 16 px. */
+
+@theme {
+  --color-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+  --breakpoint-*: initial;
+  --color-palm: #FF6B1A;
+  --color-palm-600: #E2560A;
+  --color-palm-100: #FFE3D1;
+  --color-enamel: #1F4FD8;
+  --color-enamel-100: #E3EAFF;
+  --color-ugu: #16784A;
+  --color-ugu-100: #DDF3E6;
+  --color-egusi: #FFC83D;
+  --color-egusi-100: #FFF3CF;
+  --color-amber: #B45309;
+  --color-amber-100: #FEF0DC;
+  --color-scotch: #C81E1E;
+  --color-scotch-100: #FDE2E2;
+  --color-cream: #FFF7EC;
+  --color-surface: #FFFFFF;
+  --color-sunken: #F6EBDD;
+  --color-ink: #1C1512;
+  --color-ink-2: #5B4A40;
+  --color-ink-3: #7A665A;
+  --color-line: #EADBC8;
+  --color-overlay: rgba(28, 21, 18, 0.48);
+  --color-focus: #1F4FD8;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-pill: 999px;
+  --radius-plate: 50%;
+  --shadow-button: 0 3px 0 #1C1512;
+  --shadow-button-press: 0 0 0 #1C1512;
+  --shadow-card: 0 2px 0 rgba(28,21,18,0.10), 0 8px 20px rgba(28,21,18,0.08);
+  --shadow-sheet: 0 -8px 24px rgba(28,21,18,0.14);
+  --breakpoint-sm: 360px;
+  --breakpoint-md: 480px;
+  --breakpoint-lg: 768px;
+  --breakpoint-xl: 1024px;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-enter: cubic-bezier(0, 0, 0, 1);
+  --ease-exit: cubic-bezier(0.3, 0, 1, 1);
+  --ease-spin-stop: cubic-bezier(0.15, 0.85, 0.25, 1.15);
+  --container-app: 480px;
+}
+
+@theme inline {
+  --font-display: var(--nf-display), 'Lufga', system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans', Arial, sans-serif;
+  --font-body: var(--nf-body), system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans', 'Helvetica Neue', Arial, sans-serif;
+  --font-numeric: var(--nf-body), system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans', Arial, sans-serif;
+}
+
+:root {
+  --sw-duration-instant: 0ms;
+  --sw-duration-micro: 90ms;
+  --sw-duration-fast: 160ms;
+  --sw-duration-base: 220ms;
+  --sw-duration-slow: 320ms;
+  --sw-duration-reveal: 600ms;
+  --sw-duration-spin: 1100ms;
+  --sw-duration-celebrate: 700ms;
+  --sw-size-touch-min: 48px;
+  --sw-size-button-h-l: 56px;
+  --sw-size-button-h-m: 48px;
+  --sw-size-chip-h: 40px;
+  --sw-size-app-column-max: 480px;
+  --sw-size-plate-illustration-card: 220px;
+  --sw-size-plate-illustration-hero: 300px;
+  --sw-size-icon: 24px;
+  --sw-z-base: 0;
+  --sw-z-sticky: 10;
+  --sw-z-nav: 20;
+  --sw-z-toast: 40;
+  --sw-z-sheet: 50;
+  --sw-z-overlay: 49;
+  --sw-z-reveal: 60;
+  --sw-border-interactive: 2px solid #1C1512;
+  --sw-border-subtle: 1px solid #EADBC8;
+}
+
+@utility type-display-xl {
+  font-family: var(--font-display);
+  font-size: 32px;
+  line-height: 36px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+@utility type-display-l {
+  font-family: var(--font-display);
+  font-size: 28px;
+  line-height: 32px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+}
+
+@utility type-title-l {
+  font-family: var(--font-display);
+  font-size: 22px;
+  line-height: 28px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+@utility type-title-m {
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 700;
+  letter-spacing: 0px;
+}
+
+@utility type-price-l {
+  font-family: var(--font-numeric);
+  font-size: 24px;
+  line-height: 28px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  font-variant-numeric: tabular-nums;
+}
+
+@utility type-price-m {
+  font-family: var(--font-numeric);
+  font-size: 18px;
+  line-height: 22px;
+  font-weight: 800;
+  letter-spacing: 0px;
+  font-variant-numeric: tabular-nums;
+}
+
+@utility type-body-l {
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 24px;
+  font-weight: 400;
+  letter-spacing: 0px;
+}
+
+@utility type-body-m {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 22px;
+  font-weight: 400;
+  letter-spacing: 0px;
+}
+
+@utility type-label {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+  letter-spacing: 0px;
+}
+
+@utility type-caption {
+  font-family: var(--font-body);
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  letter-spacing: 0px;
+}
+
+@utility type-cook-step {
+  font-family: var(--font-body);
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 500;
+  letter-spacing: 0px;
+}
+
+@utility type-input {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 400;
+  letter-spacing: 0px;
+}
