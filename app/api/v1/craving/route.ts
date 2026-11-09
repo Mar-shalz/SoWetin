@@ -37,7 +37,7 @@ export async function POST(request: Request) {
     cooked: cat.house.cooked.map((h) => ({ id: h.id, names: names(h.id, h.name) })),
     ingredients: [...cat.house.foodstuff, ...cat.house.basic].map((h) => ({ id: h.id, names: [h.name] })),
   };
-  const ai = C.CRAVING_AI_ENABLED ? publicAi(request) : null;
+  const ai = C.CRAVING_AI_ENABLED ? publicAi(request.headers) : null;
   const { craving, source } = await parseCraving(text, vocab, scene, ai, house);
 
   // Names for the chips, from the catalogue only.

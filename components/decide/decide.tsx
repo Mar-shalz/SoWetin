@@ -168,7 +168,7 @@ export function Decide({ greeting, house }: { greeting: ReactNode; house: HouseO
       setCravingNote('offTopic');
       return;
     }
-    const next: ActiveCraving = { c, labels: r.labels, before };
+    const next: ActiveCraving = { c, labels: r.labels, source: r.source, before };
     const o = {
       budget: c.budget_ngn ? clampBudget(c.budget_ngn) : before.budget,
       people: c.people ? clampPeople(c.people) : before.people,

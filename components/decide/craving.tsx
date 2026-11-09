@@ -10,7 +10,12 @@ import { formatNaira } from '@/lib/i18n/money';
 
 export type CravingReply = { craving: Craving; source: 'ai' | 'prepass'; labels: Record<string, string> };
 // The craving in play, and what the sentence said before it changed money, people or mode, so × can put them back.
-export type ActiveCraving = { c: Craving; labels: Record<string, string>; before: { budget: number; people: number; mode: 'cook' | 'buy' } };
+export type ActiveCraving = {
+  c: Craving;
+  labels: Record<string, string>;
+  source: 'ai' | 'prepass';
+  before: { budget: number; people: number; mode: 'cook' | 'buy' };
+};
 export type Chip = { id: string; label: string };
 type T = ReturnType<typeof useTranslations>;
 
@@ -200,6 +205,7 @@ export function CravingChips({
             ))}
           </ul>
           <p className="mt-2 type-caption text-ink-2">{t('craving.understood')}</p>
+          {active.source === 'ai' && <p className="mt-1 type-caption text-ink-2">{t('ai.note.craving')}</p>}
         </div>
       )}
       {cooking && !!found.length && (

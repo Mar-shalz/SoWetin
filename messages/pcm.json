@@ -140,6 +140,11 @@
     "people": {
       "fewer": "Reduce people",
       "more": "Add people"
+    },
+    "askChef": "Ask Chef",
+    "allergens": {
+      "contains": "E get {list} inside.",
+      "may": "E fit get {list} inside."
     }
   },
   "recipe": {
@@ -296,8 +301,11 @@
   },
   "ai": {
     "note": {
-      "full": "SoWetin dey use AI understand wetin you type, answer cooking question, help draft recipe and read price report wey dem publish. AI no dey set price by himself. Our code dey check every price wey e read against where e get am, and our people dey go market check. AI fit make mistake, so e no get last word for allergy or health matter. We no dey send your name, email or phone number go the AI service."
-    }
+      "full": "SoWetin dey use AI understand wetin you type, answer cooking question, help draft recipe and read price report wey dem publish. AI no dey set price by himself. Our code dey check every price wey e read against where e get am, and our people dey go market check. AI fit make mistake, so e no get last word for allergy or health matter. We no dey send your name, email or phone number go the AI service.",
+      "chef": "Chef na AI, e fit make mistake. For allergy matter, check the label and ask the seller.",
+      "craving": "I use AI read wetin you type. If I no catch am well, tap one chip fix am."
+    },
+    "quota": "You don ask plenty question today. Picks still dey work. Chef go come back tomorrow."
   },
   "allergy": {
     "note": {
@@ -564,6 +572,38 @@
       "_": "Language",
       "en": "English",
       "pcm": "Naija Pidgin"
+    }
+  },
+  "allergen": {
+    "crustacean": "crustacean",
+    "mollusc": "mollusc",
+    "fish": "fish",
+    "groundnut": "groundnut",
+    "tree_nut": "tree nut",
+    "coconut": "coconut",
+    "egg": "egg",
+    "dairy": "milk things",
+    "gluten": "gluten",
+    "soy": "soya",
+    "sesame": "beniseed"
+  },
+  "chef": {
+    "label": "Chef tip · AI",
+    "placeholder": "Ask anything about this food",
+    "suggest": {
+      "noCrayfish": "Crayfish no dey, wetin I fit use?",
+      "lessOil": "I fit use small oil?",
+      "burning": "How I go stop am from burning?"
+    },
+    "allergyWarning": "Hold on: this change go add {allergens}.",
+    "medical": "That one na for doctor or dietitian, no be me. See cooking tip instead.",
+    "busy": "Chef step out small. Try again small time.",
+    "send": "Ask am",
+    "thinking": "Chef dey think…",
+    "close": "Close",
+    "swap": {
+      "use": "Use {with} instead of {replace}",
+      "line": "{with} (instead of {replace})"
     }
   }
 }

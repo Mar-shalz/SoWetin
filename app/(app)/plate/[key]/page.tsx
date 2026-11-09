@@ -7,7 +7,12 @@ import { plateComponents } from '@/lib/engine/plate';
 import { pictureUrl } from '@/lib/db/env';
 import { formatNaira } from '@/lib/i18n/money';
 import { PriceSheet } from '@/components/decide/price-sheet';
+import { AllergenLine } from '@/components/plate/allergen-line';
+import { AskChef } from '@/components/plate/ask-chef';
+import { chefSetup } from '@/components/plate/chef-setup';
 import { CopyButton } from '@/components/plate/copy-button';
+import { IngredientName } from '@/components/plate/swaps';
+import { allergenLine, allergenTags } from '@/lib/plates/allergens';
 import { SaveButton } from '@/components/plate/save-button';
 import { Videos, type VideoRef } from '@/components/plate/videos';
 import { catalogueForRequest, costFn, lagosToday, parsePlateKey, receipt } from '@/lib/plates/serve';
@@ -27,7 +32,8 @@ const round = (n: number) => Math.round(n / C.PRICE_ROUNDING_NGN) * C.PRICE_ROUN
 const amount = (n: number) => (n >= 10 ? Math.round(n) : Math.round(n * 10) / 10);
 
 // S-004 written method first and S-006 market list, for one plate and a people count (doc 07, GET /plates/{plateKey}).
-// shortcut: one page for both, no tabs, cook mode or videos yet (M2 polish), and amounts in grams until market words land.
+// Ask Chef sits under each dish's method (S-019), the allergen line under the videos (S-004 item 9).
+// shortcut: one page for both, no component tabs, and amounts in grams until market words land.
 export default async function PlatePage({ params, searchParams }: { params: Promise<{ key: string }>; searchParams: Promise<{ people?: string }> }) {
   const [{ key }, sp, t] = await Promise.all([params, searchParams, getTranslations()]);
   const people = Math.min(C.PEOPLE_MAX, Math.max(C.PEOPLE_MIN, Number(sp.people) || C.PEOPLE_DEFAULT));
@@ -48,6 +54,7 @@ export default async function PlatePage({ params, searchParams }: { params: Prom
   const order = [...ids].sort((a, b) => (cat.display.get(b)?.totalMinutes ?? 0) - (cat.display.get(a)?.totalMinutes ?? 0));
   const allPublished = ids.every((id) => cat.display.get(id)?.status === 'published');
   const unit = (id: string) => cat.book.ingredients[id]?.canonicalUnit ?? 'g';
+  const chef = await chefSetup(allergenTags(cat.snap));
   // The list as plain text for WhatsApp or the clipboard; prices stay labelled as estimates (BR-21).
   const marketText = cost
     ? [
@@ -147,7 +154,7 @@ export default async function PlatePage({ params, searchParams }: { params: Prom
               <ul className="mt-1 grid gap-1">
                 {c.lines.map((l) => (
                   <li key={l.ingredientId}>
-                    {cat.names.get(l.ingredientId) ?? l.ingredientId}
+                    <IngredientName component={id} id={l.ingredientId} name={cat.names.get(l.ingredientId) ?? l.ingredientId} />
                     {l.qtyPerServing !== null && (
                       <span className="text-ink-2">
                         {' '}
@@ -207,6 +214,7 @@ export default async function PlatePage({ params, searchParams }: { params: Prom
                   <span className="type-label">{t('recipe.serve')}:</span> {m.serving_note}
                 </p>
               )}
+              {chef.on && <AskChef component={id} dish={cat.display.get(id)?.name ?? id} people={people} en={chef.en} />}
             </article>
           );
         })}
@@ -217,6 +225,7 @@ export default async function PlatePage({ params, searchParams }: { params: Prom
             .filter((v) => v.status === 'approved' && v.rank)
             .sort((a, b) => a.rank! - b.rank!)}
         />
+        <AllergenLine {...allergenLine(ids, cat.snap, cat.names)} />
       </section>
 
       {cost && (

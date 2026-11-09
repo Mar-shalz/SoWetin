@@ -7,7 +7,12 @@ import { getTranslations } from 'next-intl/server';
 import { cache } from 'react';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
 import { pictureUrl, siteUrl } from '@/lib/db/env';
+import { AllergenLine } from '@/components/plate/allergen-line';
+import { AskChef } from '@/components/plate/ask-chef';
+import { chefSetup } from '@/components/plate/chef-setup';
+import { IngredientName } from '@/components/plate/swaps';
 import { Videos, type VideoRef } from '@/components/plate/videos';
+import { allergenLine, allergenTags } from '@/lib/plates/allergens';
 import { formatNaira } from '@/lib/i18n/money';
 import { catalogueForRequest, lagosToday } from '@/lib/plates/serve';
 import { cookServings, costPlate } from '@/lib/pricing/costPlate';
@@ -97,7 +102,9 @@ export default async function DishPage({ params }: { params: Promise<{ slug: str
     : null;
   const unit = (id: string) => cat.book.ingredients[id]?.canonicalUnit ?? 'g';
   const amount = (n: number) => (n >= 10 ? Math.round(n) : Math.round(n * 10) / 10);
+  const chef = await chefSetup(allergenTags(cat.snap));
   const ingredients = (c?.lines ?? []).map((l) => ({
+    id: l.ingredientId,
     name: cat.names.get(l.ingredientId) ?? l.ingredientId,
     qty: l.qtyPerServing === null ? null : `${amount(l.qtyPerServing * servings)} ${unit(l.ingredientId)}`,
   }));
@@ -189,8 +196,8 @@ export default async function DishPage({ params }: { params: Promise<{ slug: str
         </h2>
         <ul className="mt-1 grid gap-1">
           {ingredients.map((i) => (
-            <li key={i.name}>
-              {i.name}
+            <li key={i.id}>
+              <IngredientName component={dish.id} id={i.id} name={i.name} />
               {i.qty && <span className="text-ink-2"> {i.qty}</span>}
             </li>
           ))}
@@ -245,6 +252,7 @@ export default async function DishPage({ params }: { params: Promise<{ slug: str
           <span className="type-label">{t('recipe.storage')}:</span> {dish.storage}
         </p>
       )}
+      {chef.on && c && <AskChef component={dish.id} dish={dish.name} people={people} en={chef.en} />}
       {published && (
         <p className="type-caption text-ink-2">
           {t('recipes.note.line')}{' '}
@@ -255,6 +263,7 @@ export default async function DishPage({ params }: { params: Promise<{ slug: str
       )}
 
       <Videos videos={dish.videos.filter((v) => v.status === 'approved' && v.rank).sort((a, b) => a.rank! - b.rank!)} />
+      <AllergenLine {...allergenLine([dish.id], cat.snap, cat.names)} />
 
       {!!goesWith.length && (
         <section aria-labelledby="goes-with">

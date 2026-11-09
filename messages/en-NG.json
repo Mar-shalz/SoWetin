@@ -140,6 +140,11 @@
     "people": {
       "fewer": "Fewer people",
       "more": "More people"
+    },
+    "askChef": "Ask Chef",
+    "allergens": {
+      "contains": "Contains: {list}",
+      "may": "May contain: {list}"
     }
   },
   "recipe": {
@@ -296,8 +301,11 @@
   },
   "ai": {
     "note": {
-      "full": "SoWetin uses AI to understand what you type, answer cooking questions, help draft recipes and read published price reports. AI never sets a price on its own. Every price it reads is checked against its source by our code, and our team checks markets in person. AI can make mistakes, so it never has the final word on allergies or health. We don't send your name, email or phone number to the AI service."
-    }
+      "full": "SoWetin uses AI to understand what you type, answer cooking questions, help draft recipes and read published price reports. AI never sets a price on its own. Every price it reads is checked against its source by our code, and our team checks markets in person. AI can make mistakes, so it never has the final word on allergies or health. We don't send your name, email or phone number to the AI service.",
+      "chef": "Chef is AI and can get things wrong. For allergies, check labels and ask the seller.",
+      "craving": "I read what you typed with AI. If I got it wrong, tap a chip to fix it."
+    },
+    "quota": "That's a lot of questions today. Picks still work. Chef is back tomorrow."
   },
   "allergy": {
     "note": {
@@ -564,6 +572,38 @@
       "_": "Language",
       "en": "English",
       "pcm": "Naija Pidgin"
+    }
+  },
+  "allergen": {
+    "crustacean": "crustacean",
+    "mollusc": "mollusc",
+    "fish": "fish",
+    "groundnut": "groundnut",
+    "tree_nut": "tree nut",
+    "coconut": "coconut",
+    "egg": "egg",
+    "dairy": "dairy",
+    "gluten": "gluten",
+    "soy": "soy",
+    "sesame": "sesame"
+  },
+  "chef": {
+    "label": "Chef tip · AI",
+    "placeholder": "Ask about this dish",
+    "suggest": {
+      "noCrayfish": "No crayfish, what can I use?",
+      "lessOil": "Can I use less oil?",
+      "burning": "How do I stop it burning?"
+    },
+    "allergyWarning": "Heads up: this swap adds {allergens}.",
+    "medical": "That one's for a doctor or dietitian, not me. Here's a cooking tip instead.",
+    "busy": "Chef stepped out. Try again in a bit.",
+    "send": "Ask",
+    "thinking": "Chef is thinking…",
+    "close": "Close",
+    "swap": {
+      "use": "Use {with} for {replace}",
+      "line": "{with} (instead of {replace})"
     }
   }
 }
