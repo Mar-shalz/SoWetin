@@ -1,16 +1,18 @@
 import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 import { Decide } from '@/components/decide/decide';
-import { ChevronIcon, HouseIcon, SearchIcon } from '@/components/ui/icons';
+import { SearchIcon } from '@/components/ui/icons';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
 import { catalogueHealth } from '@/lib/db/health';
 import { mealTimeAt } from '@/lib/engine/time';
+import { catalogueForRequest } from '@/lib/plates/serve';
 
 // S-001 Decide: the sentence, Pick for me and the plate cards live in <Decide>; the house and craving rows come later in M2.
 export default async function DecidePage() {
   const t = await getTranslations();
   const greeting = t(`home.greeting.${mealTimeAt(new Date(), C.MEAL_WINDOWS, C.TIMEZONE)}`);
   const cut = greeting.search(/[.?!]\s/);
+  const { cat } = await catalogueForRequest();
   return (
     <main className="mx-auto flex min-h-dvh max-w-app flex-col px-4 pb-6">
       <p className="-mx-4 bg-ink px-4 py-2 type-caption text-cream">
@@ -22,6 +24,7 @@ export default async function DecidePage() {
       </p>
 
       <Decide
+        house={cat?.house ?? { cooked: [], foodstuff: [], basic: [] }}
         greeting={
           <h1 className="mt-2">
             {cut > 0 && <span className="block type-body-l text-ink-2">{greeting.slice(0, cut + 1)}</span>}
@@ -29,12 +32,6 @@ export default async function DecidePage() {
           </h1>
         }
       >
-        <div className="mt-6 flex min-h-14 items-center gap-3 rounded-lg border-2 border-ink bg-surface px-4 type-label">
-          <HouseIcon />
-          <span className="flex-1">{t('home.house.empty')}</span>
-          <ChevronIcon />
-        </div>
-
         <div className="mt-3 flex min-h-14 items-center gap-2 rounded-pill border-2 border-ink bg-surface pl-4 pr-2">
           <SearchIcon size={20} />
           <span className="min-w-0 flex-1 truncate type-input text-ink-3">{t('home.craving.placeholder')}</span>

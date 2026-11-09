@@ -26,7 +26,8 @@
       "edit": "{value}. Change it"
     },
     "house": {
-      "empty": "What's in the house? Tap what you have."
+      "empty": "What's in the house? Tap what you have.",
+      "summary": "{items}"
     },
     "craving": {
       "placeholder": "Craving something? Type am…"
@@ -60,7 +61,12 @@
     },
     "why": {
       "time": "{minutes} min",
-      "fits": "Fits {budget} with {spare} spare"
+      "fits": "Fits {budget} with {spare} spare",
+      "house": {
+        "cooked": "With your {component}",
+        "items": "Uses your {items}",
+        "buy": "buy about {amount} more"
+      }
     },
     "cta": {
       "go": "Let's go",
@@ -73,7 +79,10 @@
       "single": "Your plate",
       "deck": "Three plates"
     },
-    "basis": "For {budget} · {people}",
+    "basis": {
+      "_": "For {budget} · {people}",
+      "house": "using your kitchen"
+    },
     "swap": {
       "_": "Swap",
       "label": "Swap {component}",
@@ -99,7 +108,8 @@
   "detail": {
     "back": "Back",
     "cta": {
-      "market": "Market list"
+      "market": "Market list",
+      "cook": "Start cooking"
     },
     "price": {
       "sources": "Based on {count, plural, one {# price report} other {# price reports}} · checked {relative}"
@@ -188,5 +198,50 @@
     "apply": "Show plates",
     "reset": "Reset",
     "close": "Close"
+  },
+  "house": {
+    "title": "What's in the house?",
+    "subtitle": "Tap what you have. I'll pick around it.",
+    "group": {
+      "cooked": "Cooked and waiting",
+      "foodstuff": "Foodstuff",
+      "basic": "Kitchen basics"
+    },
+    "basic": {
+      "collapsed": "Kitchen basics ({count} selected)"
+    },
+    "cooked": {
+      "age": {
+        "today": "today",
+        "from": "from {day}"
+      }
+    },
+    "more": "More",
+    "cta": "Show me what I can cook",
+    "clear": "Clear all",
+    "close": "Close"
+  },
+  "cook": {
+    "next": "Next",
+    "back": "Back",
+    "close": "Close",
+    "step": "Step {n} of {total}",
+    "divider": "{done} done. Now the {next}.",
+    "timer": {
+      "start": "Start {minutes} min timer",
+      "left": "{name}: {time} left",
+      "done": "Time! {stepName} is done."
+    },
+    "screenOn": "Keep your screen on while you cook.",
+    "finish": {
+      "title": "Done? How did it go?",
+      "ateIt": "Ate it",
+      "pot": {
+        "_": "Got {component} left? Add it to your kitchen",
+        "add": "Add it",
+        "no": "No",
+        "added": "Added. I'll find what goes with it next time."
+      }
+    }
   }
 }

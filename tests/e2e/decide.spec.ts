@@ -22,3 +22,13 @@ test('filters open, apply and show their count', async ({ page }) => {
   await expect(page.getByRole('dialog', { name: 'Filters' })).toBeHidden();
   await expect(page.getByRole('button', { name: 'Filters, 1 on' })).toBeVisible();
 });
+
+// S-024: the house row opens its sheet, and the sheet closes again.
+test("what's in the house opens and closes", async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: "What's in the house? Tap what you have." }).click();
+  const sheet = page.getByRole('dialog', { name: "What's in the house?" });
+  await expect(sheet).toBeVisible();
+  await sheet.getByRole('button', { name: 'Close' }).click();
+  await expect(sheet).toBeHidden();
+});

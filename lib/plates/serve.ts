@@ -153,6 +153,12 @@ export function plateView(sp: ScoredPlate, cat: Catalogue, ctx: Pick<Context, 'h
       gap_ngn: sp.gapNgn,
       receipt: receipt(c, cat),
     },
+    // The why line names house items first (doc 11): cooked food on the plate, then foodstuff it uses.
+    uses_house: [
+      ...ids.filter((id) => ctx.house.cooked.includes(id)).map((id) => cat.display.get(id)?.name ?? id),
+      ...c.pantryUsed.map((id) => cat.names.get(id) ?? id),
+    ],
+    uses_cooked: ids.some((id) => ctx.house.cooked.includes(id)),
     total_minutes: plateMinutes(
       ids.map((id) => cat.snap.components.get(id)!),
       { house: ctx.house } as Context,

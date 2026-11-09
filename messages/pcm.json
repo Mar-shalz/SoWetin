@@ -26,7 +26,8 @@
       "edit": "{value}. Change am"
     },
     "house": {
-      "empty": "Wetin dey house? Tap wetin you get."
+      "empty": "Wetin dey house? Tap wetin you get.",
+      "summary": "{items}"
     },
     "craving": {
       "placeholder": "You dey crave something? Type am…"
@@ -60,7 +61,12 @@
     },
     "why": {
       "time": "{minutes} min",
-      "fits": "E fit {budget}, {spare} go remain"
+      "fits": "E fit {budget}, {spare} go remain",
+      "house": {
+        "cooked": "With the {component} wey you get",
+        "items": "E go use your {items}",
+        "buy": "buy about {amount} more"
+      }
     },
     "cta": {
       "go": "Oya, make we go",
@@ -73,7 +79,10 @@
       "single": "Your plate",
       "deck": "Three plates"
     },
-    "basis": "For {budget} · {people}",
+    "basis": {
+      "_": "For {budget} · {people}",
+      "house": "with wetin dey your kitchen"
+    },
     "swap": {
       "_": "Change am",
       "label": "Change {component}",
@@ -99,7 +108,8 @@
   "detail": {
     "back": "Go back",
     "cta": {
-      "market": "Market list"
+      "market": "Market list",
+      "cook": "Make we start to cook"
     },
     "price": {
       "sources": "E come from {count, plural, one {# price report} other {# price reports}} · we check am {relative}"
@@ -188,5 +198,50 @@
     "apply": "Show me plates",
     "reset": "Clear am",
     "close": "Close"
+  },
+  "house": {
+    "title": "Wetin dey house?",
+    "subtitle": "Tap wetin you get. I go pick around am.",
+    "group": {
+      "cooked": "Food wey don cook",
+      "foodstuff": "Foodstuff",
+      "basic": "Kitchen basics"
+    },
+    "basic": {
+      "collapsed": "Kitchen basics ({count} don select)"
+    },
+    "cooked": {
+      "age": {
+        "today": "today",
+        "from": "from {day}"
+      }
+    },
+    "more": "More",
+    "cta": "Show me wetin I fit cook",
+    "clear": "Clear everything",
+    "close": "Close"
+  },
+  "cook": {
+    "next": "Next",
+    "back": "Back",
+    "close": "Close",
+    "step": "Step {n} of {total}",
+    "divider": "{done} don do. Now na the {next}.",
+    "timer": {
+      "start": "Start {minutes} min timer",
+      "left": "{name}: {time} remain",
+      "done": "Time don reach! {stepName} don do."
+    },
+    "screenOn": "Make your screen dey on as you dey cook.",
+    "finish": {
+      "title": "You don finish? How e be?",
+      "ateIt": "I don chop am",
+      "pot": {
+        "_": "{component} remain? Add am to your kitchen",
+        "add": "Add am",
+        "no": "No",
+        "added": "I don add am. Next time I go find wetin go with am."
+      }
+    }
   }
 }

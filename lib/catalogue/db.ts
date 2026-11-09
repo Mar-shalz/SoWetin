@@ -9,7 +9,10 @@ import type { LineGroup, PriceBook, PricePoint, SourceKind } from '@/lib/pricing
 // Whoever asks decides what it holds: the public key sees published dishes only (BR-40); a signed-in admin or
 // editor also sees drafts, through the same row-level security, so staff can preview dishes before publishing.
 export type Display = { name: string; localName: string | null; picture: string | null; status: string; totalMinutes: number };
-export type Catalogue = { snap: Snapshot; book: PriceBook; display: Map<string, Display>; names: Map<string, string>; drafts: boolean };
+type Item = { id: string; name: string };
+// S-024 chips: cooked dishes marked house_chip, and the foodstuff and kitchen basics people say they have (D-18).
+export type HouseOptions = { cooked: Item[]; foodstuff: Item[]; basic: Item[] };
+export type Catalogue = { snap: Snapshot; book: PriceBook; display: Map<string, Display>; names: Map<string, string>; drafts: boolean; house: HouseOptions };
 
 const sortedKey = (a: string, b: string) => (a < b ? `${a}|${b}` : `${b}|${a}`);
 const CACHE_MS = 60_000;
@@ -49,12 +52,12 @@ export async function loadCatalogue(client: SupabaseClient, area = C.DEFAULT_ARE
     client
       .from('components')
       .select(
-        'id, name, local_names, types, region, cuisine_family, meal_times, total_minutes, spice_level, effort, tags, popularity_prior, protein_included, needs_sauce, vegetarian_ok, batch_servings_min, status, illustration_path, component_ingredients(ingredient_id, optional, qty_per_serving, grp)',
+        'id, name, local_names, types, region, cuisine_family, meal_times, total_minutes, spice_level, effort, tags, popularity_prior, protein_included, needs_sauce, vegetarian_ok, batch_servings_min, status, illustration_path, house_chip, component_ingredients(ingredient_id, optional, qty_per_serving, grp)',
       )
       .neq('status', 'retired'),
     client
       .from('ingredients')
-      .select('id, name, allergens, may_contain, is_animal, canonical_unit, market_units(label, canonical_qty, sellable, is_minimum, area_id)'),
+      .select('id, name, allergens, may_contain, is_animal, canonical_unit, house_group, market_units(label, canonical_qty, sellable, is_minimum, area_id)'),
     client.from('plate_templates').select('key, meal_times, main_slot, slots'),
     client.from('pairings').select('component_a, component_b, score').eq('status', 'approved'),
     client.from('pairing_defaults').select('type_a, type_b, score'),
@@ -147,6 +150,11 @@ export async function loadCatalogue(client: SupabaseClient, area = C.DEFAULT_ARE
     display,
     names: new Map(ingredients.map((i) => [i.id as string, i.name as string])),
     drafts: components.some((c) => c.status !== 'published'),
+    house: {
+      cooked: components.filter((c) => c.house_chip).map((c) => ({ id: c.id as string, name: c.name as string })),
+      foodstuff: ingredients.filter((i) => i.house_group === 'foodstuff').map((i) => ({ id: i.id as string, name: i.name as string })),
+      basic: ingredients.filter((i) => i.house_group === 'basic').map((i) => ({ id: i.id as string, name: i.name as string })),
+    },
   };
 }
 

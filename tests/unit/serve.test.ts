@@ -45,6 +45,7 @@ const cat: Catalogue = {
   ),
   names: new Map(INGREDIENTS.ingredients.map((i) => [i.slug, i.name])),
   drafts: true,
+  house: { cooked: [], foodstuff: [], basic: [] },
 };
 
 describe('suggestions served from the database catalogue', () => {

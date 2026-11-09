@@ -5,7 +5,9 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { PriceSheet } from '@/components/decide/price-sheet';
-import { CaretIcon, SlidersIcon } from '@/components/ui/icons';
+import { EMPTY_KITCHEN, kitchenForApi, lagosToday as today, saveKitchen, useKitchen, type Kitchen } from '@/components/decide/kitchen';
+import { CaretIcon, ChevronIcon, HouseIcon, SlidersIcon } from '@/components/ui/icons';
+import type { HouseOptions } from '@/lib/catalogue/db';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
 import type { MealTime } from '@/lib/engine/time';
 import { formatNaira } from '@/lib/i18n/money';
@@ -29,7 +31,7 @@ const activeFilters = (f: Filters) => [f.meal_time, f.plate_types.length, f.max_
 // S-001 Decide: the top bar with Filters (S-007), the one-sentence answers, Pick for me or three plates (S-003),
 // a Swap per dish (BR-37), and the price receipt (S-023).
 // shortcut: native pickers and <dialog> sheets; the motion of doc 10 comes with the M2 polish.
-export function Decide({ greeting, children }: { greeting: ReactNode; children?: ReactNode }) {
+export function Decide({ greeting, house, children }: { greeting: ReactNode; house: HouseOptions; children?: ReactNode }) {
   const t = useTranslations();
   const [budget, setBudget] = useState<number>(C.FIRST_VISIT_DEFAULT_BUDGET);
   const [people, setPeople] = useState<number>(C.PEOPLE_DEFAULT);
@@ -45,6 +47,11 @@ export function Decide({ greeting, children }: { greeting: ReactNode; children?:
   const [notice, setNotice] = useState<string | null>(null);
   const answer = useRef<HTMLElement>(null);
   const sheet = useRef<HTMLDialogElement>(null);
+  const houseSheet = useRef<HTMLDialogElement>(null);
+  const [houseOpens, setHouseOpens] = useState(0);
+  const kitchen = useKitchen();
+  const cooking = mode === 'cook';
+  const inKitchen = cooking && kitchen.cooked.length + kitchen.foodstuff.length + kitchen.basic.length > 0;
   // New answers scroll into view above the sticky buttons; instantly when the phone asks for reduced motion (doc 10).
   useEffect(() => {
     if (result || failed)
@@ -53,7 +60,7 @@ export function Decide({ greeting, children }: { greeting: ReactNode; children?:
 
   const scene = (f: Filters = filters) => {
     const { meal_time, ...rest } = f;
-    return { budget_ngn: budget, people, mode, meal_time, filters: rest };
+    return { budget_ngn: budget, people, mode, meal_time, filters: rest, house: kitchenForApi(kitchen) };
   };
 
   async function post<T>(url: string, body: object): Promise<T | null> {
@@ -203,12 +210,53 @@ export function Decide({ greeting, children }: { greeting: ReactNode; children?:
         })}
       </p>
       <p className="mt-3 type-caption text-ink-2">{t('home.sentence.hint')}</p>
+      {cooking && (
+        <button
+          type="button"
+          onClick={() => {
+            setHouseOpens(houseOpens + 1);
+            houseSheet.current?.showModal();
+          }}
+          className="mt-6 flex min-h-14 w-full items-center gap-3 rounded-lg border-2 border-ink bg-surface px-4 text-left type-label"
+        >
+          <HouseIcon />
+          <span className="flex-1">{inKitchen ? t('home.house.summary', { items: houseNames(kitchen, house).join(', ') }) : t('home.house.empty')}</span>
+          <ChevronIcon />
+        </button>
+      )}
+      <dialog
+        ref={houseSheet}
+        aria-labelledby="house-title"
+        className="mx-auto mb-0 mt-auto max-h-[85dvh] w-full max-w-app rounded-t-xl border-2 border-ink bg-surface p-5 text-ink backdrop:bg-overlay"
+      >
+        {/* Keyed per opening, so the sheet's first-look choices (basics folded or not) are made fresh each time. */}
+        <HouseSheet
+          key={houseOpens}
+          options={house}
+          kitchen={kitchen}
+          onShow={() => {
+            houseSheet.current?.close();
+            void pick(C.DECK_SIZE);
+          }}
+        />
+      </dialog>
       {children}
 
       <section ref={answer} aria-live="polite" className="mt-6 grid scroll-mt-4 gap-4">
         {slow && <p className="text-ink-2">{t('reveal.slow')}</p>}
         {failed && <p className="text-scotch">{t('error.generic')}</p>}
-        {result && <Results result={result} budget={budget} people={people} peopleLabel={peopleLabel} onNotThis={replace} onSwap={swap} busy={busy} />}
+        {result && (
+          <Results
+            result={result}
+            budget={budget}
+            people={people}
+            peopleLabel={peopleLabel}
+            inKitchen={inKitchen}
+            onNotThis={replace}
+            onSwap={swap}
+            busy={busy}
+          />
+        )}
         {notice && <p className="text-ink-2">{notice}</p>}
       </section>
 
@@ -303,6 +351,7 @@ function Results({
   budget,
   people,
   peopleLabel,
+  inKitchen,
   onNotThis,
   onSwap,
   busy,
@@ -311,6 +360,7 @@ function Results({
   budget: number;
   people: number;
   peopleLabel: string;
+  inKitchen: boolean;
   onNotThis: (i: number) => void;
   onSwap: (i: number, slot: string) => void;
   busy: boolean;
@@ -329,7 +379,10 @@ function Results({
       ) : (
         <div>
           <h2 className="type-title-m">{t(result.plates.length > 1 ? 'plate.title.deck' : 'plate.title.single')}</h2>
-          <p className="type-caption text-ink-2">{t('plate.basis', { budget: formatNaira(budget), people: peopleLabel })}</p>
+          <p className="type-caption text-ink-2">
+            {t('plate.basis._', { budget: formatNaira(budget), people: peopleLabel })}
+            {inKitchen && ` · ${t('plate.basis.house')}`}
+          </p>
         </div>
       )}
       {result.plates.map((p, i) => (
@@ -429,6 +482,12 @@ function PlateCard({
       ) : (
         spare >= 0 && <p className="mt-1 type-label text-ugu">{t('plate.why.fits', { budget: formatNaira(budget), spare: formatNaira(spare) })}</p>
       )}
+      {!!p.uses_house.length && (
+        <p className="mt-1 type-label text-ugu">
+          {p.uses_cooked ? t('plate.why.house.cooked', { component: p.uses_house[0] }) : t('plate.why.house.items', { items: p.uses_house.join(', ') })} ·{' '}
+          {t('plate.why.house.buy', { amount: formatNaira(Math.round((price.low_ngn + price.high_ngn) / 2 / C.PRICE_ROUNDING_NGN) * C.PRICE_ROUNDING_NGN) })}
+        </p>
+      )}
       <ul className="mt-3 grid gap-2">
         {p.slots.map((s) => (
           <li key={`${s.slot}-${s.component.id}`} className="flex items-center justify-between gap-3 border-t border-line pt-2">
@@ -497,5 +556,97 @@ function FirstPriceNote({ sheet }: { sheet: SheetProps }) {
         </PriceSheet>
       </div>
     </div>
+  );
+}
+
+const houseNames = (k: Kitchen, o: HouseOptions) => {
+  const name = (list: { id: string; name: string }[], id: string) => list.find((x) => x.id === id)?.name ?? id;
+  return [...k.cooked.map((c) => name(o.cooked, c.id)), ...k.foodstuff.map((id) => name(o.foodstuff, id)), ...k.basic.map((id) => name(o.basic, id))];
+};
+const FOODSTUFF_SHOWN = 10;
+
+// S-024 What's in the house? Every tap saves at once, on this phone. Cooked food carries its day ("today", "from Sunday").
+// shortcut: no "Anything else?" text (it needs the AI parser, M3), no "Other soup or stew" search, no live preview.
+function HouseSheet({ options, kitchen, onShow }: { options: HouseOptions; kitchen: Kitchen; onShow: () => void }) {
+  const t = useTranslations('house');
+  const [allFood, setAllFood] = useState(false);
+  // Basics collapse once some are chosen, decided when the sheet opens so it never folds away mid-tap.
+  const [basicsOpen] = useState(!kitchen.basic.length);
+  const now = today();
+  const chip = (active: boolean) => `min-h-12 rounded-pill border-2 px-4 type-label ${active ? 'border-ink bg-palm-100' : 'border-ink-3 bg-surface'}`;
+  const toggle = (group: 'foodstuff' | 'basic', id: string) =>
+    saveKitchen({ ...kitchen, [group]: kitchen[group].includes(id) ? kitchen[group].filter((x) => x !== id) : [...kitchen[group], id] });
+  const toggleCooked = (id: string) =>
+    saveKitchen({
+      ...kitchen,
+      cooked: kitchen.cooked.some((c) => c.id === id) ? kitchen.cooked.filter((c) => c.id !== id) : [...kitchen.cooked, { id, at: now }],
+    });
+  const age = (at: string) =>
+    at === now ? t('cooked.age.today') : t('cooked.age.from', { day: new Intl.DateTimeFormat('en-NG', { weekday: 'long' }).format(new Date(at)) });
+  const items = (list: { id: string; name: string }[], group: 'foodstuff' | 'basic') =>
+    list.map((i) => (
+      <button
+        key={i.id}
+        type="button"
+        aria-pressed={kitchen[group].includes(i.id)}
+        onClick={() => toggle(group, i.id)}
+        className={chip(kitchen[group].includes(i.id))}
+      >
+        {i.name}
+      </button>
+    ));
+  return (
+    <>
+      <div className="flex items-center justify-between">
+        <h2 id="house-title" className="type-title-l">
+          {t('title')}
+        </h2>
+        <form method="dialog">
+          <button className="min-h-12 px-3 type-label underline">{t('close')}</button>
+        </form>
+      </div>
+      <p className="text-ink-2">{t('subtitle')}</p>
+      {!!options.cooked.length && (
+        <fieldset className="mt-5">
+          <legend className="type-label">{t('group.cooked')}</legend>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {options.cooked.map((c) => {
+              const have = kitchen.cooked.find((k) => k.id === c.id);
+              return (
+                <button key={c.id} type="button" aria-pressed={!!have} onClick={() => toggleCooked(c.id)} className={chip(!!have)}>
+                  {c.name}
+                  {have && <span className="text-ink-2"> · {age(have.at)}</span>}
+                </button>
+              );
+            })}
+          </div>
+        </fieldset>
+      )}
+      <fieldset className="mt-5">
+        <legend className="type-label">{t('group.foodstuff')}</legend>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {items(allFood ? options.foodstuff : options.foodstuff.slice(0, FOODSTUFF_SHOWN), 'foodstuff')}
+          {!allFood && options.foodstuff.length > FOODSTUFF_SHOWN && (
+            <button type="button" onClick={() => setAllFood(true)} className="min-h-12 px-3 type-label underline">
+              {t('more')}
+            </button>
+          )}
+        </div>
+      </fieldset>
+      <details open={basicsOpen} className="mt-5">
+        <summary className="min-h-12 cursor-pointer py-3 type-label">
+          {kitchen.basic.length ? t('basic.collapsed', { count: kitchen.basic.length }) : t('group.basic')}
+        </summary>
+        <div className="mt-2 flex flex-wrap gap-2">{items(options.basic, 'basic')}</div>
+      </details>
+      <div className="mt-6 grid gap-2">
+        <button type="button" onClick={onShow} className="min-h-14 rounded-pill border-2 border-ink bg-palm type-title-m">
+          {t('cta')}
+        </button>
+        <button type="button" onClick={() => saveKitchen(EMPTY_KITCHEN)} className="min-h-12 type-label underline">
+          {t('clear')}
+        </button>
+      </div>
+    </>
   );
 }

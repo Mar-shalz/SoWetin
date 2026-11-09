@@ -82,6 +82,14 @@ export default async function PlatePage({ params, searchParams }: { params: Prom
         <h2 id="cook" className="type-title-l">
           {t('recipe.title')}
         </h2>
+        {ids.some((id) => methods.get(id)?.component_steps.length) && (
+          <Link
+            href={`/plate/${encodeURIComponent(decodeURIComponent(key))}/cook?people=${people}`}
+            className="flex min-h-14 items-center justify-center rounded-pill border-2 border-ink bg-palm type-title-m"
+          >
+            {t('detail.cta.cook')}
+          </Link>
+        )}
         {order.map((id) => {
           const c = cat.snap.components.get(id)!;
           const m = methods.get(id);
