@@ -73,7 +73,12 @@
       "single": "Your plate",
       "deck": "Three plates"
     },
-    "basis": "For {budget} · {people}"
+    "basis": "For {budget} · {people}",
+    "swap": {
+      "_": "Swap",
+      "label": "Swap {component}",
+      "none": "That's the only one that fits. Swap something else?"
+    }
   },
   "deck": {
     "tight": {
@@ -123,11 +128,65 @@
   "prices": {
     "note": {
       "line": "Estimate from many price reports. Prices in your market may be different."
+    },
+    "sheet": {
+      "title": "Where this price comes from",
+      "for": "Estimate for {people} in {area}",
+      "explainer": "We check many price reports every week, plus our own market visits. We take the middle of them all, so one odd price doesn't throw it off, then show a range because prices move.",
+      "count": "Based on {count, plural, one {# price report} other {# price reports}}",
+      "kinds": "{visits} market visits · {reports} market reports · {stores} online stores · {official} national figures",
+      "lastVisit": "Our team last checked these prices in a Lagos market on {date}.",
+      "noVisit": "We haven't visited a market for some of these yet, so this range is wider.",
+      "wide": "This range is wide because prices for {items} are moving a lot right now.",
+      "close": "Close"
+    },
+    "disclaimer": {
+      "full": "This is an estimate, not a quote. Your market may be cheaper or dearer, and prices can change overnight."
+    },
+    "firstNote": {
+      "body": "Prices here are estimates from many market reports. Your market may be a bit different.",
+      "ok": "Got it",
+      "more": "How we price"
     }
   },
   "recipes": {
     "note": {
       "line": "Written by SoWetin and tested by home cooks. Amounts and times are a guide."
     }
+  },
+  "filters": {
+    "title": "Filters",
+    "mealTitle": "Meal time",
+    "mealNow": "Right now",
+    "meals": {
+      "breakfast": "Breakfast",
+      "lunch": "Lunch",
+      "dinner": "Dinner",
+      "late_night": "Late night"
+    },
+    "typeTitle": "Plate type",
+    "types": {
+      "soup_swallow": "Swallow and soup",
+      "rice_plate": "Rice",
+      "one_pot": "One-pot",
+      "pasta_noodles": "Pasta and noodles",
+      "yam_plantain_sauce": "Yam and plantain",
+      "breakfast_pair": "Breakfast pairs",
+      "snack": "Snacks",
+      "single": "Complete dishes"
+    },
+    "timeTitle": "Time",
+    "any": "Any",
+    "spiceTitle": "Spice",
+    "spice": {
+      "0": "Mild",
+      "1": "Medium",
+      "2": "Hot",
+      "3": "Fire"
+    },
+    "vegetarian": "Vegetarian",
+    "apply": "Show plates",
+    "reset": "Reset",
+    "close": "Close"
   }
 }

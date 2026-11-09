@@ -11,3 +11,14 @@ test('the answer pills change and Pick for me answers', async ({ page }) => {
   await expect(page.locator('section[aria-live]')).not.toBeEmpty();
   expect(cspErrors).toEqual([]);
 });
+
+// S-007: the filters sheet opens, a choice sticks after Apply, and the button says how many filters are on.
+test('filters open, apply and show their count', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Filters' }).click();
+  await expect(page.getByRole('dialog', { name: 'Filters' })).toBeVisible();
+  await page.getByRole('button', { name: 'Rice', exact: true }).click();
+  await page.getByRole('button', { name: 'Show plates' }).click();
+  await expect(page.getByRole('dialog', { name: 'Filters' })).toBeHidden();
+  await expect(page.getByRole('button', { name: 'Filters, 1 on' })).toBeVisible();
+});

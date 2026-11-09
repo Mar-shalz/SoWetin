@@ -8,7 +8,7 @@ import { plateMinutes } from '@/lib/engine/filters';
 import { plateComponents } from '@/lib/engine/plate';
 import type { Context, CostFn, Plate, ScoredPlate } from '@/lib/engine/types';
 import { costPlate } from '@/lib/pricing/costPlate';
-import type { House } from '@/lib/pricing/types';
+import type { House, PlateCost } from '@/lib/pricing/types';
 
 // Shared by the suggestions API and the plate page: which catalogue to use, how to cost a plate, what to send.
 
@@ -67,6 +67,55 @@ export function parsePlateKey(key: string, cat: Catalogue): Plate | null {
 }
 
 export type PlateView = ReturnType<typeof plateView>;
+export type Receipt = PlateView['price']['receipt'];
+
+// S-023 "Where this price comes from": the plate's sources by kind, up to six named ones, the last market visit,
+// and which ingredients make a wide range wide. Names only, never a link (doc 04, section 3, step 9).
+export function receipt(cost: PlateCost, cat: Catalogue) {
+  const points = cost.lines.map((l) => cat.book.points[l.ingredientId]).filter((p) => p !== undefined);
+  const kinds = { market_check: 0, press_survey: 0, online_store: 0, official_stats: 0 };
+  for (const p of points) for (const [k, n] of Object.entries(p.sourceKinds)) kinds[k as keyof typeof kinds] += n ?? 0;
+  const seen = new Set<string>();
+  const shown = points
+    .flatMap((p) => p.sourcesShown)
+    .sort((a, b) => b.observedOn.localeCompare(a.observedOn))
+    .filter((s) => !seen.has(s.name) && seen.add(s.name))
+    .slice(0, C.PRICE_SOURCES_SHOWN_MAX)
+    .map((s) => ({ name: s.name, observed_on: s.observedOn }));
+  const visits = points.map((p) => p.lastMarketCheck).filter((d): d is string => !!d);
+  const spread = cost.outlayMidNgn ? (cost.outlayHighNgn - cost.outlayLowNgn) / (2 * cost.outlayMidNgn) : 0;
+  return {
+    kinds,
+    shown,
+    last_visit: visits.length === points.length && visits.length ? visits.sort().at(-1)! : null,
+    wide_items:
+      spread > C.PRICE_WIDE_SPREAD
+        ? [...cost.lines]
+            .sort((a, b) => b.spread - a.spread)
+            .slice(0, 2)
+            .map((l) => cat.names.get(l.ingredientId) ?? l.ingredientId)
+        : [],
+  };
+}
+
+// A plate rebuilt from its key, priced for this request, as the engine's swap needs it (BR-37).
+export function scoredFromKey(key: string, cat: Catalogue, cost: CostFn, budget: number): ScoredPlate | null {
+  const plate = parsePlateKey(key, cat);
+  const c = plate && cost(plate);
+  if (!plate || !c) return null;
+  const tpl = cat.snap.templates.find((t) => t.key === plate.template)!;
+  return {
+    plate,
+    key,
+    main: plate.slots[tpl.mainSlot]?.[0] ?? '',
+    cost: c,
+    score: 0,
+    stretch: c.outlayHighNgn > budget,
+    gapNgn: Math.max(0, c.outlayHighNgn - budget),
+    forgotten: false,
+    newToUser: false,
+  };
+}
 
 // What a plate card needs (doc 07, POST /suggestions), and nothing that names a wholesale unit (FR-027).
 export function plateView(sp: ScoredPlate, cat: Catalogue, ctx: Pick<Context, 'house'>) {
@@ -102,6 +151,7 @@ export function plateView(sp: ScoredPlate, cat: Catalogue, ctx: Pick<Context, 'h
       source_count: c.sourceCount,
       stretch: sp.stretch,
       gap_ngn: sp.gapNgn,
+      receipt: receipt(c, cat),
     },
     total_minutes: plateMinutes(
       ids.map((id) => cat.snap.components.get(id)!),

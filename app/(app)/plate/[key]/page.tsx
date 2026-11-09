@@ -6,7 +6,8 @@ import { APP_CONFIG as C } from '@/lib/config/app.config';
 import { plateComponents } from '@/lib/engine/plate';
 import { pictureUrl } from '@/lib/db/env';
 import { formatNaira } from '@/lib/i18n/money';
-import { catalogueForRequest, costFn, lagosToday, parsePlateKey } from '@/lib/plates/serve';
+import { PriceSheet } from '@/components/decide/price-sheet';
+import { catalogueForRequest, costFn, lagosToday, parsePlateKey, receipt } from '@/lib/plates/serve';
 import { cookServings } from '@/lib/pricing/costPlate';
 
 type Method = {
@@ -55,6 +56,24 @@ export default async function PlatePage({ params, searchParams }: { params: Prom
             {t('plate.price.range', { low: formatNaira(cost.outlayLowNgn), high: formatNaira(cost.outlayHighNgn) })}
           </p>
           <p className="type-caption text-ink-2">{t('plate.price.today')}</p>
+          <p className="mt-2 type-caption text-ink-2">
+            <PriceSheet
+              low={cost.outlayLowNgn}
+              high={cost.outlayHighNgn}
+              people={t('home.sentence.people', { count: people })}
+              count={cost.sourceCount}
+              receipt={receipt(cost, cat)}
+              className="min-h-12"
+            >
+              {t('detail.price.sources', {
+                count: cost.sourceCount,
+                relative: new Intl.RelativeTimeFormat('en-NG', { numeric: 'auto' }).format(
+                  -Math.max(0, Math.round((Date.parse(lagosToday()) - Date.parse(cost.oldestPriceDate)) / 86_400_000)),
+                  'day',
+                ),
+              })}
+            </PriceSheet>
+          </p>
           <p className="mt-2 type-caption text-ink-2">{t('prices.note.line')}</p>
         </section>
       )}

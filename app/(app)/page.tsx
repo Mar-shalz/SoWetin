@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 import { Decide } from '@/components/decide/decide';
-import { CaretIcon, ChevronIcon, HouseIcon, SearchIcon, SlidersIcon } from '@/components/ui/icons';
+import { ChevronIcon, HouseIcon, SearchIcon } from '@/components/ui/icons';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
 import { catalogueHealth } from '@/lib/db/health';
 import { mealTimeAt } from '@/lib/engine/time';
@@ -21,26 +21,14 @@ export default async function DecidePage() {
         </Suspense>
       </p>
 
-      <header className="flex min-h-14 items-center justify-between gap-2">
-        <span className="type-title-l">{C.APP_NAME}</span>
-        <div className="flex items-center gap-2">
-          <span className="inline-flex min-h-10 items-center gap-1 rounded-pill border-2 border-ink bg-surface px-3 type-label">
-            <SlidersIcon size={18} />
-            <span className="max-sm:sr-only">{t('home.cta.filters')}</span>
-          </span>
-          <span className="inline-flex min-h-10 items-center gap-1 rounded-pill border-2 border-ink bg-surface px-3 type-label">
-            {t('areas.lagos')}
-            <CaretIcon size={16} />
-          </span>
-        </div>
-      </header>
-
-      <h1 className="mt-2">
-        {cut > 0 && <span className="block type-body-l text-ink-2">{greeting.slice(0, cut + 1)}</span>}
-        <span className="block type-display-xl">{greeting.slice(cut + 1).trim()}</span>
-      </h1>
-
-      <Decide>
+      <Decide
+        greeting={
+          <h1 className="mt-2">
+            {cut > 0 && <span className="block type-body-l text-ink-2">{greeting.slice(0, cut + 1)}</span>}
+            <span className="block type-display-xl">{greeting.slice(cut + 1).trim()}</span>
+          </h1>
+        }
+      >
         <div className="mt-6 flex min-h-14 items-center gap-3 rounded-lg border-2 border-ink bg-surface px-4 type-label">
           <HouseIcon />
           <span className="flex-1">{t('home.house.empty')}</span>

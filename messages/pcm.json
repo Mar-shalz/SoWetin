@@ -73,7 +73,12 @@
       "single": "Your plate",
       "deck": "Three plates"
     },
-    "basis": "For {budget} · {people}"
+    "basis": "For {budget} · {people}",
+    "swap": {
+      "_": "Change am",
+      "label": "Change {component}",
+      "none": "Na only this one fit. Change another thing?"
+    }
   },
   "deck": {
     "tight": {
@@ -123,11 +128,65 @@
   "prices": {
     "note": {
       "line": "We check plenty price report take estimate am. Price for your market fit different."
+    },
+    "sheet": {
+      "title": "Where this price come from",
+      "for": "Estimate for {people} for {area}",
+      "explainer": "Every week we dey check plenty price report, plus our own market visit. We dey take the middle of all of dem, so one odd price no go scatter am, then we show you range because price dey move.",
+      "count": "We use {count} price report",
+      "kinds": "{visits} market visit · {reports} market report · {stores} online store · {official} national figure",
+      "lastVisit": "Our people last check this price for Lagos market on {date}.",
+      "noVisit": "We never reach market for some of these ones, so the range wide pass.",
+      "wide": "The range wide because {items} price dey jump up and down now.",
+      "close": "Close"
+    },
+    "disclaimer": {
+      "full": "Na estimate, no be final price. Your market fit cheap pass or cost pass, and price fit change overnight."
+    },
+    "firstNote": {
+      "body": "Price wey you see here na estimate from plenty market report. Your market fit different small.",
+      "ok": "I don hear",
+      "more": "How una take price am"
     }
   },
   "recipes": {
     "note": {
       "line": "SoWetin write am, and home cooks don test am. The measure and time na guide."
     }
+  },
+  "filters": {
+    "title": "Filters",
+    "mealTitle": "Time to chop",
+    "mealNow": "Now now",
+    "meals": {
+      "breakfast": "Breakfast",
+      "lunch": "Lunch",
+      "dinner": "Dinner",
+      "late_night": "Late night"
+    },
+    "typeTitle": "Type of plate",
+    "types": {
+      "soup_swallow": "Swallow and soup",
+      "rice_plate": "Rice",
+      "one_pot": "One-pot",
+      "pasta_noodles": "Pasta and noodles",
+      "yam_plantain_sauce": "Yam and plantain",
+      "breakfast_pair": "Breakfast pairs",
+      "snack": "Small chops",
+      "single": "Complete food"
+    },
+    "timeTitle": "Time",
+    "any": "Any",
+    "spiceTitle": "Pepper",
+    "spice": {
+      "0": "No pepper",
+      "1": "Small pepper",
+      "2": "Hot",
+      "3": "Fire"
+    },
+    "vegetarian": "No meat, no fish",
+    "apply": "Show me plates",
+    "reset": "Clear am",
+    "close": "Close"
   }
 }

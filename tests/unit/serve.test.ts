@@ -3,7 +3,8 @@ import type { Catalogue } from '@/lib/catalogue/db';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
 import { suggest } from '@/lib/engine/select';
 import type { EngineComponent } from '@/lib/engine/types';
-import { costFn, parsePlateKey, plateView } from '@/lib/plates/serve';
+import { swapSlot } from '@/lib/engine/swap';
+import { costFn, parsePlateKey, plateView, receipt, scoredFromKey } from '@/lib/plates/serve';
 import { INGREDIENTS, SNAP, ctxOf } from '../fixtures/engine';
 
 // The real costing on the real seed catalogue, once every line has an amount and every ingredient a price.
@@ -75,5 +76,25 @@ describe('suggestions served from the database catalogue', () => {
   it('prices nothing when a line has no amount, instead of guessing', () => {
     const bare = { ...cat, snap: SNAP };
     expect(suggest(bare.snap, ctx, costFn(bare, 1, ctx.house, '2026-11-20'), C, 3).plates).toEqual([]);
+  });
+
+  it('swaps one dish and keeps the rest of the plate (A-26)', () => {
+    const cost = costFn(cat, 1, ctx.house, '2026-11-20');
+    const multi =
+      deck.plates.find((sp) => Object.keys(sp.plate.slots).length > 1) ??
+      suggest(cat.snap, { ...ctx, filters: { plateTypes: ['soup_swallow'] } }, cost, C, 1).plates[0];
+    const current = scoredFromKey(multi.key, cat, cost, ctx.budget)!;
+    const tpl = cat.snap.templates.find((t) => t.key === current.plate.template)!;
+    const other = tpl.slots.find((s) => s.key !== tpl.mainSlot && current.plate.slots[s.key]?.length)!;
+    const next = swapSlot(cat.snap, ctx, current, other.key, cost, C)!;
+    expect(next.plate.slots[other.key]).not.toEqual(current.plate.slots[other.key]);
+    expect(next.plate.slots[tpl.mainSlot]).toEqual(current.plate.slots[tpl.mainSlot]);
+  });
+
+  it('builds the price receipt from the sources behind the plate (S-023)', () => {
+    const r = receipt(deck.plates[0].cost, cat);
+    expect(r.kinds.market_check).toBeGreaterThan(0);
+    expect(r.last_visit).toBe('2026-11-18');
+    expect(r.shown).toEqual([]);
   });
 });
