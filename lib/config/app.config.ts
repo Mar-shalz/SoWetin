@@ -66,9 +66,13 @@ export const APP_CONFIG = {
   AI_QUOTA_USER_DAILY: 60,
   // T3 drafts run on Gemini's free tier (Victor, 9 November 2026). The free limits show in Google AI Studio.
   AI_MODEL_AUTHORING: 'gemini-3.6-flash',
+  // Tap-time AI (craving parse T1, Chef T2) on the same free tier, thinking kept minimal for speed (D-36).
+  AI_MODEL_RUNTIME: 'gemini-3.6-flash',
+  AI_RUNTIME_THINKING: 'minimal' as const,
   AI_DRAFT_TIMEOUT_MS: 90000,
   AI_DRAFT_BATCH: 3,
   CRAVING_MAX_CHARS: 200,
+  CRAVING_COUNTER_FROM: 150, // S-008: the character counter shows from here
   CHEF_QUESTION_MAX_CHARS: 300,
   LOG_TEXT_RETENTION_DAYS: 30,
   SIGNIN_PROMPT_SNOOZE_DAYS: 7,
@@ -111,6 +115,7 @@ export const APP_CONFIG = {
   HOUSE_FOODSTUFF_CHECK_DAYS: 14,
   HOUSE_COOKED_MIN_CARDS: 2,
   HOUSE_CUSTOM_MAX_CHARS: 40,
+  HOUSE_CUSTOM_MAX_ITEMS: 10, // typed items kept on the phone (BR-134), so the list can't grow without end
   HOUSE_CUSTOM_REPORT_MIN_PROFILES: 5,
   VOTE_TTL_HOURS: 24,
   VOTE_RESULTS_DAYS: 7,

@@ -42,7 +42,26 @@
     }
   },
   "craving": {
-    "find": "Find"
+    "find": "Find",
+    "examples": "something peppery and light · swallow under 2k · I never chop since morning · breakfast for 4, no beans",
+    "try": "Try one:",
+    "understood": "That's what I understood. Tap × on anything I got wrong.",
+    "chip": {
+      "remove": "Remove {chip}",
+      "not": "Not {item}",
+      "without": "No {item}"
+    },
+    "none": {
+      "_": "Nothing fits that right now. Try other words, or let me pick.",
+      "cta": "Pick without the craving"
+    },
+    "thinking": "Reading your mind…",
+    "offTopic": "I only do food o. Want me to pick something?",
+    "fallback": "Showing good picks for now.",
+    "clarify": {
+      "cook": "Cooking",
+      "buy": "Buying"
+    }
   },
   "plate": {
     "price": {
@@ -232,7 +251,18 @@
     "more": "More",
     "cta": "Show me what I can cook",
     "clear": "Clear all",
-    "close": "Close"
+    "close": "Close",
+    "text": {
+      "label": "Anything else?",
+      "placeholder": "I get small yam and 2 eggs",
+      "found": "Found these",
+      "unknown": "I don't know \"{word}\" yet.",
+      "added": "Added {items}.",
+      "kept": "It stays on your list."
+    },
+    "custom": {
+      "tag": "Not in picks yet"
+    }
   },
   "cook": {
     "next": "Next",
@@ -471,5 +501,69 @@
   },
   "offline": {
     "banner": "You're offline. Showing what I saved."
+  },
+  "tag": {
+    "base_beans": "beans",
+    "base_cassava": "cassava",
+    "base_maize": "corn",
+    "base_plantain": "plantain",
+    "base_potato": "potato",
+    "base_rice": "rice",
+    "base_wheat": "wheat",
+    "base_yam": "yam",
+    "bitter_greens": "bitter greens",
+    "breakfast_friendly": "good for breakfast",
+    "comfort": "comfort food",
+    "creamy": "creamy",
+    "crunchy": "crunchy",
+    "festive": "festive",
+    "filling": "filling",
+    "fried": "fried",
+    "grilled": "grilled",
+    "herby": "herby",
+    "kid_friendly": "kid friendly",
+    "late_night_friendly": "late night",
+    "light": "light",
+    "mild": "mild",
+    "no_cook": "no cooking",
+    "nutty": "nutty",
+    "party_food": "party food",
+    "peppery": "peppery",
+    "protein_beef": "beef",
+    "protein_chicken": "chicken",
+    "protein_egg": "egg",
+    "protein_fish": "fish",
+    "protein_goat": "goat meat",
+    "protein_offal": "offal",
+    "protein_snail": "snail",
+    "protein_turkey": "turkey",
+    "quick": "quick",
+    "rainy_day": "rainy day",
+    "saucy": "saucy",
+    "savoury": "savoury",
+    "seasonal": "in season",
+    "smoky": "smoky",
+    "soupy": "soupy",
+    "sour_tangy": "sour and tangy",
+    "street_food": "street food",
+    "student_friendly": "student friendly",
+    "sunday_special": "Sunday special",
+    "sweet": "sweet",
+    "veg_friendly": "veggie friendly",
+    "weekend_cook": "weekend cooking"
+  },
+  "pidgin": {
+    "offer": {
+      "_": "I fit yarn Pidgin too. You wan switch?",
+      "yes": "Yes, switch",
+      "no": "No, English is fine"
+    }
+  },
+  "settings": {
+    "language": {
+      "_": "Language",
+      "en": "English",
+      "pcm": "Naija Pidgin"
+    }
   }
 }

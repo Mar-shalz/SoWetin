@@ -15,14 +15,20 @@ describe("what's in the house (S-024), kept on the phone", () => {
       ],
       foodstuff: ['rice-local-parboiled', 42, '<script>'],
       basic: 'nope',
+      custom: ['  ugba  ', 'ugba', 7, 'x'.repeat(60)],
     });
-    expect(parseKitchen(raw, '2026-11-10')).toEqual({ cooked: [{ id: 'egusi-soup', at: '2026-11-09' }], foodstuff: ['rice-local-parboiled'], basic: [] });
-    expect(parseKitchen('{broken', '2026-11-10')).toEqual({ cooked: [], foodstuff: [], basic: [] });
+    expect(parseKitchen(raw, '2026-11-10')).toEqual({
+      cooked: [{ id: 'egusi-soup', at: '2026-11-09' }],
+      foodstuff: ['rice-local-parboiled'],
+      basic: [],
+      custom: ['ugba', 'x'.repeat(C.HOUSE_CUSTOM_MAX_CHARS)],
+    });
+    expect(parseKitchen('{broken', '2026-11-10')).toEqual({ cooked: [], foodstuff: [], basic: [], custom: [] });
   });
 
   it('reaches the engine in cook mode only', () => {
     const cat = { snap: SNAP } as Catalogue;
-    const house = kitchenForApi({ cooked: [{ id: 'egusi-soup', at: '2026-11-10' }], foodstuff: ['eggs'], basic: [] });
+    const house = kitchenForApi({ cooked: [{ id: 'egusi-soup', at: '2026-11-10' }], foodstuff: ['eggs'], basic: [], custom: ['ugba'] });
     const scene = (mode: 'cook' | 'buy') => Scene.parse({ budget_ngn: 3500, people: 1, mode, house });
     expect(contextFor(scene('cook'), cat, 's').house).toEqual({ cooked: ['egusi-soup'], foodstuff: ['eggs'], basic: [] });
     expect(contextFor(scene('buy'), cat, 's').house).toEqual({ cooked: [], foodstuff: [], basic: [] });

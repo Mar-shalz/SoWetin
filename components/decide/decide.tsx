@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { CravingChips, CravingField, chipsOf, clampBudget, clampPeople, withoutChip, type ActiveCraving, type CravingReply } from '@/components/decide/craving';
 import { PriceSheet } from '@/components/decide/price-sheet';
 import { SaveButton } from '@/components/plate/save-button';
 import { EMPTY_KITCHEN, kitchenForApi, lagosToday as today, saveKitchen, useKitchen, type Kitchen } from '@/components/decide/kitchen';
@@ -18,6 +19,8 @@ type State = 'ok' | 'tight' | 'empty' | 'none_left' | 'buy_unavailable';
 type Result = { state: State; staff_preview?: boolean; plates: PlateView[] };
 type Filters = { meal_time: MealTime | null; plate_types: string[]; max_total_minutes: number | null; spice_max: number | null; vegetarian: boolean };
 type SheetProps = Omit<React.ComponentProps<typeof PriceSheet>, 'children' | 'className'>;
+// What one request may differ in from the screen's current state (a craving changes these before the state catches up).
+type Over = { filters?: Filters; budget?: number; people?: number; mode?: 'cook' | 'buy'; craving?: ActiveCraving | null; kitchen?: Kitchen };
 const NO_FILTERS: Filters = { meal_time: null, plate_types: [], max_total_minutes: null, spice_max: null, vegetarian: false };
 const MEALS: MealTime[] = ['breakfast', 'lunch', 'dinner', 'late_night'];
 const PLATE_TYPES = ['soup_swallow', 'rice_plate', 'one_pot', 'pasta_noodles', 'yam_plantain_sauce', 'breakfast_pair', 'snack', 'single'] as const;
@@ -29,10 +32,10 @@ const lagosToday = () => new Intl.DateTimeFormat('en-CA', { timeZone: C.TIMEZONE
 const daysAgo = (iso: string) => Math.max(0, Math.round((Date.parse(lagosToday()) - Date.parse(iso)) / 86_400_000));
 const activeFilters = (f: Filters) => [f.meal_time, f.plate_types.length, f.max_total_minutes, f.spice_max !== null, f.vegetarian].filter(Boolean).length;
 
-// S-001 Decide: the top bar with Filters (S-007), the one-sentence answers, Pick for me or three plates (S-003),
-// a Swap per dish (BR-37), and the price receipt (S-023).
-// shortcut: native pickers and <dialog> sheets; the motion of doc 10 comes with the M2 polish.
-export function Decide({ greeting, house, children }: { greeting: ReactNode; house: HouseOptions; children?: ReactNode }) {
+// S-001 Decide: the top bar with Filters (S-007), the one-sentence answers, the craving field (S-008), Pick for me or
+// three plates (S-003), a Swap per dish (BR-37), and the price receipt (S-023).
+// shortcut: native pickers and <dialog> sheets; the motion of doc 10 (Kòkò thinking, M-19) comes with the M2 polish.
+export function Decide({ greeting, house }: { greeting: ReactNode; house: HouseOptions }) {
   const t = useTranslations();
   const [budget, setBudget] = useState<number>(C.FIRST_VISIT_DEFAULT_BUDGET);
   const [people, setPeople] = useState<number>(C.PEOPLE_DEFAULT);
@@ -46,6 +49,9 @@ export function Decide({ greeting, house, children }: { greeting: ReactNode; hou
   const [slow, setSlow] = useState(false);
   const [failed, setFailed] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  const [craving, setCraving] = useState<ActiveCraving | null>(null);
+  const [cravingNote, setCravingNote] = useState<'thinking' | 'offTopic' | 'fallback' | null>(null);
+  const [cravingRuns, setCravingRuns] = useState(0);
   const answer = useRef<HTMLElement>(null);
   const sheet = useRef<HTMLDialogElement>(null);
   const houseSheet = useRef<HTMLDialogElement>(null);
@@ -59,9 +65,24 @@ export function Decide({ greeting, house, children }: { greeting: ReactNode; hou
       answer.current?.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   }, [result, failed]);
 
-  const scene = (f: Filters = filters) => {
-    const { meal_time, ...rest } = f;
-    return { budget_ngn: budget, people, mode, meal_time, filters: rest, house: kitchenForApi(kitchen) };
+  const scene = (o: Over = {}) => {
+    const { meal_time, ...rest } = o.filters ?? filters;
+    const c = (o.craving === undefined ? craving : o.craving)?.c;
+    const named = c && [c.boost_tags, c.avoid_tags, c.plate_types, c.include_components, c.exclude_components].some((a) => a.length);
+    return {
+      budget_ngn: o.budget ?? budget,
+      people: o.people ?? people,
+      mode: o.mode ?? mode,
+      meal_time: c?.meal_time ?? meal_time,
+      // The craving's time, spice and vegetarian go with the request only; the Filters sheet stays as the person set it.
+      filters: c
+        ? { ...rest, max_total_minutes: c.max_total_minutes ?? rest.max_total_minutes, spice_max: c.spice_max ?? rest.spice_max, vegetarian: rest.vegetarian || c.vegetarian }
+        : rest,
+      craving: named
+        ? { boost_tags: c.boost_tags, avoid_tags: c.avoid_tags, plate_types: c.plate_types, include_components: c.include_components, exclude_components: c.exclude_components }
+        : null,
+      house: kitchenForApi(o.kitchen ?? kitchen),
+    };
   };
 
   async function post<T>(url: string, body: object): Promise<T | null> {
@@ -83,9 +104,10 @@ export function Decide({ greeting, house, children }: { greeting: ReactNode; hou
     }
   }
 
-  async function pick(size: number, f: Filters = filters) {
+  async function pick(size: number, o: Over = {}) {
     setDeckSize(size);
-    const r = await post<Result>('/api/v1/suggestions', { ...scene(f), deck_size: size });
+    setCravingNote(null);
+    const r = await post<Result>('/api/v1/suggestions', { ...scene(o), deck_size: size });
     if (!r) return;
     setResult(r);
     setSeen(r.plates.map((p) => p.plate_key));
@@ -119,7 +141,88 @@ export function Decide({ greeting, house, children }: { greeting: ReactNode; hou
   function applyFilters(next: Filters) {
     setFilters(next);
     sheet.current?.close();
-    if (result) void pick(deckSize, next);
+    if (result) void pick(deckSize, { filters: next });
+  }
+
+  // S-008: read the craving, show what was understood, then the picks. AI trouble already fell back to the code reading.
+  async function find(text: string) {
+    setResult(null);
+    setCravingRuns(cravingRuns + 1);
+    setCravingNote('thinking');
+    const r = await post<CravingReply>('/api/v1/craving', { text, budget_ngn: budget, people, mode, meal_time: filters.meal_time });
+    setCravingNote(null);
+    if (!r) return;
+    // What the sentence says without any craving: the next craving starts from there, and × puts it back.
+    const was = craving;
+    const before = {
+      budget: was?.c.budget_ngn ? was.before.budget : budget,
+      people: was?.c.people ? was.before.people : people,
+      mode: was?.c.mode ? was.before.mode : mode,
+    };
+    const c = r.craving;
+    if (c.intent === 'off_topic') {
+      setCraving(null);
+      setBudget(before.budget);
+      setPeople(before.people);
+      setMode(before.mode);
+      setCravingNote('offTopic');
+      return;
+    }
+    const next: ActiveCraving = { c, labels: r.labels, before };
+    const o = {
+      budget: c.budget_ngn ? clampBudget(c.budget_ngn) : before.budget,
+      people: c.people ? clampPeople(c.people) : before.people,
+      mode: c.mode ?? before.mode,
+    };
+    setBudget(o.budget);
+    setPeople(o.people);
+    setMode(o.mode);
+    const understood = chipsOf(next, t).length > 0;
+    const found = c.have_cooked.length + c.have_ingredients.length > 0;
+    setCraving(understood || found ? next : null);
+    await pick(C.DECK_SIZE, { ...o, craving: understood ? next : null });
+    if (!understood && !found) setCravingNote('fallback');
+  }
+
+  function removeChip(id: string) {
+    if (!craving) return;
+    const next = { ...craving, c: withoutChip(craving.c, id) };
+    const o = {
+      budget: id === 'budget_ngn' ? craving.before.budget : budget,
+      people: id === 'people' ? craving.before.people : people,
+      mode: id === 'mode' ? craving.before.mode : mode,
+    };
+    setBudget(o.budget);
+    setPeople(o.people);
+    setMode(o.mode);
+    const keep = chipsOf(next, t).length > 0 || next.c.have_cooked.length + next.c.have_ingredients.length > 0;
+    setCraving(keep ? next : null);
+    void pick(deckSize, { ...o, craving: keep ? next : null });
+  }
+
+  function withoutCraving() {
+    if (!craving) return;
+    const { before } = craving;
+    setBudget(before.budget);
+    setPeople(before.people);
+    setMode(before.mode);
+    setCraving(null);
+    void pick(C.DECK_SIZE, { ...before, craving: null });
+  }
+
+  function cravingMode(m: 'cook' | 'buy') {
+    if (!craving) return;
+    const next = { ...craving, c: { ...craving.c, mode: m, clarify: null } };
+    setMode(m);
+    setCraving(next);
+    void pick(deckSize, { mode: m, craving: next });
+  }
+
+  // BR-134: food the craving mentioned joins the house list only when the person taps it.
+  function addHouse(id: string) {
+    const next = addFound(kitchen, house, [id], today());
+    saveKitchen(next);
+    if (result) void pick(deckSize, { kitchen: next });
   }
 
   const peopleLabel = t('home.sentence.people', { count: people });
@@ -154,6 +257,8 @@ export function Decide({ greeting, house, children }: { greeting: ReactNode; hou
   const sentence = (t.raw('home.sentence._') as string).split(/\{(\w+)\}/);
   const glued = (i: number) => (i % 2 ? (sentence[i + 1]?.match(/^[,.!?]/)?.[0] ?? '') : '');
   const on = activeFilters(filters);
+  const listed = houseNames(kitchen, house);
+  const have = [...kitchen.cooked.map((c) => c.id), ...kitchen.foodstuff, ...kitchen.basic];
 
   return (
     <>
@@ -221,7 +326,7 @@ export function Decide({ greeting, house, children }: { greeting: ReactNode; hou
           className="mt-6 flex min-h-14 w-full items-center gap-3 rounded-lg border-2 border-ink bg-surface px-4 text-left type-label"
         >
           <HouseIcon />
-          <span className="flex-1">{inKitchen ? t('home.house.summary', { items: houseNames(kitchen, house).join(', ') }) : t('home.house.empty')}</span>
+          <span className="flex-1">{listed.length ? t('home.house.summary', { items: listed.join(', ') }) : t('home.house.empty')}</span>
           <ChevronIcon />
         </button>
       )}
@@ -241,11 +346,23 @@ export function Decide({ greeting, house, children }: { greeting: ReactNode; hou
           }}
         />
       </dialog>
-      {children}
+      <CravingField busy={busy} onFind={find} />
 
       <section ref={answer} aria-live="polite" className="mt-6 grid scroll-mt-4 gap-4">
-        {slow && <p className="text-ink-2">{t('reveal.slow')}</p>}
+        {cravingNote === 'thinking' ? <p className="text-ink-2">{t('craving.thinking')}</p> : slow && <p className="text-ink-2">{t('reveal.slow')}</p>}
         {failed && <p className="text-scotch">{t('error.generic')}</p>}
+        {cravingNote === 'offTopic' && (
+          <div>
+            <p>{t('craving.offTopic')}</p>
+            <button type="button" onClick={() => pick(1)} className="mt-2 min-h-12 rounded-pill border-2 border-ink bg-palm px-4 type-label">
+              {t('home.cta.pick')}
+            </button>
+          </div>
+        )}
+        {cravingNote === 'fallback' && <p className="text-ink-2">{t('craving.fallback')}</p>}
+        {craving && (
+          <CravingChips key={cravingRuns} active={craving} cooking={cooking} have={have} onRemove={removeChip} onMode={cravingMode} onAddHouse={addHouse} />
+        )}
         {result && (
           <Results
             result={result}
@@ -256,6 +373,8 @@ export function Decide({ greeting, house, children }: { greeting: ReactNode; hou
             onNotThis={replace}
             onSwap={swap}
             busy={busy}
+            craving={!!craving}
+            onWithout={withoutCraving}
           />
         )}
         {notice && <p className="text-ink-2">{notice}</p>}
@@ -356,6 +475,8 @@ function Results({
   onNotThis,
   onSwap,
   busy,
+  craving,
+  onWithout,
 }: {
   result: Result;
   budget: number;
@@ -365,9 +486,20 @@ function Results({
   onNotThis: (i: number) => void;
   onSwap: (i: number, slot: string) => void;
   busy: boolean;
+  craving: boolean;
+  onWithout: () => void;
 }) {
   const t = useTranslations();
   if (result.state === 'buy_unavailable') return <p>{t('deck.buyLater')}</p>;
+  if (!result.plates.length && craving && result.state === 'empty')
+    return (
+      <div>
+        <p>{t('craving.none._')}</p>
+        <button type="button" onClick={onWithout} className="mt-2 min-h-12 rounded-pill border-2 border-ink bg-palm px-4 type-label">
+          {t('craving.none.cta')}
+        </button>
+      </div>
+    );
   if (!result.plates.length) return <p>{t(result.state === 'none_left' ? 'plate.skip.none' : 'deck.empty')}</p>;
   return (
     <>
@@ -565,12 +697,29 @@ function FirstPriceNote({ sheet }: { sheet: SheetProps }) {
 
 const houseNames = (k: Kitchen, o: HouseOptions) => {
   const name = (list: { id: string; name: string }[], id: string) => list.find((x) => x.id === id)?.name ?? id;
-  return [...k.cooked.map((c) => name(o.cooked, c.id)), ...k.foodstuff.map((id) => name(o.foodstuff, id)), ...k.basic.map((id) => name(o.basic, id))];
+  return [
+    ...k.cooked.map((c) => name(o.cooked, c.id)),
+    ...k.foodstuff.map((id) => name(o.foodstuff, id)),
+    ...k.basic.map((id) => name(o.basic, id)),
+    ...k.custom,
+  ];
 };
+// Food the parser found, put into the right house group. Cooked food counts from today.
+function addFound(k: Kitchen, o: HouseOptions, ids: string[], now: string): Kitchen {
+  const next: Kitchen = { ...k, cooked: [...k.cooked], foodstuff: [...k.foodstuff], basic: [...k.basic] };
+  for (const id of ids) {
+    if (o.cooked.some((h) => h.id === id)) {
+      if (!next.cooked.some((c) => c.id === id)) next.cooked.push({ id, at: now });
+    } else if (o.basic.some((h) => h.id === id)) {
+      if (!next.basic.includes(id)) next.basic.push(id);
+    } else if (o.foodstuff.some((h) => h.id === id) && !next.foodstuff.includes(id)) next.foodstuff.push(id);
+  }
+  return next;
+}
 const FOODSTUFF_SHOWN = 10;
 
 // S-024 What's in the house? Every tap saves at once, on this phone. Cooked food carries its day ("today", "from Sunday").
-// shortcut: no "Anything else?" text (it needs the AI parser, M3), no "Other soup or stew" search, no live preview.
+// shortcut: no "Other soup or stew" search and no live preview yet; typed items aren't reported to admin (needs profiles).
 function HouseSheet({ options, kitchen, onShow }: { options: HouseOptions; kitchen: Kitchen; onShow: () => void }) {
   const t = useTranslations('house');
   const [allFood, setAllFood] = useState(false);
@@ -643,6 +792,7 @@ function HouseSheet({ options, kitchen, onShow }: { options: HouseOptions; kitch
         </summary>
         <div className="mt-2 flex flex-wrap gap-2">{items(options.basic, 'basic')}</div>
       </details>
+      <HouseText options={options} kitchen={kitchen} />
       <div className="mt-6 grid gap-2">
         <button type="button" onClick={onShow} className="min-h-14 rounded-pill border-2 border-ink bg-palm type-title-m">
           {t('cta')}
@@ -652,5 +802,116 @@ function HouseSheet({ options, kitchen, onShow }: { options: HouseOptions; kitch
         </button>
       </div>
     </>
+  );
+}
+
+// BR-134 "Anything else?": the craving parser reads what was typed into house items, shown as chips to tap before anything
+// is added. Something the catalogue doesn't know stays on the list as typed, marked "Not in picks yet", and the engine
+// never sees it.
+function HouseText({ options, kitchen }: { options: HouseOptions; kitchen: Kitchen }) {
+  const t = useTranslations();
+  const [text, setText] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [found, setFound] = useState<{ ids: string[]; labels: Record<string, string> } | null>(null);
+  const [unknown, setUnknown] = useState<string | null>(null);
+  const [added, setAdded] = useState<string[]>([]);
+  const have = [...kitchen.cooked.map((c) => c.id), ...kitchen.foodstuff, ...kitchen.basic];
+  async function read(e: React.FormEvent) {
+    e.preventDefault();
+    const v = text.trim();
+    if (!v || busy) return;
+    setBusy(true);
+    setUnknown(null);
+    try {
+      const res = await fetch('/api/v1/craving', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ text: v, house: true }) });
+      const r = res.ok ? ((await res.json()) as CravingReply) : null;
+      const ids = r ? [...r.craving.have_cooked, ...r.craving.have_ingredients] : [];
+      if (r && ids.length) setFound({ ids, labels: r.labels });
+      else {
+        const item = v.slice(0, C.HOUSE_CUSTOM_MAX_CHARS);
+        saveKitchen({ ...kitchen, custom: [...new Set([...kitchen.custom, item])].slice(0, C.HOUSE_CUSTOM_MAX_ITEMS) });
+        setUnknown(item);
+      }
+      setText('');
+    } catch {
+      setUnknown(null);
+    } finally {
+      setBusy(false);
+    }
+  }
+  const chip = 'inline-flex min-h-12 items-center gap-2 rounded-pill border-2 px-4 type-label';
+  const left = found?.ids.filter((id) => !have.includes(id)) ?? [];
+  return (
+    <div className="mt-5">
+      <form onSubmit={read}>
+        <label htmlFor="house-text" className="type-label">
+          {t('house.text.label')}
+        </label>
+        <div className="mt-2 flex gap-2">
+          <input
+            id="house-text"
+            value={text}
+            maxLength={C.CRAVING_MAX_CHARS}
+            onChange={(e) => setText(e.target.value)}
+            placeholder={t('house.text.placeholder')}
+            className="min-h-12 min-w-0 flex-1 rounded-md border border-ink-3 bg-sunken px-3 type-input"
+          />
+          <button
+            disabled={!text.trim() || busy}
+            className="min-h-12 shrink-0 rounded-pill border-2 border-ink bg-palm px-4 type-label disabled:border-ink-3 disabled:bg-sunken disabled:text-ink-3"
+          >
+            {t('craving.find')}
+          </button>
+        </div>
+      </form>
+      <div aria-live="polite" className="mt-2 grid gap-2">
+        {!!left.length && (
+          <div>
+            <p className="type-label">{t('house.text.found')}</p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {left.map((id) => (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => {
+                    saveKitchen(addFound(kitchen, options, [id], today()));
+                    setAdded([...added, id]);
+                  }}
+                  className={`${chip} border-ink-3 bg-surface`}
+                >
+                  + {found?.labels[id] ?? id}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+        {!!added.length && <p className="type-caption text-ugu">{t('house.text.added', { items: added.map((id) => found?.labels[id] ?? id).join(', ') })}</p>}
+        {unknown && (
+          <p className="type-caption text-ink-2">
+            {t('house.text.unknown', { word: unknown })} {t('house.text.kept')}
+          </p>
+        )}
+      </div>
+      {!!kitchen.custom.length && (
+        <ul className="mt-3 flex flex-wrap gap-2">
+          {kitchen.custom.map((item) => (
+            <li key={item}>
+              <span className={`${chip} border-ink-3 bg-surface pr-1`}>
+                {item}
+                <span className="type-caption text-ink-2">{t('house.custom.tag')}</span>
+                <button
+                  type="button"
+                  onClick={() => saveKitchen({ ...kitchen, custom: kitchen.custom.filter((x) => x !== item) })}
+                  aria-label={t('craving.chip.remove', { chip: item })}
+                  className="grid size-10 place-items-center rounded-pill"
+                >
+                  ×
+                </button>
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }

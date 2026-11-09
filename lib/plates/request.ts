@@ -11,6 +11,10 @@ const slugs = z
   .array(z.string().regex(/^[a-z0-9-]{1,80}$/))
   .max(60)
   .default([]);
+const tags = z
+  .array(z.string().regex(/^[a-z_]{1,40}$/))
+  .max(6)
+  .default([]);
 export const Scene = z
   .object({
     budget_ngn: z.int().min(C.BUDGET_MIN).max(C.BUDGET_MAX),
@@ -29,6 +33,18 @@ export const Scene = z
       })
       .strict()
       .default({ plate_types: [], max_total_minutes: null, spice_max: null, vegetarian: false }),
+    // A parsed craving (S-008): tags to favour or avoid, plate types, and dishes named or ruled out. Unknown ids match nothing.
+    craving: z
+      .object({
+        boost_tags: tags,
+        avoid_tags: tags,
+        plate_types: z.array(z.string().regex(/^[a-z_]{1,40}$/)).max(4).default([]),
+        include_components: slugs,
+        exclude_components: slugs,
+      })
+      .strict()
+      .nullable()
+      .default(null),
     // What's in the house (S-024), kept on the phone until accounts arrive; ignored in buy mode (doc 07).
     house: z.object({ cooked: slugs, foodstuff: slugs, basic: slugs }).strict().default({ cooked: [], foodstuff: [], basic: [] }),
   })
@@ -59,6 +75,15 @@ export function contextFor(s: SceneIn, cat: Catalogue, seed: string, excludeMain
     allergy: { ingredients: [], allergens: [], seasoningCubesOk: false },
     house: s.mode === 'cook' ? s.house : { cooked: [], foodstuff: [], basic: [] },
     excludeMains,
+    craving: s.craving
+      ? {
+          boostTags: s.craving.boost_tags,
+          avoidTags: s.craving.avoid_tags,
+          plateTypes: s.craving.plate_types,
+          include: s.craving.include_components,
+          exclude: s.craving.exclude_components,
+        }
+      : undefined,
     signals: { affinities: {}, count: 0, ateAt: {}, dislikedUntil: {}, lastPositiveAt: {}, seenMains: [] },
     seed,
   };

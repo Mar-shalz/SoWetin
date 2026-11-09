@@ -16,6 +16,7 @@ export function componentPasses(c: EngineComponent, snap: Snapshot, ctx: Context
   const avoidIngredients = new Set(ctx.avoid.ingredients);
   const avoidTags = new Set(ctx.avoid.allergens);
   const without: string[] = [];
+  if (ctx.craving?.exclude?.includes(c.id)) return NO; // "no beans"
 
   for (const line of c.lines) {
     const ing = snap.ingredients.get(line.ingredientId);

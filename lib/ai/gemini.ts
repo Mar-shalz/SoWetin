@@ -1,6 +1,7 @@
 // Google's Gemini API on the free tier (Victor, 9 November 2026: no paid AI yet). Server only: the key never
 // reaches a page. Uses generateContent with a JSON Schema, then the caller validates the answer again with Zod.
-export type GeminiCall = { model: string; key: string; system: string; prompt: string; schema: unknown; timeoutMs: number };
+// thinking: Gemini 3 thinking level; "minimal" keeps tap-time calls fast (ai.google.dev/gemini-api/docs/thinking).
+export type GeminiCall = { model: string; key: string; system: string; prompt: string; schema: unknown; timeoutMs: number; thinking?: 'minimal' | 'low' | 'medium' | 'high' };
 export type GeminiUsage = { input?: number; output?: number };
 export type GeminiResult =
   | { ok: true; json: unknown; stop: string; latencyMs: number; usage: GeminiUsage }
@@ -22,7 +23,11 @@ export async function geminiJson(c: GeminiCall, fetchFn: typeof fetch = fetch): 
       body: JSON.stringify({
         systemInstruction: { parts: [{ text: c.system }] },
         contents: [{ role: 'user', parts: [{ text: c.prompt }] }],
-        generationConfig: { responseMimeType: 'application/json', responseJsonSchema: c.schema },
+        generationConfig: {
+          responseMimeType: 'application/json',
+          responseJsonSchema: c.schema,
+          ...(c.thinking && { thinkingConfig: { thinkingLevel: c.thinking } }),
+        },
       }),
       signal: AbortSignal.timeout(c.timeoutMs),
     });

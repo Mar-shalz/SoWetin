@@ -49,7 +49,8 @@ export type Context = {
   allergy: { ingredients: string[]; allergens: string[]; seasoningCubesOk: boolean };
   house: { cooked: string[]; foodstuff: string[]; basic: string[] };
   excludeMains: string[]; // everything already shown this session, and the cards on screen
-  craving?: { boostTags: string[]; avoidTags: string[]; plateTypes: string[] };
+  // A parsed craving (doc 03, 7.1): plate types it names (only those), dishes it names (plates must hold one) or rules out.
+  craving?: { boostTags: string[]; avoidTags: string[]; plateTypes: string[]; include?: string[]; exclude?: string[] };
   signals: {
     affinities: Record<string, number>;
     count: number;

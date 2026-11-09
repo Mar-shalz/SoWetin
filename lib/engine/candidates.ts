@@ -46,6 +46,7 @@ export function generateCandidates(snap: Snapshot, ctx: Context, cfg: Cfg): Plat
 
   for (const t of snap.templates) {
     if (ctx.filters.plateTypes?.length && !ctx.filters.plateTypes.includes(t.key)) continue;
+    if (ctx.craving?.plateTypes.length && !ctx.craving.plateTypes.includes(t.key)) continue;
     const mealTime = templateMealTime(t, ctx);
     if (!mealTime) continue;
     const checked = new Map<string, FilterResult>();
@@ -122,20 +123,23 @@ export function generateCandidates(snap: Snapshot, ctx: Context, cfg: Cfg): Plat
       .map((x) => x.c);
     for (const m of mains) build({ [t.mainSlot]: [m.id] }, false);
 
-    // D-18: food cooked and waiting gets plates built around it, locked in its slot.
-    for (const id of ctx.house.cooked) {
-      const cooked = snap.components.get(id);
-      if (!cooked || !pass(cooked).ok) continue;
+    // D-18: food cooked and waiting gets plates built around it, locked in its slot. So does a dish the craving names.
+    const around = (id: string, usesCooked: boolean) => {
+      const locked = snap.components.get(id);
+      if (!locked || !pass(locked).ok) return;
       for (const s of t.slots) {
-        if (!fits(cooked, s)) continue;
+        if (!fits(locked, s)) continue;
         if (s.key === t.mainSlot) {
-          if (!mainBlocked(cooked, ctx, cfg)) build({ [s.key]: [id] }, true);
-        } else for (const m of mains) if (pairing(snap, m.id, id) > 0) build({ [t.mainSlot]: [m.id], [s.key]: [id] }, true);
+          if (!mainBlocked(locked, ctx, cfg)) build({ [s.key]: [id] }, usesCooked);
+        } else for (const m of mains) if (pairing(snap, m.id, id) > 0) build({ [t.mainSlot]: [m.id], [s.key]: [id] }, usesCooked);
       }
-    }
+    };
+    for (const id of ctx.house.cooked) around(id, true);
+    for (const id of ctx.craving?.include ?? []) around(id, false);
   }
 
-  const plates = [...out.values()];
+  const include = ctx.craving?.include ?? [];
+  const plates = [...out.values()].filter((p) => !include.length || Object.values(p.slots).some((ids) => ids.some((id) => include.includes(id))));
   if (plates.length <= cfg.ENGINE_MAX_CANDIDATES) return plates;
   const cooked = plates.filter((p) => p.usesCooked);
   return [...cooked, ...plates.filter((p) => !p.usesCooked).slice(0, Math.max(0, cfg.ENGINE_MAX_CANDIDATES - cooked.length))];

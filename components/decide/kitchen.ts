@@ -5,8 +5,9 @@ import { APP_CONFIG as C } from '@/lib/config/app.config';
 
 // What's in the house (S-024), kept on this phone until accounts arrive (doc 07 sends it with every cook request).
 // Cooked food counts for HOUSE_COOKED_DAYS, then drops off by itself.
-export type Kitchen = { cooked: { id: string; at: string }[]; foodstuff: string[]; basic: string[] };
-export const EMPTY_KITCHEN: Kitchen = { cooked: [], foodstuff: [], basic: [] };
+// custom: what someone typed that the catalogue doesn't know (BR-134). It stays on the list and never reaches the engine.
+export type Kitchen = { cooked: { id: string; at: string }[]; foodstuff: string[]; basic: string[]; custom: string[] };
+export const EMPTY_KITCHEN: Kitchen = { cooked: [], foodstuff: [], basic: [], custom: [] };
 const KEY = 'sw_kitchen';
 const SLUG = /^[a-z0-9-]{1,80}$/; // the same rule the API applies, so a stored list can never get a request refused
 const listeners = new Set<() => void>();
@@ -40,6 +41,14 @@ export function parseKitchen(raw: string, today: string): Kitchen {
       ),
       foodstuff: ids(k.foodstuff),
       basic: ids(k.basic),
+      custom: [
+        ...new Set(
+          (Array.isArray(k.custom) ? k.custom : [])
+            .filter((x): x is string => typeof x === 'string')
+            .map((x) => x.trim().slice(0, C.HOUSE_CUSTOM_MAX_CHARS))
+            .filter(Boolean),
+        ),
+      ].slice(0, C.HOUSE_CUSTOM_MAX_ITEMS),
     };
   } catch {
     return EMPTY_KITCHEN;
