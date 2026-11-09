@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { body, display } from '@/app/fonts/fonts';
+import { Offline } from '@/components/nav/offline';
 import tokens from '@/design/tokens.json';
 import '../globals.css';
 
@@ -18,7 +19,10 @@ export default async function AppLayout({ children }: LayoutProps<'/'>) {
   return (
     <html lang={await getLocale()} className={`${display.variable} ${body.variable}`}>
       <body>
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider>
+          <Offline />
+          {children}
+        </NextIntlClientProvider>
       </body>
     </html>
   );

@@ -8,7 +8,15 @@ import type { LineGroup, PriceBook, PricePoint, SourceKind } from '@/lib/pricing
 // The engine's snapshot and the price book, read from the database (doc 06: "Catalogue and price snapshot").
 // Whoever asks decides what it holds: the public key sees published dishes only (BR-40); a signed-in admin or
 // editor also sees drafts, through the same row-level security, so staff can preview dishes before publishing.
-export type Display = { name: string; localName: string | null; picture: string | null; status: string; totalMinutes: number };
+export type Display = {
+  name: string;
+  localName: string | null;
+  aliases: string[];
+  picture: string | null;
+  status: string;
+  totalMinutes: number;
+  forgotten: boolean;
+};
 type Item = { id: string; name: string };
 // S-024 chips: cooked dishes marked house_chip, and the foodstuff and kitchen basics people say they have (D-18).
 export type HouseOptions = { cooked: Item[]; foodstuff: Item[]; basic: Item[] };
@@ -52,7 +60,7 @@ export async function loadCatalogue(client: SupabaseClient, area = C.DEFAULT_ARE
     client
       .from('components')
       .select(
-        'id, name, local_names, types, region, cuisine_family, meal_times, total_minutes, spice_level, effort, tags, popularity_prior, protein_included, needs_sauce, vegetarian_ok, batch_servings_min, status, illustration_path, house_chip, component_ingredients(ingredient_id, optional, qty_per_serving, grp)',
+        'id, name, local_names, types, region, cuisine_family, meal_times, total_minutes, spice_level, effort, tags, popularity_prior, protein_included, needs_sauce, vegetarian_ok, batch_servings_min, status, illustration_path, house_chip, aliases, forgotten_classic, component_ingredients(ingredient_id, optional, qty_per_serving, grp)',
       )
       .neq('status', 'retired'),
     client
@@ -141,6 +149,8 @@ export async function loadCatalogue(client: SupabaseClient, area = C.DEFAULT_ARE
         picture: (c.illustration_path as string | null) ?? null,
         status: c.status as string,
         totalMinutes: c.total_minutes as number,
+        aliases: (c.aliases as string[]) ?? [],
+        forgotten: !!c.forgotten_classic,
       },
     ]),
   );

@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { body, display } from '@/app/fonts/fonts';
 import { CookMode, type CookComponent } from '@/components/cook/cook-mode';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
 import { plateComponents } from '@/lib/engine/plate';
@@ -32,12 +33,15 @@ export default async function CookPage({ params, searchParams }: { params: Promi
     }))
     .filter((c) => c.steps.length);
   if (!components.length) notFound();
-  const pot = costFn(cat, people, { cooked: [], foodstuff: [], basic: [] }, lagosToday())(plate)?.pot ?? null;
+  const cost = costFn(cat, people, { cooked: [], foodstuff: [], basic: [] }, lagosToday())(plate);
+  const pot = cost?.pot ?? null;
 
   return (
     <CookMode
       components={components}
       plateKey={plateKey}
+      price={cost ? { low: cost.outlayLowNgn, high: cost.outlayHighNgn, date: cost.oldestPriceDate } : null}
+      fonts={{ display: display.style.fontFamily, body: body.style.fontFamily }}
       title={ids.map((id) => cat.display.get(id)?.name ?? id).join(' + ')}
       back={`/plate/${encodeURIComponent(plateKey)}?people=${people}`}
       pot={pot && pot.moreMeals > 0 ? { id: pot.componentId, name: cat.display.get(pot.componentId)?.name ?? pot.componentId } : null}

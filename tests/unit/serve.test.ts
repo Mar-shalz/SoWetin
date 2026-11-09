@@ -41,7 +41,10 @@ const cat: Catalogue = {
     ),
   },
   display: new Map(
-    [...SNAP.components].map(([id, c]) => [id, { name: c.name, localName: null, picture: null, status: 'draft', totalMinutes: c.totalMinutes }]),
+    [...SNAP.components].map(([id, c]) => [
+      id,
+      { name: c.name, localName: null, aliases: [], picture: null, status: 'draft', totalMinutes: c.totalMinutes, forgotten: false },
+    ]),
   ),
   names: new Map(INGREDIENTS.ingredients.map((i) => [i.slug, i.name])),
   drafts: true,

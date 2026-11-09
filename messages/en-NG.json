@@ -331,5 +331,145 @@
     "play": "Play here",
     "more": "More ways to cook it",
     "prefer": "Prefer to watch?"
+  },
+  "explore": {
+    "shelf": {
+      "swallow": "Swallow and soup",
+      "rice": "Rice things",
+      "one_pot": "One-pot and porridge",
+      "breakfast": "Breakfast",
+      "snacks": "Small chops and snacks",
+      "west": "From the West",
+      "east": "From the East",
+      "north": "From the North",
+      "south_south": "From the South-South",
+      "efik": "Efik and Ibibio",
+      "west_african": "West African neighbours",
+      "africa": "Across Africa",
+      "continental": "Lagos continental",
+      "under_2000": "Under ₦2,000 for 1",
+      "under_3500": "Under ₦3,500 for 1",
+      "under_5000": "Under ₦5,000 for 1",
+      "quick": "30 minutes or less",
+      "forgotten": "Forgotten classics",
+      "late_night": "Late-night"
+    },
+    "search": "Search dishes and local names",
+    "noResults": "Nothing called that yet. Try another name.",
+    "seeAll": "See all",
+    "empty": "No dishes here yet.",
+    "sortLabel": "Sort",
+    "sort": {
+      "popular": "Popular",
+      "quickest": "Quickest",
+      "cheapest": "Cheapest today"
+    }
+  },
+  "persona": {
+    "swallow": {
+      "name": "Swallow Loyalist",
+      "line": "Soup and swallow or nothing. You can tell eba from semo with your eyes closed.",
+      "traits": "Soup first · Hands ready · Sunday special",
+      "dishes": "Egusi soup, Amala, Pounded yam"
+    },
+    "pepper": {
+      "name": "Pepper Soldier",
+      "line": "If it doesn't burn a little, it's not done. Suya, pepper soup and asun are your people.",
+      "traits": "Spice level: fire · Extra yaji · Rainy day pepper soup",
+      "dishes": "Suya, Goat meat pepper soup, Asun (peppered goat)"
+    },
+    "jollof": {
+      "name": "Jollof Captain",
+      "line": "Rice is always the plan. Party jollof, dodo on the side, and that smoky bottom of the pot.",
+      "traits": "Party rice energy · Dodo on everything · Bottom-pot hunter",
+      "dishes": "Jollof rice, Nigerian fried rice, Dodo (fried plantain)"
+    },
+    "street": {
+      "name": "Street Food Royalty",
+      "line": "You eat the city. Akara at 7, suya at 9, and you know every good spot in between.",
+      "traits": "Knows the best spot · Roadside expert · Late-night regular",
+      "dishes": "Suya, Akara, Boli and fish"
+    },
+    "explorer": {
+      "name": "Soup Explorer",
+      "line": "You've eaten your way around Nigeria. Banga, afang, nsala, miyan kuka. Every region, one bowl at a time.",
+      "traits": "Every region · Sunday soup · Open to anything",
+      "dishes": "Banga soup, Afang soup, Miyan kuka"
+    },
+    "comfort": {
+      "name": "Comfort Keeper",
+      "line": "Food that holds you like a hug. Beans, yam porridge and a pot that lasts the week.",
+      "traits": "Pot that lasts · Beans and dodo · Rainy day food",
+      "dishes": "Beans porridge (ewa riro), Yam porridge (asaro), Ewa agoyin"
+    },
+    "breakfast": {
+      "name": "Breakfast Champion",
+      "line": "Your day starts with akara and pap, or it doesn't start at all.",
+      "traits": "Early bird · Akara and pap · Yam and egg",
+      "dishes": "Akara, Pap (ogi / akamu), Boiled yam"
+    },
+    "quick": {
+      "name": "Quick Chop Hero",
+      "line": "Fifteen minutes, one pot, belle full. Noodles and egg is a whole art.",
+      "traits": "Ready in 15 · Late-night chef · One-pot wonder",
+      "dishes": "Instant noodles, Fried egg, Jollof spaghetti"
+    },
+    "everything": {
+      "name": "Everything Eater",
+      "line": "You've never met a plate you didn't like. Every pot is an adventure.",
+      "traits": "Tries every pot · No food enemies · Adventure on a plate",
+      "dishes": "Egusi soup, Jollof rice, Suya"
+    },
+    "connoisseur": {
+      "name": "The Connoisseur",
+      "line": "You know exactly what you like. The kitchen respects that.",
+      "traits": "Picky and proud · Knows the recipe · Quality first",
+      "dishes": "Kòkò alone, no dishes"
+    },
+    "entry": {
+      "title": "What's your chop personality?",
+      "body": "12 plates. Yum or nah. About a minute.",
+      "cta": "Play"
+    },
+    "eyebrow": "Your chop personality",
+    "matches": "Plates that match you",
+    "save": "Save my card",
+    "copy": "Copy caption",
+    "pick": "Pick a plate for me",
+    "again": "Play again",
+    "see": "See my card",
+    "card": {
+      "cta": "What's yours? Find out at sowetin.com"
+    },
+    "caption": "I'm a {name} on SoWetin. What's your chop personality? sowetin.com",
+    "yum": "Yum",
+    "nah": "Nah",
+    "finish": "Finish now",
+    "progress": "{n} of {total}",
+    "copied": "Copied"
+  },
+  "frame": {
+    "title": "Show off your pot",
+    "body": "Snap what you cooked. I'll put it on an enamel plate for your Status.",
+    "photo": "Take or pick a photo",
+    "drawing": "Use the drawing instead",
+    "privacy": "Your photo stays on this phone. SoWetin never uploads it.",
+    "price": "Show the price",
+    "name": {
+      "label": "Your name (optional)"
+    },
+    "eyebrow": {
+      "self": "Cooked it myself",
+      "name": "Cooked by {name}"
+    },
+    "sticker": "I cooked it!",
+    "save": "Save image",
+    "caption": "I cooked {plate} today. SoWetin picked it, I did the rest. So, wetin you go chop? sowetin.com",
+    "done": "Done",
+    "copy": "Copy caption",
+    "copied": "Copied"
+  },
+  "offline": {
+    "banner": "You're offline. Showing what I saved."
   }
 }

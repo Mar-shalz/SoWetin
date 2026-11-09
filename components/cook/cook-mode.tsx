@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState, useSyncExternalStore } from 'react';
+import { Frame, type FramePrice } from '@/components/cook/frame';
 import { lagosToday, saveKitchen, useKitchen } from '@/components/decide/kitchen';
 import { HISTORY, MAX_ITEMS, NO_PLATES, parsePlates, store, useStored } from '@/lib/device/store';
 
@@ -28,12 +29,16 @@ export function CookMode({
   pot,
   plateKey,
   title,
+  price,
+  fonts,
 }: {
   components: CookComponent[];
   back: string;
   pot: { id: string; name: string } | null;
   plateKey: string;
   title: string;
+  price: FramePrice;
+  fonts: { display: string; body: string };
 }) {
   const t = useTranslations('cook');
   const t2 = useTranslations();
@@ -51,6 +56,7 @@ export function CookMode({
   const [now, setNow] = useState(() => Date.now());
   const [done, setDone] = useState<string | null>(null);
   const [asking, setAsking] = useState(false);
+  const [framing, setFraming] = useState(false);
   const canLock = useSyncExternalStore(
     noop,
     () => 'wakeLock' in navigator,
@@ -98,8 +104,16 @@ export function CookMode({
   const finish = (addPot: boolean) => {
     store(HISTORY, [{ key: plateKey, title, at: new Date().toISOString() }, ...history].slice(0, MAX_ITEMS));
     if (addPot && pot) saveKitchen({ ...kitchen, cooked: [...kitchen.cooked.filter((c) => c.id !== pot.id), { id: pot.id, at: lagosToday() }] });
-    router.push('/');
+    // S-029 follows "Ate it" once per plate (F30).
+    setFraming(true);
   };
+
+  if (framing)
+    return (
+      <main className="mx-auto flex min-h-dvh max-w-app flex-col gap-4 px-4 py-4">
+        <Frame plate={title} price={price} fonts={fonts} onDone={() => router.push('/')} />
+      </main>
+    );
 
   return (
     <main className="mx-auto flex min-h-dvh max-w-app flex-col gap-4 px-4 py-4">
