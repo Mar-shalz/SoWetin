@@ -64,6 +64,10 @@ export const APP_CONFIG = {
   AI_CHEF_TIMEOUT_MS: 8000,
   AI_QUOTA_ANON_DAILY: 15,
   AI_QUOTA_USER_DAILY: 60,
+  // T3 drafts run on Gemini's free tier (Victor, 9 November 2026). The free limits show in Google AI Studio.
+  AI_MODEL_AUTHORING: 'gemini-3.6-flash',
+  AI_DRAFT_TIMEOUT_MS: 90000,
+  AI_DRAFT_BATCH: 3,
   CRAVING_MAX_CHARS: 200,
   CHEF_QUESTION_MAX_CHARS: 300,
   LOG_TEXT_RETENTION_DAYS: 30,

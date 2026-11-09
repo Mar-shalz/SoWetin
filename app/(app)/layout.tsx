@@ -1,12 +1,8 @@
 import type { Metadata, Viewport } from 'next';
-import localFont from 'next/font/local';
 import { getLocale, getTranslations } from 'next-intl/server';
+import { body, display } from '@/app/fonts/fonts';
 import tokens from '@/design/tokens.json';
 import '../globals.css';
-
-// Self-hosted subsets from scripts/subset-fonts.sh. Only the body file is preloaded (doc 12, section 2).
-const display = localFont({ src: '../fonts/bricolage-grotesque.woff2', variable: '--nf-display', weight: '600 800', display: 'swap', preload: false });
-const body = localFont({ src: '../fonts/plus-jakarta-sans.woff2', variable: '--nf-body', weight: '400 800', display: 'swap' });
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('meta');
