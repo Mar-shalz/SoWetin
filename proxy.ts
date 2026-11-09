@@ -19,6 +19,7 @@ export async function proxy(request: NextRequest) {
     "base-uri 'self'",
     "form-action 'self'",
     "frame-ancestors 'none'",
+    `frame-src ${/^\/(plate|dish)\//.test(request.nextUrl.pathname) ? 'https://www.youtube-nocookie.com' : "'none'"}`,
     'upgrade-insecure-requests',
   ].join('; ');
 

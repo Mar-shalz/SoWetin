@@ -7,6 +7,9 @@ import { plateComponents } from '@/lib/engine/plate';
 import { pictureUrl } from '@/lib/db/env';
 import { formatNaira } from '@/lib/i18n/money';
 import { PriceSheet } from '@/components/decide/price-sheet';
+import { CopyButton } from '@/components/plate/copy-button';
+import { SaveButton } from '@/components/plate/save-button';
+import { Videos, type VideoRef } from '@/components/plate/videos';
 import { catalogueForRequest, costFn, lagosToday, parsePlateKey, receipt } from '@/lib/plates/serve';
 import { cookServings } from '@/lib/pricing/costPlate';
 
@@ -18,6 +21,7 @@ type Method = {
   storage: string | null;
   serving_note: string | null;
   component_steps: { step_no: number; text: string; cue: string | null; heat: 'low' | 'medium' | 'high' | null; timer_seconds: number | null }[];
+  videos: (VideoRef & { rank: number | null; status: string })[];
 };
 const round = (n: number) => Math.round(n / C.PRICE_ROUNDING_NGN) * C.PRICE_ROUNDING_NGN;
 const amount = (n: number) => (n >= 10 ? Math.round(n) : Math.round(n * 10) / 10);
@@ -35,13 +39,26 @@ export default async function PlatePage({ params, searchParams }: { params: Prom
   const cost = costFn(cat, people, { cooked: [], foodstuff: [], basic: [] }, lagosToday())(plate);
   const { data } = await client
     .from('components')
-    .select('id, status, tips, mistakes, storage, serving_note, component_steps(step_no, text, cue, heat, timer_seconds)')
+    .select(
+      'id, status, tips, mistakes, storage, serving_note, component_steps(step_no, text, cue, heat, timer_seconds), videos(youtube_id, title, channel_title, duration_seconds, thumbnail_url, rank, status)',
+    )
     .in('id', ids);
   const methods = new Map(((data ?? []) as Method[]).map((m) => [m.id, m]));
   // Cooking order (doc 07): the component that takes longest starts first.
   const order = [...ids].sort((a, b) => (cat.display.get(b)?.totalMinutes ?? 0) - (cat.display.get(a)?.totalMinutes ?? 0));
   const allPublished = ids.every((id) => cat.display.get(id)?.status === 'published');
   const unit = (id: string) => cat.book.ingredients[id]?.canonicalUnit ?? 'g';
+  // The list as plain text for WhatsApp or the clipboard; prices stay labelled as estimates (BR-21).
+  const marketText = cost
+    ? [
+        `${t('market.title')}: ${ids.map((id) => cat.display.get(id)?.name ?? id).join(' + ')} (${t('home.sentence.people', { count: people })})`,
+        ...cost.lines
+          .filter((l) => l.bought.length)
+          .map((l) => `- ${cat.names.get(l.ingredientId) ?? l.ingredientId}: ${l.bought.map((b) => `${b.count} × ${b.label}`).join(', ')}`),
+        t('market.total', { low: formatNaira(cost.outlayLowNgn), high: formatNaira(cost.outlayHighNgn) }),
+        t('market.footer', { area: t('areas.lagos'), date: cost.oldestPriceDate }),
+      ].join('\n')
+    : '';
 
   return (
     <main className="mx-auto flex min-h-dvh max-w-app flex-col gap-6 px-4 py-6">
@@ -49,6 +66,7 @@ export default async function PlatePage({ params, searchParams }: { params: Prom
         {t('detail.back')}
       </Link>
       <h1 className="type-display-l">{ids.map((id) => cat.display.get(id)?.name ?? id).join(' + ')}</h1>
+      <SaveButton plateKey={decodeURIComponent(key)} title={ids.map((id) => cat.display.get(id)?.name ?? id).join(' + ')} people={people} />
 
       {cost && (
         <section aria-labelledby="price">
@@ -56,6 +74,23 @@ export default async function PlatePage({ params, searchParams }: { params: Prom
             {t('plate.price.range', { low: formatNaira(cost.outlayLowNgn), high: formatNaira(cost.outlayHighNgn) })}
           </p>
           <p className="type-caption text-ink-2">{t('plate.price.today')}</p>
+          <div className="mt-3 flex items-center gap-3">
+            <Link
+              href={`/plate/${encodeURIComponent(decodeURIComponent(key))}?people=${Math.max(C.PEOPLE_MIN, people - 1)}`}
+              aria-label={t('detail.people.fewer')}
+              className="flex size-12 items-center justify-center rounded-pill border-2 border-ink bg-surface type-title-m"
+            >
+              −
+            </Link>
+            <span className="type-label">{t('home.sentence.people', { count: people })}</span>
+            <Link
+              href={`/plate/${encodeURIComponent(decodeURIComponent(key))}?people=${Math.min(C.PEOPLE_MAX, people + 1)}`}
+              aria-label={t('detail.people.more')}
+              className="flex size-12 items-center justify-center rounded-pill border-2 border-ink bg-surface type-title-m"
+            >
+              +
+            </Link>
+          </div>
           <p className="mt-2 type-caption text-ink-2">
             <PriceSheet
               low={cost.outlayLowNgn}
@@ -176,6 +211,12 @@ export default async function PlatePage({ params, searchParams }: { params: Prom
           );
         })}
         {allPublished && <p className="type-caption text-ink-2">{t('recipes.note.line')}</p>}
+        <Videos
+          videos={order
+            .flatMap((id) => methods.get(id)?.videos ?? [])
+            .filter((v) => v.status === 'approved' && v.rank)
+            .sort((a, b) => a.rank! - b.rank!)}
+        />
       </section>
 
       {cost && (
@@ -198,6 +239,17 @@ export default async function PlatePage({ params, searchParams }: { params: Prom
           </ul>
           <p className="type-label">{t('market.total', { low: formatNaira(cost.outlayLowNgn), high: formatNaira(cost.outlayHighNgn) })}</p>
           <p className="type-caption text-ink-2">{t('market.footer', { area: t('areas.lagos'), date: cost.oldestPriceDate })}</p>
+          <div className="mt-2 flex gap-3">
+            <a
+              href={`https://wa.me/?text=${encodeURIComponent(marketText)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex min-h-12 flex-1 items-center justify-center rounded-pill border-2 border-ink bg-palm px-4 type-label"
+            >
+              {t('market.share')}
+            </a>
+            <CopyButton text={marketText} label={t('market.copy')} done={t('market.copied')} />
+          </div>
         </section>
       )}
     </main>

@@ -6,7 +6,11 @@
     "dishes": "Dishes",
     "signOut": "Sign out",
     "signedInAs": "Signed in as {email}",
-    "prices": "Prices"
+    "prices": "Prices",
+    "pairings": "Pairings",
+    "ingredients": "Ingredients",
+    "settings": "Settings",
+    "videos": "Videos"
   },
   "signIn": {
     "title": "Sign in to the admin",
@@ -283,6 +287,60 @@
       "details": "Why rows were rejected",
       "moves": "Big moves: {list}",
       "unfinished": "Didn’t finish"
+    }
+  },
+  "pairings": {
+    "title": "Pairings",
+    "intro": "{approved} of {total} approved. The engine only uses approved pairings; until then it uses the type defaults (BR-42).",
+    "status": "Status",
+    "approved": "Approved",
+    "draft": "Not yet",
+    "score": "Score, 0 to 1",
+    "save": "Save"
+  },
+  "ingredients": {
+    "title": "Ingredients",
+    "intro": "Names, local names and where they show in \"What’s in the house?\". Allergens are locked here: changing them needs a second reviewer.",
+    "allergens": "Allergens: {list}",
+    "edit": "Edit",
+    "name": "Name",
+    "house": "In \"What’s in the house?\"",
+    "houseNone": "Not offered",
+    "houseFood": "Foodstuff",
+    "houseBasic": "Kitchen basic"
+  },
+  "settings": {
+    "auditTitle": "Audit log",
+    "title": "Settings",
+    "intro": "The values the app runs on (PRD section 12 and doc 06 flags). They change in code for now.",
+    "you": "you",
+    "system": "system",
+    "details": "What changed"
+  },
+  "videos": {
+    "title": "Videos",
+    "intro": "Paste a YouTube link for a dish. Up to {max} per dish; the first one is the primary. Watch it first and check it makes the dish the way our recipe does.",
+    "dish": "Dish",
+    "link": "YouTube link",
+    "language": "Language",
+    "minutes": "Length in minutes (optional)",
+    "add": "Add video",
+    "adding": "Checking the video…",
+    "added": "Video added.",
+    "badLink": "That isn’t a YouTube video link.",
+    "full": "This dish already has {max} videos. Hide one first.",
+    "notEmbeddable": "YouTube says this video can’t be shown in other apps, or it doesn’t exist.",
+    "duplicate": "That video is already on this dish.",
+    "primary": "Primary",
+    "up": "Move up",
+    "hide": "Hide",
+    "languages": {
+      "en": "English",
+      "pcm": "Pidgin",
+      "yo": "Yoruba",
+      "ig": "Igbo",
+      "ha": "Hausa",
+      "other": "Other"
     }
   }
 }

@@ -15,6 +15,18 @@ export function AdminHeader({ email }: { email?: string }) {
         <Link href="/admin/prices" className="text-enamel underline">
           {t('nav.prices')}
         </Link>
+        <Link href="/admin/pairings" className="text-enamel underline">
+          {t('nav.pairings')}
+        </Link>
+        <Link href="/admin/ingredients" className="text-enamel underline">
+          {t('nav.ingredients')}
+        </Link>
+        <Link href="/admin/videos" className="text-enamel underline">
+          {t('nav.videos')}
+        </Link>
+        <Link href="/admin/settings" className="text-enamel underline">
+          {t('nav.settings')}
+        </Link>
       </nav>
       <form action={signOut} className="flex flex-wrap items-center gap-3">
         {email && <span className="type-caption text-ink-2">{t('nav.signedInAs', { email })}</span>}

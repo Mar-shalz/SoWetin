@@ -172,3 +172,29 @@ describe('dish pictures (BR-41)', () => {
     expect(pictureType(bytes('<html><script>'))).toBeNull();
   });
 });
+
+describe('YouTube paste-in (A-05)', () => {
+  it('reads the video id from every common link, and nothing else', async () => {
+    const { youtubeId } = await import('@/lib/admin/youtube');
+    expect(youtubeId('https://www.youtube.com/watch?v=dQw4w9WgXcQ&t=10s')).toBe('dQw4w9WgXcQ');
+    expect(youtubeId('https://youtu.be/dQw4w9WgXcQ')).toBe('dQw4w9WgXcQ');
+    expect(youtubeId('https://m.youtube.com/shorts/dQw4w9WgXcQ')).toBe('dQw4w9WgXcQ');
+    expect(youtubeId('https://evil.example.com/watch?v=dQw4w9WgXcQ')).toBeNull();
+    expect(youtubeId('javascript:alert(1)')).toBeNull();
+    expect(youtubeId('https://www.youtube.com/watch?v=short')).toBeNull();
+  });
+
+  it('takes title and channel from oEmbed, refuses unembeddable videos and foreign thumbnails', async () => {
+    const { videoInfo } = await import('@/lib/admin/youtube');
+    const ok = vi.fn(async () => Response.json({ title: 'Egusi soup', author_name: 'Sisi Yemmie', thumbnail_url: 'https://i.ytimg.com/vi/x/hqdefault.jpg' }));
+    expect(await videoInfo('dQw4w9WgXcQ', ok)).toEqual({ title: 'Egusi soup', channel: 'Sisi Yemmie', thumbnail: 'https://i.ytimg.com/vi/x/hqdefault.jpg' });
+    expect(
+      await videoInfo(
+        'dQw4w9WgXcQ',
+        vi.fn(async () => new Response('Unauthorized', { status: 401 })),
+      ),
+    ).toBeNull();
+    const odd = vi.fn(async () => Response.json({ title: 'x', author_name: 'y', thumbnail_url: 'https://evil.example.com/t.jpg' }));
+    expect((await videoInfo('dQw4w9WgXcQ', odd))?.thumbnail).toBeNull();
+  });
+});

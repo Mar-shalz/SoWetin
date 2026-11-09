@@ -88,7 +88,8 @@
       "_": "Swap",
       "label": "Swap {component}",
       "none": "That's the only one that fits. Swap something else?"
-    }
+    },
+    "save": "Save this plate"
   },
   "deck": {
     "tight": {
@@ -116,7 +117,11 @@
       "sources": "Based on {count, plural, one {# price report} other {# price reports}} · checked {relative}"
     },
     "goesWith": "Goes well with",
-    "howWePrice": "How we price"
+    "howWePrice": "How we price",
+    "people": {
+      "fewer": "Fewer people",
+      "more": "More people"
+    }
   },
   "recipe": {
     "title": "How to cook it",
@@ -137,7 +142,10 @@
   "market": {
     "title": "Market list",
     "total": "Total: about {low} to {high}",
-    "footer": "Prices are estimates for {area}, checked {date}. Your market may be a bit different."
+    "footer": "Prices are estimates for {area}, checked {date}. Your market may be a bit different.",
+    "share": "Send on WhatsApp",
+    "copy": "Copy list",
+    "copied": "Copied"
   },
   "prices": {
     "note": {
@@ -251,8 +259,10 @@
   },
   "videos": {
     "note": {
-      "full": "We pick these videos by hand from YouTube creators. We don't own or control them. Some cook the dish a little differently from our written steps, and that's fine. Every Nigerian kitchen has its own way. If a video is gone or doesn't match the dish, tell us."
-    }
+      "full": "We pick these videos by hand from YouTube creators. We don't own or control them. Some cook the dish a little differently from our written steps, and that's fine. Every Nigerian kitchen has its own way. If a video is gone or doesn't match the dish, tell us.",
+      "line": "Videos are by independent cooks on YouTube. Their method may be a bit different from ours."
+    },
+    "report": "Video gone or wrong? Tell us"
   },
   "ai": {
     "note": {
@@ -291,5 +301,35 @@
       "pick": "Hungry now? Let SoWetin pick for you"
     },
     "price": "Estimate for {people} in {area}: {range}"
+  },
+  "nav": {
+    "label": "Main",
+    "decide": "Decide",
+    "explore": "Explore",
+    "saved": "Saved",
+    "me": "Me"
+  },
+  "saved": {
+    "on": "Saved",
+    "tab": {
+      "saved": "Saved",
+      "history": "History"
+    },
+    "again": "Again?",
+    "remove": "Remove",
+    "onPhone": "Kept on this phone for now."
+  },
+  "empty": {
+    "saved": "Nothing saved yet. Tap the heart on any plate.",
+    "history": "Nothing logged yet. Tap \"Ate it\" after a meal and I'll keep track."
+  },
+  "me": {
+    "onPhone": "No account needed yet. What you save and your kitchen list stay on this phone."
+  },
+  "video": {
+    "watch": "Watch on YouTube",
+    "play": "Play here",
+    "more": "More ways to cook it",
+    "prefer": "Prefer to watch?"
   }
 }

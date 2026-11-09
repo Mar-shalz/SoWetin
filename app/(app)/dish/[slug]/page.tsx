@@ -7,6 +7,7 @@ import { getTranslations } from 'next-intl/server';
 import { cache } from 'react';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
 import { pictureUrl, siteUrl } from '@/lib/db/env';
+import { Videos, type VideoRef } from '@/components/plate/videos';
 import { formatNaira } from '@/lib/i18n/money';
 import { catalogueForRequest, lagosToday } from '@/lib/plates/serve';
 import { cookServings, costPlate } from '@/lib/pricing/costPlate';
@@ -29,6 +30,7 @@ type Dish = {
   total_minutes: number;
   illustration_path: string | null;
   component_steps: { step_no: number; text: string; cue: string | null; heat: 'low' | 'medium' | 'high' | null }[];
+  videos: (VideoRef & { rank: number | null; status: string })[];
 };
 
 // One database read per request, shared by the page and its metadata. Published dishes only for the public;
@@ -40,7 +42,7 @@ const load = cache(async (slug: string) => {
   const { data } = await client
     .from('components')
     .select(
-      'id, name, status, description, local_names, equipment, tips, mistakes, storage, serving_note, types, region, cuisine_family, prep_minutes, total_minutes, illustration_path, component_steps(step_no, text, cue, heat)',
+      'id, name, status, description, local_names, equipment, tips, mistakes, storage, serving_note, types, region, cuisine_family, prep_minutes, total_minutes, illustration_path, component_steps(step_no, text, cue, heat), videos(youtube_id, title, channel_title, duration_seconds, thumbnail_url, rank, status)',
     )
     .eq('id', slug)
     .maybeSingle();
@@ -251,6 +253,8 @@ export default async function DishPage({ params }: { params: Promise<{ slug: str
           </Link>
         </p>
       )}
+
+      <Videos videos={dish.videos.filter((v) => v.status === 'approved' && v.rank).sort((a, b) => a.rank! - b.rank!)} />
 
       {!!goesWith.length && (
         <section aria-labelledby="goes-with">

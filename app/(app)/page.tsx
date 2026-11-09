@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 import { Decide } from '@/components/decide/decide';
+import { BottomNav } from '@/components/nav/bottom-nav';
 import { SearchIcon } from '@/components/ui/icons';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
 import { catalogueHealth } from '@/lib/db/health';
@@ -14,7 +15,7 @@ export default async function DecidePage() {
   const cut = greeting.search(/[.?!]\s/);
   const { cat } = await catalogueForRequest();
   return (
-    <main className="mx-auto flex min-h-dvh max-w-app flex-col px-4 pb-6">
+    <main className="mx-auto flex min-h-dvh max-w-app flex-col px-4">
       <p className="-mx-4 bg-ink px-4 py-2 type-caption text-cream">
         {t('preview.m0')}
         {/* Streams in after the page, so a slow database never delays the first paint. */}
@@ -38,6 +39,7 @@ export default async function DecidePage() {
           <span className="rounded-pill border-2 border-ink-3 bg-sunken px-4 py-2 type-label text-ink-3">{t('craving.find')}</span>
         </div>
       </Decide>
+      <BottomNav current="decide" />
     </main>
   );
 }

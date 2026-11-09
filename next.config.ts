@@ -17,7 +17,12 @@ const SECURITY_HEADERS = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   // Dish pictures live in Supabase Storage and are resized through /_next/image, so the CSP stays 'self'.
-  images: { remotePatterns: [{ protocol: 'https', hostname: '*.supabase.co', pathname: '/storage/v1/object/public/illustrations/**' }] },
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: '*.supabase.co', pathname: '/storage/v1/object/public/illustrations/**' },
+      { protocol: 'https', hostname: 'i.ytimg.com', pathname: '/vi/**' },
+    ],
+  },
   headers: async () => [{ source: '/:path*', headers: SECURITY_HEADERS }],
   turbopack: {
     rules: {

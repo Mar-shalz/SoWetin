@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { PriceSheet } from '@/components/decide/price-sheet';
+import { SaveButton } from '@/components/plate/save-button';
 import { EMPTY_KITCHEN, kitchenForApi, lagosToday as today, saveKitchen, useKitchen, type Kitchen } from '@/components/decide/kitchen';
 import { CaretIcon, ChevronIcon, HouseIcon, SlidersIcon } from '@/components/ui/icons';
 import type { HouseOptions } from '@/lib/catalogue/db';
@@ -260,7 +261,7 @@ export function Decide({ greeting, house, children }: { greeting: ReactNode; hou
         {notice && <p className="text-ink-2">{notice}</p>}
       </section>
 
-      <div className="sticky bottom-0 mt-auto bg-cream pb-2 pt-3">
+      <div className="sticky bottom-14 mt-auto bg-cream pb-2 pt-3">
         <button
           type="button"
           disabled={busy}
@@ -453,7 +454,10 @@ function PlateCard({
           className="mb-3 aspect-[4/3] w-full rounded-md object-cover"
         />
       )}
-      <h3 className="type-title-m">{p.title}</h3>
+      <div className="flex items-start justify-between gap-3">
+        <h3 className="type-title-m">{p.title}</h3>
+        <SaveButton plateKey={p.plate_key} title={p.title} people={people} />
+      </div>
       <p className="mt-2 type-price-l">{t('plate.price.range', { low: formatNaira(price.low_ngn), high: formatNaira(price.high_ngn) })}</p>
       <p className="type-caption text-ink-2">{t('plate.price.today')}</p>
       {price.pot ? (

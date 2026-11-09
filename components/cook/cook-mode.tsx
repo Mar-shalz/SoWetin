@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState, useSyncExternalStore } from 'react';
 import { lagosToday, saveKitchen, useKitchen } from '@/components/decide/kitchen';
+import { HISTORY, MAX_ITEMS, NO_PLATES, parsePlates, store, useStored } from '@/lib/device/store';
 
 export type CookStep = { text: string; cue: string | null; heat: 'low' | 'medium' | 'high' | null; timer_seconds: number | null };
 export type CookComponent = { id: string; name: string; steps: CookStep[] };
@@ -21,11 +22,24 @@ const clock = (ms: number) => {
 // S-005 Cook mode (doc 02): one step per screen, big type, timers that keep running across steps and components,
 // the screen kept on (FR-021), then "Done? How did it go?" with the pot offer (BR-28).
 // shortcut: no swipe, servings stepper, ingredient drawer, Ate it logging or offline yet (events and PWA come later).
-export function CookMode({ components, back, pot }: { components: CookComponent[]; back: string; pot: { id: string; name: string } | null }) {
+export function CookMode({
+  components,
+  back,
+  pot,
+  plateKey,
+  title,
+}: {
+  components: CookComponent[];
+  back: string;
+  pot: { id: string; name: string } | null;
+  plateKey: string;
+  title: string;
+}) {
   const t = useTranslations('cook');
   const t2 = useTranslations();
   const router = useRouter();
   const kitchen = useKitchen();
+  const history = useStored(HISTORY, parsePlates, NO_PLATES);
   const screens: Screen[] = components.flatMap((c, i): Screen[] => [
     ...(i ? [{ kind: 'divider' as const, done: components[i - 1].name, next: c.name }] : []),
     ...c.steps.map((step, n) => ({ kind: 'step' as const, component: c.name, step, n })),
@@ -82,6 +96,7 @@ export function CookMode({ components, back, pot }: { components: CookComponent[
   const start = (step: CookStep, component: string) =>
     setTimers([...timers, { id: `${component}-${step.text}`, name: step.text.split(/[.,]/)[0], endsAt: Date.now() + step.timer_seconds! * 1000 }]);
   const finish = (addPot: boolean) => {
+    store(HISTORY, [{ key: plateKey, title, at: new Date().toISOString() }, ...history].slice(0, MAX_ITEMS));
     if (addPot && pot) saveKitchen({ ...kitchen, cooked: [...kitchen.cooked.filter((c) => c.id !== pot.id), { id: pot.id, at: lagosToday() }] });
     router.push('/');
   };

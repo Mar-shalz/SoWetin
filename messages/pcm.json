@@ -88,7 +88,8 @@
       "_": "Change am",
       "label": "Change {component}",
       "none": "Na only this one fit. Change another thing?"
-    }
+    },
+    "save": "Save this plate"
   },
   "deck": {
     "tight": {
@@ -116,7 +117,11 @@
       "sources": "E come from {count, plural, one {# price report} other {# price reports}} · we check am {relative}"
     },
     "goesWith": "E go well with",
-    "howWePrice": "How una take price am"
+    "howWePrice": "How una take price am",
+    "people": {
+      "fewer": "Reduce people",
+      "more": "Add people"
+    }
   },
   "recipe": {
     "title": "How to cook am",
@@ -137,7 +142,10 @@
   "market": {
     "title": "Market list",
     "total": "Total: about {low} to {high}",
-    "footer": "Price na estimate for {area}, we check am {date}. Your market fit different small."
+    "footer": "Price na estimate for {area}, we check am {date}. Your market fit different small.",
+    "share": "Send am for WhatsApp",
+    "copy": "Copy the list",
+    "copied": "E don copy"
   },
   "prices": {
     "note": {
@@ -251,8 +259,10 @@
   },
   "videos": {
     "note": {
-      "full": "We dey pick these videos one by one from YouTube creators. No be we get dem, and we no control dem. Some people cook am small different from our own steps, and e no bad. Every Naija kitchen get their own style. If video no dey again or e no match the food, tell us."
-    }
+      "full": "We dey pick these videos one by one from YouTube creators. No be we get dem, and we no control dem. Some people cook am small different from our own steps, and e no bad. Every Naija kitchen get their own style. If video no dey again or e no match the food, tell us.",
+      "line": "Na independent cooks for YouTube make these videos. Their style fit different small from our own."
+    },
+    "report": "Video don go or e no correct? Tell us"
   },
   "ai": {
     "note": {
@@ -291,5 +301,35 @@
       "pick": "Hunger dey catch you? Make SoWetin pick for you"
     },
     "price": "Estimate for {people} for {area}: {range}"
+  },
+  "nav": {
+    "label": "Main",
+    "decide": "Decide",
+    "explore": "Explore",
+    "saved": "Wetin I save",
+    "me": "Me"
+  },
+  "saved": {
+    "on": "E don save",
+    "tab": {
+      "saved": "Wetin I save",
+      "history": "Wetin I don chop"
+    },
+    "again": "Again?",
+    "remove": "Comot am",
+    "onPhone": "E dey this phone for now."
+  },
+  "empty": {
+    "saved": "Nothing never save. Tap save for any plate.",
+    "history": "Nothing never log. Tap \"I don chop am\" after you chop, I go keep am."
+  },
+  "me": {
+    "onPhone": "You no need account yet. Wetin you save and your kitchen list go stay for this phone."
+  },
+  "video": {
+    "watch": "Watch am for YouTube",
+    "play": "Play am here",
+    "more": "Other ways to cook am",
+    "prefer": "You prefer to watch?"
   }
 }

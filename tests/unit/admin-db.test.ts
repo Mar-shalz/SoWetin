@@ -175,3 +175,20 @@ describe('scout rules in the database (A-04)', () => {
     expect(await count(editor, 'scout_runs')).toBe(0);
   });
 });
+
+describe('pairing and ingredient rules (A-06, A-07)', () => {
+  it('shows draft pairings to staff only and lets staff approve them', async () => {
+    const [{ a, b }] = (await db.query<{ a: string; b: string }>(`select component_a as a, component_b as b from pairings where status = 'draft' limit 1`))
+      .rows;
+    const approved = await count('anon', 'pairings');
+    await as(editor, `update pairings set status = 'approved' where component_a = $1 and component_b = $2`, [a, b]);
+    expect(await count('anon', 'pairings')).toBe(approved + 1);
+    expect(await count(editor, 'pairings')).toBeGreaterThan(approved + 1);
+  });
+
+  it('refuses any allergen change, even from staff', async () => {
+    await expect(as(editor, `update ingredients set allergens = '{}' where id = 'crayfish'`)).rejects.toThrow(/second reviewer/);
+    await as(editor, `update ingredients set house_group = 'basic' where id = 'crayfish'`);
+    await expect(as({ sub: STRANGER, aal: 'aal2' }, `update ingredients set name = 'x' where id = 'crayfish' returning id`)).resolves.toEqual([]);
+  });
+});

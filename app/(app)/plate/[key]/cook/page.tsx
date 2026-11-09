@@ -37,6 +37,8 @@ export default async function CookPage({ params, searchParams }: { params: Promi
   return (
     <CookMode
       components={components}
+      plateKey={plateKey}
+      title={ids.map((id) => cat.display.get(id)?.name ?? id).join(' + ')}
       back={`/plate/${encodeURIComponent(plateKey)}?people=${people}`}
       pot={pot && pot.moreMeals > 0 ? { id: pot.componentId, name: cat.display.get(pot.componentId)?.name ?? pot.componentId } : null}
     />
