@@ -21,3 +21,11 @@ test('unpublished dishes are not public, and robots keep out of the admin', asyn
   expect(robots).toContain('Disallow: /admin');
   expect(robots).toContain('Disallow: /api/');
 });
+
+// S-022: a shared link that names no real plate is a plain 404, never a broken card.
+test('a shared plate link for an unknown plate is not found', async ({ page }) => {
+  const res = await page.goto('/p/2/not-a-plate');
+  expect(res?.status()).toBe(404);
+  const bad = await page.goto('/p/99/soup_swallow%3Asoup%3Degusi-soup');
+  expect(bad?.status()).toBe(404);
+});

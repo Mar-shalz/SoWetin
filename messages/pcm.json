@@ -108,7 +108,13 @@
       "label": "Change {component}",
       "none": "Na only this one fit. Change another thing?"
     },
-    "save": "Save this plate"
+    "save": "Save this plate",
+    "more": {
+      "share": {
+        "_": "Share this plate",
+        "hint": "Card for your Status"
+      }
+    }
   },
   "deck": {
     "tight": {
@@ -604,6 +610,24 @@
     "swap": {
       "use": "Use {with} instead of {replace}",
       "line": "{with} (instead of {replace})"
+    }
+  },
+  "share": {
+    "card": {
+      "price": "{low} to {high} for {people} for {area}",
+      "estimate": "Estimate · we check am {date}",
+      "from": "From {name}"
+    },
+    "text": "So, wetin we go chop? Na this one: {plate}. {link}",
+    "sticker": {
+      "plate": "Na tonight!"
+    },
+    "copy": "Copy the link",
+    "copied": "E don copy",
+    "download": "Download the picture",
+    "page": {
+      "cook": "Cook am",
+      "pick": "Pick something for me"
     }
   }
 }

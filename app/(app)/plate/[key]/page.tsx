@@ -11,7 +11,10 @@ import { AllergenLine } from '@/components/plate/allergen-line';
 import { AskChef } from '@/components/plate/ask-chef';
 import { chefSetup } from '@/components/plate/chef-setup';
 import { CopyButton } from '@/components/plate/copy-button';
+import { ShareButton } from '@/components/plate/share-button';
 import { IngredientName } from '@/components/plate/swaps';
+import { body, display } from '@/app/fonts/fonts';
+import { shareCard } from '@/lib/share/card';
 import { allergenLine, allergenTags } from '@/lib/plates/allergens';
 import { SaveButton } from '@/components/plate/save-button';
 import { Videos, type VideoRef } from '@/components/plate/videos';
@@ -55,6 +58,7 @@ export default async function PlatePage({ params, searchParams }: { params: Prom
   const allPublished = ids.every((id) => cat.display.get(id)?.status === 'published');
   const unit = (id: string) => cat.book.ingredients[id]?.canonicalUnit ?? 'g';
   const chef = await chefSetup(allergenTags(cat.snap));
+  const share = shareCard(cat, key, String(people));
   // The list as plain text for WhatsApp or the clipboard; prices stay labelled as estimates (BR-21).
   const marketText = cost
     ? [
@@ -74,6 +78,7 @@ export default async function PlatePage({ params, searchParams }: { params: Prom
       </Link>
       <h1 className="type-display-l">{ids.map((id) => cat.display.get(id)?.name ?? id).join(' + ')}</h1>
       <SaveButton plateKey={decodeURIComponent(key)} title={ids.map((id) => cat.display.get(id)?.name ?? id).join(' + ')} people={people} />
+      {C.SHARE_CARDS_ENABLED && share && <ShareButton card={share} fonts={{ display: display.style.fontFamily, body: body.style.fontFamily }} />}
 
       {cost && (
         <section aria-labelledby="price">
