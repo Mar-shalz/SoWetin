@@ -72,7 +72,8 @@ export const APP_CONFIG = {
   AI_DRAFT_TIMEOUT_MS: 90000,
   AI_DRAFT_BATCH: 3,
   CRAVING_MAX_CHARS: 200,
-  CRAVING_COUNTER_FROM: 150, // S-008: the character counter shows from here
+  CRAVING_COUNTER_FROM: 150,
+  REEL_NAMES_MAX: 16, // dish names the Pick for me spin shows (doc 10, M-04) // S-008: the character counter shows from here
   CHEF_QUESTION_MAX_CHARS: 300,
   LOG_TEXT_RETENTION_DAYS: 30,
   SIGNIN_PROMPT_SNOOZE_DAYS: 7,

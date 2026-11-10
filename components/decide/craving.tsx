@@ -3,7 +3,7 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { setLanguage } from '@/app/(app)/actions';
-import { SearchIcon } from '@/components/ui/icons';
+import { CloseIcon, SearchIcon } from '@/components/ui/icons';
 import type { Craving } from '@/lib/ai/craving';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
 import { formatNaira } from '@/lib/i18n/money';
@@ -76,7 +76,7 @@ export function CravingSheet({ text, setText, busy, onFind }: { text: string; se
           <button className="min-h-12 px-3 type-label underline">{t('house.close')}</button>
         </form>
       </div>
-      <div className="mt-4 overflow-hidden rounded-xl border-2 border-ink bg-surface focus-within:outline-3 focus-within:outline-offset-2 focus-within:outline-focus">
+      <div className="mt-4 overflow-hidden rounded-xl border-2 border-ink bg-surface focus-within:border-focus focus-within:shadow-[0_0_0_1px_var(--color-focus)]">
         <form
           role="search"
           onSubmit={(e) => {
@@ -88,7 +88,7 @@ export function CravingSheet({ text, setText, busy, onFind }: { text: string; se
           <SearchIcon size={20} />
           <input
             autoFocus
-            type="search"
+            type="text"
             value={text}
             maxLength={C.CRAVING_MAX_CHARS}
             onChange={(e) => setText(e.target.value)}
@@ -99,6 +99,11 @@ export function CravingSheet({ text, setText, busy, onFind }: { text: string; se
             enterKeyHint="search"
             className="sw-field min-h-12 min-w-0 flex-1 bg-transparent type-input placeholder:text-ink-3"
           />
+          {!!text && (
+            <button type="button" onClick={() => setText('')} aria-label={t('craving.clear')} className="grid size-10 shrink-0 place-items-center rounded-pill">
+              <CloseIcon size={18} />
+            </button>
+          )}
           <button
             type="submit"
             disabled={!text.trim() || busy}

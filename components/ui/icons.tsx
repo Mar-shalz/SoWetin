@@ -93,3 +93,8 @@ export function LogoMark({ size = 28 }: { size?: number }) {
     </svg>
   );
 }
+export const BackIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="m15 6-6 6 6 6" />
+  </Icon>
+);

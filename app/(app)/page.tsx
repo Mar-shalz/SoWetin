@@ -27,6 +27,7 @@ export default async function DecidePage() {
       <Decide
         house={cat?.house ?? { cooked: [], foodstuff: [], basic: [] }}
         promo={C.TASTE_GAME_ENABLED && <PersonalityCard />}
+        reelNames={cat ? [...cat.display.values()].map((d) => d.name).slice(0, C.REEL_NAMES_MAX) : []}
         greeting={
           <h1 className="mt-2">
             {cut > 0 && <span className="block type-body-l text-ink-2">{greeting.slice(0, cut + 1)}</span>}

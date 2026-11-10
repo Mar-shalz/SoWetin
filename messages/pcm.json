@@ -23,7 +23,8 @@
       "cook": "cook am",
       "buy": "buy am",
       "hint": "Tap any word wey get colour to change am.",
-      "edit": "{value}. Change am"
+      "edit": "{value}. Change am",
+      "other": "Another amount…"
     },
     "house": {
       "empty": "Wetin dey house? Tap wetin you get.",
@@ -42,6 +43,12 @@
     },
     "filters": {
       "on": "Filters, {count} dey on"
+    },
+    "budget": {
+      "title": "How much you get?",
+      "label": "Amount for naira",
+      "use": "Use this amount",
+      "range": "From {min} reach {max}"
     }
   },
   "craving": {
@@ -108,7 +115,8 @@
     },
     "basis": {
       "_": "For {budget} · {people}",
-      "house": "with wetin dey your kitchen"
+      "house": "with wetin dey your kitchen",
+      "change": "Change am"
     },
     "swap": {
       "_": "Change am",

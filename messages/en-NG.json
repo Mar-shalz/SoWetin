@@ -23,7 +23,8 @@
       "cook": "cook it",
       "buy": "buy it",
       "hint": "Tap a highlighted word to change it.",
-      "edit": "{value}. Change it"
+      "edit": "{value}. Change it",
+      "other": "Other amount…"
     },
     "house": {
       "empty": "What's in the house? Tap what you have.",
@@ -42,6 +43,12 @@
     },
     "filters": {
       "on": "Filters, {count} on"
+    },
+    "budget": {
+      "title": "How much do you have?",
+      "label": "Amount in naira",
+      "use": "Use this amount",
+      "range": "Between {min} and {max}"
     }
   },
   "craving": {
@@ -108,7 +115,8 @@
     },
     "basis": {
       "_": "For {budget} · {people}",
-      "house": "using your kitchen"
+      "house": "using your kitchen",
+      "change": "Change"
     },
     "swap": {
       "_": "Swap",

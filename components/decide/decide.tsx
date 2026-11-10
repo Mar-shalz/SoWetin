@@ -2,13 +2,15 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { CravingChips, CravingSheet, chipsOf, clampBudget, clampPeople, withoutChip, type ActiveCraving, type CravingReply } from '@/components/decide/craving';
 import { PriceSheet } from '@/components/decide/price-sheet';
 import { SaveButton } from '@/components/plate/save-button';
 import { EMPTY_KITCHEN, kitchenForApi, lagosToday as today, saveKitchen, useKitchen, type Kitchen } from '@/components/decide/kitchen';
-import { CaretIcon, CloseIcon, HouseIcon, LogoMark, SlidersIcon, SparkleIcon } from '@/components/ui/icons';
+import { BackIcon, CaretIcon, CloseIcon, HouseIcon, LogoMark, SlidersIcon, SparkleIcon } from '@/components/ui/icons';
+import tokens from '@/design/tokens.json';
 import type { HouseOptions } from '@/lib/catalogue/db';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
 import type { MealTime } from '@/lib/engine/time';
@@ -26,6 +28,8 @@ const MEALS: MealTime[] = ['breakfast', 'lunch', 'dinner', 'late_night'];
 const PLATE_TYPES = ['soup_swallow', 'rice_plate', 'one_pot', 'pasta_noodles', 'yam_plantain_sauce', 'breakfast_pair', 'snack', 'single'] as const;
 const TIMES = [30, 45, 60];
 const SLOW_MS = 3000;
+const REEL_MIN = 3; // fewer real dish names than this and the spin would loop the same one
+const REEL_COLS = 3;
 const NOTE_KEY = 'sw_price_note_seen';
 
 const lagosToday = () => new Intl.DateTimeFormat('en-CA', { timeZone: C.TIMEZONE }).format(new Date());
@@ -35,7 +39,7 @@ const activeFilters = (f: Filters) => [f.meal_time, f.plate_types.length, f.max_
 // S-001 Decide: the top bar with Filters (S-007), the one-sentence answers, the craving field (S-008), Pick for me or
 // three plates (S-003), a Swap per dish (BR-37), and the price receipt (S-023).
 // shortcut: native pickers and <dialog> sheets; the motion of doc 10 (Kòkò thinking, M-19) comes with the M2 polish.
-export function Decide({ greeting, house, promo }: { greeting: ReactNode; house: HouseOptions; promo?: ReactNode }) {
+export function Decide({ greeting, house, promo, reelNames = [] }: { greeting: ReactNode; house: HouseOptions; promo?: ReactNode; reelNames?: string[] }) {
   const t = useTranslations();
   const [budget, setBudget] = useState<number>(C.FIRST_VISIT_DEFAULT_BUDGET);
   const [people, setPeople] = useState<number>(C.PEOPLE_DEFAULT);
@@ -62,6 +66,12 @@ export function Decide({ greeting, house, promo }: { greeting: ReactNode; house:
     cravingSheet.current?.querySelector('input')?.focus(); // React's autoFocus runs before the dialog opens
   }, [cravingOpen]);
   const answer = useRef<HTMLElement>(null);
+  // S-003 is its own screen: ?view=plates on the same page, so the phone's back button and ours both return to Decide.
+  const params = useSearchParams();
+  const pushed = useRef(false);
+  const [reel, setReel] = useState<{ final: string[] | null } | null>(null);
+  const skip = useRef<(() => void) | null>(null);
+  const [budgetOpen, setBudgetOpen] = useState(false);
   const sheet = useRef<HTMLDialogElement>(null);
   const houseSheet = useRef<HTMLDialogElement>(null);
   const [houseOpens, setHouseOpens] = useState(0);
@@ -113,10 +123,48 @@ export function Decide({ greeting, house, promo }: { greeting: ReactNode; house:
     }
   }
 
+  function toPlates() {
+    // Read the live URL: a craving's pick runs from an older render, whose params don't know the first push yet.
+    if (new URLSearchParams(window.location.search).get('view') !== 'plates') {
+      window.history.pushState(null, '', '?view=plates');
+      pushed.current = true;
+    }
+    document.querySelector('.app-frame')?.scrollTo(0, 0);
+    window.scrollTo(0, 0);
+  }
+  function back() {
+    if (pushed.current) window.history.back();
+    else window.history.replaceState(null, '', window.location.pathname);
+    pushed.current = false;
+  }
+  // A pause the person can cut short by tapping the reel (doc 10, M-04).
+  const wait = (ms: number) =>
+    new Promise<void>((done) => {
+      const id = setTimeout(done, ms);
+      skip.current = () => {
+        clearTimeout(id);
+        done();
+      };
+    });
+
   async function pick(size: number, o: Over = {}) {
     setDeckSize(size);
     setCravingNote(null);
+    toPlates();
+    // M-04: one plate spins up from real dish names while the request runs, then lands. Lite spins shorter; Reduced fades.
+    const tier = document.documentElement.dataset.motion;
+    const spin = size === 1 && tier !== 'reduced' && reelNames.length >= REEL_MIN;
+    const started = Date.now();
+    if (spin) setReel({ final: null });
     const r = await post<Result>('/api/v1/suggestions', { ...scene(o), deck_size: size });
+    if (spin) {
+      const total = tier === 'lite' ? tokens.motion.duration['spin-lite'] : tokens.motion.duration.spin;
+      await wait(Math.max(0, total - (Date.now() - started)));
+      const final = r?.plates[0]?.slots.slice(0, REEL_COLS).map((s) => s.component.name) ?? [];
+      setReel({ final });
+      if (final.length) await wait(tokens.motion.stagger['reel-stop'] * (final.length - 1) + tokens.motion.duration.slow);
+      setReel(null);
+    }
     if (!r) return;
     setResult(r);
     setSeen(r.plates.map((p) => p.plate_key));
@@ -156,6 +204,7 @@ export function Decide({ greeting, house, promo }: { greeting: ReactNode; house:
   // S-008: read the craving, show what was understood, then the picks. AI trouble already fell back to the code reading.
   async function find(text: string) {
     setResult(null);
+    toPlates();
     setCravingRuns(cravingRuns + 1);
     setCravingNote('thinking');
     const r = await post<CravingReply>('/api/v1/craving', { text, budget_ngn: budget, people, mode, meal_time: filters.meal_time });
@@ -252,8 +301,11 @@ export function Decide({ greeting, house, promo }: { greeting: ReactNode; house:
     budget: {
       label: formatNaira(budget),
       value: String(budget),
-      options: [...new Set([...C.BUDGET_CHIPS, budget])].sort((a, b) => a - b).map((b): [string, string] => [String(b), formatNaira(b)]),
-      set: (v: string) => setBudget(Number(v)),
+      options: [
+        ...[...new Set([...C.BUDGET_CHIPS, budget])].sort((a, b) => a - b).map((b): [string, string] => [String(b), formatNaira(b)]),
+        ['other', t('home.sentence.other')] as [string, string],
+      ],
+      set: (v: string) => (v === 'other' ? setBudgetOpen(true) : setBudget(Number(v))),
     },
     people: {
       label: peopleLabel,
@@ -281,33 +333,50 @@ export function Decide({ greeting, house, promo }: { greeting: ReactNode; house:
   const on = activeFilters(filters);
   const listed = houseNames(kitchen, house);
   const have = [...kitchen.cooked.map((c) => c.id), ...kitchen.foodstuff, ...kitchen.basic];
+  const onPlates = params.get('view') === 'plates' && (busy || !!reel || !!result || failed || !!cravingNote);
+  const filtersButton = (
+    <button
+      type="button"
+      onClick={() => sheet.current?.showModal()}
+      aria-label={on ? t('home.filters.on', { count: on }) : t('home.cta.filters')}
+      className="inline-flex min-h-12 items-center gap-1 rounded-pill border-2 border-ink bg-surface px-3 type-label"
+    >
+      <SlidersIcon size={18} />
+      <span className="max-sm:sr-only">{t('home.cta.filters')}</span>
+      {!!on && <span className="rounded-pill bg-ink px-2 text-cream">{on}</span>}
+    </button>
+  );
 
   return (
     <>
-      <header className="flex min-h-14 items-center justify-between gap-2">
-        <span className="flex items-center gap-2 type-title-l">
-          <LogoMark size={30} />
-          {C.APP_NAME}
-        </span>
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => sheet.current?.showModal()}
-            aria-label={on ? t('home.filters.on', { count: on }) : t('home.cta.filters')}
-            className="inline-flex min-h-12 items-center gap-1 rounded-pill border-2 border-ink bg-surface px-3 type-label"
-          >
-            <SlidersIcon size={18} />
-            <span className="max-sm:sr-only">{t('home.cta.filters')}</span>
-            {!!on && <span className="rounded-pill bg-ink px-2 text-cream">{on}</span>}
+      {onPlates ? (
+        <header className="flex min-h-14 items-center justify-between gap-2">
+          <button type="button" onClick={back} className="inline-flex min-h-12 items-center gap-1 rounded-pill border-2 border-ink bg-surface pl-2 pr-4 type-label">
+            <BackIcon size={20} />
+            {t('detail.back')}
           </button>
-          <span className="inline-flex min-h-12 items-center gap-1 rounded-pill border-2 border-ink bg-surface px-3 type-label">
-            {t('areas.lagos')}
-            <CaretIcon size={16} />
+          {filtersButton}
+        </header>
+      ) : (
+        <header className="flex min-h-14 items-center justify-between gap-2">
+          <span className="flex items-center gap-2 type-title-l">
+            <LogoMark size={30} />
+            {C.APP_NAME}
           </span>
-        </div>
-      </header>
+          <div className="flex items-center gap-2">
+            {filtersButton}
+            <span className="inline-flex min-h-12 items-center gap-1 rounded-pill border-2 border-ink bg-surface px-3 type-label">
+              {t('areas.lagos')}
+              <CaretIcon size={16} />
+            </span>
+          </div>
+        </header>
+      )}
       <FiltersSheet dialog={sheet} filters={filters} onApply={applyFilters} />
+      <BudgetSheet open={budgetOpen} onClose={() => setBudgetOpen(false)} budget={budget} onUse={(n) => setBudget(n)} />
 
+      {!onPlates && (
+        <>
       <section className="mt-3 rounded-xl border-2 border-ink bg-surface p-5 shadow-button">
         {greeting}
 
@@ -372,6 +441,8 @@ export function Decide({ greeting, house, promo }: { greeting: ReactNode; house:
           clearLabel={t('craving.clear')}
         />
       </div>
+        </>
+      )}
       <dialog
         ref={houseSheet}
         aria-labelledby="house-title"
@@ -410,7 +481,9 @@ export function Decide({ greeting, house, promo }: { greeting: ReactNode; house:
         )}
       </dialog>
 
-      <section ref={answer} aria-live="polite" className="sw-deal mt-6 grid scroll-mt-4 gap-4">
+      {onPlates && (
+      <section ref={answer} aria-live="polite" className="sw-deal mt-4 grid scroll-mt-4 gap-4">
+        {reel && <Reel names={reelNames} final={reel.final} onSkip={() => skip.current?.()} />}
         {cravingNote === 'thinking' ? <p className="text-ink-2">{t('craving.thinking')}</p> : slow && <p className="text-ink-2">{t('reveal.slow')}</p>}
         {failed && <p className="text-scotch">{t('error.generic')}</p>}
         {cravingNote === 'offTopic' && (
@@ -423,9 +496,27 @@ export function Decide({ greeting, house, promo }: { greeting: ReactNode; house:
         )}
         {cravingNote === 'fallback' && <p className="text-ink-2">{t('craving.fallback')}</p>}
         {craving && (
+          <div className="flex items-center gap-1 self-start rounded-pill border-2 border-ink bg-palm-100 pl-4">
+            <button type="button" onClick={() => setCravingOpen(true)} className="min-h-12 type-label">
+              “{cravingText}”
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                clearCraving();
+                back();
+              }}
+              aria-label={t('craving.clear')}
+              className="grid size-12 place-items-center rounded-pill"
+            >
+              <CloseIcon size={18} />
+            </button>
+          </div>
+        )}
+        {craving && (
           <CravingChips key={cravingRuns} active={craving} cooking={cooking} have={have} onRemove={removeChip} onMode={cravingMode} onAddHouse={addHouse} />
         )}
-        {result && (
+        {result && !reel && (
           <Results
             result={result}
             budget={budget}
@@ -437,11 +528,13 @@ export function Decide({ greeting, house, promo }: { greeting: ReactNode; house:
             busy={busy}
             craving={!!craving}
             onWithout={withoutCraving}
+            onChange={back}
           />
         )}
         {notice && <p className="text-ink-2">{notice}</p>}
       </section>
-      {promo && <div className="mt-6">{promo}</div>}
+      )}
+      {!onPlates && promo && <div className="mt-6">{promo}</div>}
 
       <div className="sticky bottom-14 mt-auto bg-cream pb-2 pt-3">
         <button
@@ -540,6 +633,7 @@ function Results({
   busy,
   craving,
   onWithout,
+  onChange,
 }: {
   result: Result;
   budget: number;
@@ -551,6 +645,7 @@ function Results({
   busy: boolean;
   craving: boolean;
   onWithout: () => void;
+  onChange: () => void;
 }) {
   const t = useTranslations();
   if (result.state === 'buy_unavailable') return <p>{t('deck.buyLater')}</p>;
@@ -569,15 +664,18 @@ function Results({
       {result.staff_preview && <p className="rounded-md bg-amber-100 p-3 type-caption">{t('deck.staffPreview')}</p>}
       {result.state === 'tight' ? (
         <div>
-          <h2 className="type-title-m">{t('deck.tight.title', { budget: formatNaira(budget), people: peopleLabel })}</h2>
+          <h1 className="type-title-l">{t('deck.tight.title', { budget: formatNaira(budget), people: peopleLabel })}</h1>
           <p className="text-ink-2">{t('deck.tight.subtitle')}</p>
         </div>
       ) : (
         <div>
-          <h2 className="type-title-m">{t(result.plates.length > 1 ? 'plate.title.deck' : 'plate.title.single')}</h2>
+          <h1 className="type-title-l">{t(result.plates.length > 1 ? 'plate.title.deck' : 'plate.title.single')}</h1>
           <p className="type-caption text-ink-2">
             {t('plate.basis._', { budget: formatNaira(budget), people: peopleLabel })}
-            {inKitchen && ` · ${t('plate.basis.house')}`}
+            {inKitchen && ` · ${t('plate.basis.house')}`} ·{' '}
+            <button type="button" onClick={onChange} className="min-h-12 type-caption underline">
+              {t('plate.basis.change')}
+            </button>
           </p>
         </div>
       )}
@@ -1016,5 +1114,92 @@ function Tile({
         </button>
       )}
     </div>
+  );
+}
+
+// M-04 reveal, simplified: one window per slot spins through real dish names while the request runs, then each stops on
+// the chosen dish, left to right. Tap to skip. Hidden from screen readers; the plate itself is announced (doc 10, 4).
+function Reel({ names, final, onSkip }: { names: string[]; final: string[] | null; onSkip: () => void }) {
+  const strip = [...names, ...names];
+  const cols = final?.length || REEL_COLS;
+  return (
+    <div aria-hidden onClick={onSkip} className="sw-reel grid gap-2 rounded-lg border-2 border-ink bg-surface p-4">
+      {Array.from({ length: cols }, (_, i) => (
+        <span key={i} className="block h-12 overflow-hidden rounded-md border-2 border-ink bg-cream">
+          {final ? (
+            <span className="sw-reel-stop flex h-12 items-center justify-center px-2 text-center type-title-m">{final[i]}</span>
+          ) : (
+            <span className="sw-reel-spin block">
+              {strip.map((n, j) => (
+                <span key={j} className="flex h-12 items-center justify-center px-2 text-center type-title-m text-ink-2">
+                  {n}
+                </span>
+              ))}
+            </span>
+          )}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+// "Other amount…" in the money pill: any amount the app allows, typed in (Victor, 10 November 2026).
+function BudgetSheet({ open, onClose, budget, onUse }: { open: boolean; onClose: () => void; budget: number; onUse: (n: number) => void }) {
+  const t = useTranslations();
+  const dialog = useRef<HTMLDialogElement>(null);
+  const [value, setValue] = useState('');
+  useEffect(() => {
+    if (open) dialog.current?.showModal();
+  }, [open]);
+  const n = Number(value.replace(/[^0-9]/g, ''));
+  const ok = n >= C.BUDGET_MIN && n <= C.BUDGET_MAX;
+  return (
+    <dialog
+      ref={dialog}
+      aria-labelledby="budget-title"
+      onClose={() => {
+        setValue('');
+        onClose();
+      }}
+      className="mx-auto mb-0 mt-auto w-full max-w-app rounded-t-xl border-2 border-ink bg-surface p-5 text-ink backdrop:bg-overlay"
+    >
+      <div className="flex items-center justify-between">
+        <h2 id="budget-title" className="type-title-l">
+          {t('home.budget.title')}
+        </h2>
+        <form method="dialog">
+          <button className="min-h-12 px-3 type-label underline">{t('house.close')}</button>
+        </form>
+      </div>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (!ok) return;
+          onUse(n);
+          dialog.current?.close();
+        }}
+        className="mt-4 grid gap-3"
+      >
+        <label htmlFor="budget-amount" className="type-label">
+          {t('home.budget.label')}
+        </label>
+        <input
+          id="budget-amount"
+          inputMode="numeric"
+          autoComplete="off"
+          value={value}
+          placeholder={formatNaira(budget)}
+          onChange={(e) => setValue(e.target.value)}
+          aria-describedby="budget-range"
+          className="min-h-14 rounded-md border-2 border-ink bg-sunken px-4 type-title-m"
+        />
+        <p id="budget-range" className="type-caption text-ink-2">
+          {t('home.budget.range', { min: formatNaira(C.BUDGET_MIN), max: formatNaira(C.BUDGET_MAX) })}
+        </p>
+        <button disabled={!ok} className="min-h-14 rounded-pill border-2 border-ink bg-palm shadow-button type-title-m disabled:opacity-60">
+          {t('home.budget.use')}
+        </button>
+      </form>
+    </dialog>
   );
 }

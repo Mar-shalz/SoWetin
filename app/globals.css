@@ -227,3 +227,28 @@ html[data-motion='reduced'] .sw-pop {
     animation: none;
   }
 }
+
+/* M-04 reel: names stream upward while the pick is fetched, then each window drops onto the chosen dish, 200 ms apart. */
+@keyframes sw-reel {
+  to {
+    transform: translateY(-50%);
+  }
+}
+@keyframes sw-reel-stop {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+}
+.sw-reel-spin {
+  animation: sw-reel 900ms linear infinite;
+}
+.sw-reel-stop {
+  animation: sw-reel-stop var(--sw-duration-slow) var(--ease-spin-stop) both;
+}
+.sw-reel > :nth-child(2) .sw-reel-stop {
+  animation-delay: 200ms;
+}
+.sw-reel > :nth-child(3) .sw-reel-stop {
+  animation-delay: 400ms;
+}

@@ -64,6 +64,7 @@
   --sw-duration-slow: 320ms;
   --sw-duration-reveal: 600ms;
   --sw-duration-spin: 1100ms;
+  --sw-duration-spin-lite: 700ms;
   --sw-duration-celebrate: 700ms;
   --sw-size-touch-min: 48px;
   --sw-size-button-h-l: 56px;

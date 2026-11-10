@@ -39,7 +39,7 @@ test('a craving becomes chips that can be removed', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: /Craving something\?/ }).click();
   const sheet = page.getByRole('dialog', { name: 'What are you craving?' });
-  const field = sheet.getByRole('searchbox', { name: 'Craving something? Type am…' });
+  const field = sheet.getByRole('textbox', { name: 'Craving something? Type am…' });
   const find = sheet.getByRole('button', { name: 'Find', exact: true });
   await expect(field).toBeFocused();
   await expect(find).toBeDisabled();
@@ -49,8 +49,8 @@ test('a craving becomes chips that can be removed', async ({ page }) => {
   await find.click();
   await expect(sheet).toBeHidden();
   await expect(page.getByRole('button', { name: 'Remove ₦2,000' })).toBeVisible();
-  await expect(page.getByLabel('₦2,000. Change it')).toBeVisible();
   await page.getByRole('button', { name: 'Remove ₦2,000' }).click();
+  await page.getByRole('button', { name: 'Back' }).click();
   await expect(page.getByLabel('₦3,500. Change it')).toBeVisible();
 });
 
@@ -58,7 +58,7 @@ test('a craving becomes chips that can be removed', async ({ page }) => {
 test('clearing the craving takes its chips away', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: /Craving something\?/ }).click();
-  await page.getByRole('searchbox').fill('food for 2k');
+  await page.getByRole('textbox', { name: 'Craving something? Type am…' }).fill('food for 2k');
   await page.getByRole('button', { name: 'Find', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Remove ₦2,000' })).toBeVisible();
   await page.getByRole('button', { name: 'Clear the craving' }).click();
@@ -77,4 +77,14 @@ test('typed house items the catalogue does not know stay on the list', async ({ 
   await expect(sheet.getByText('Not in picks yet')).toBeVisible();
   await sheet.getByRole('button', { name: 'Remove zobo leaves' }).click();
   await expect(sheet.getByText('Not in picks yet')).toBeHidden();
+});
+
+// "Other amount…" in the money pill takes any amount the app allows (Victor, 10 November 2026).
+test('any budget amount can be typed in', async ({ page }) => {
+  await page.goto('/');
+  await page.getByLabel('₦3,500. Change it').selectOption('other');
+  const sheet = page.getByRole('dialog', { name: 'How much do you have?' });
+  await sheet.getByLabel('Amount in naira').fill('2750');
+  await sheet.getByRole('button', { name: 'Use this amount' }).click();
+  await expect(page.getByLabel('₦2,750. Change it')).toBeVisible();
 });
