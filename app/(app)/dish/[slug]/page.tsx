@@ -13,6 +13,7 @@ import { chefSetup } from '@/components/plate/chef-setup';
 import { IngredientName } from '@/components/plate/swaps';
 import { Videos, type VideoRef } from '@/components/plate/videos';
 import { allergenLine, allergenTags } from '@/lib/plates/allergens';
+import { roundAmount, stepText } from '@/lib/plates/step-text';
 import { formatNaira } from '@/lib/i18n/money';
 import { catalogueForRequest, lagosToday } from '@/lib/plates/serve';
 import { cookServings, costPlate } from '@/lib/pricing/costPlate';
@@ -101,7 +102,7 @@ export default async function DishPage({ params }: { params: Promise<{ slug: str
       )
     : null;
   const unit = (id: string) => cat.book.ingredients[id]?.canonicalUnit ?? 'g';
-  const amount = (n: number) => (n >= 10 ? Math.round(n) : Math.round(n * 10) / 10);
+  const amount = roundAmount;
   const chef = await chefSetup(allergenTags(cat.snap));
   const ingredients = (c?.lines ?? []).map((l) => ({
     id: l.ingredientId,
@@ -109,6 +110,11 @@ export default async function DishPage({ params }: { params: Promise<{ slug: str
     qty: l.qtyPerServing === null ? null : `${amount(l.qtyPerServing * servings)} ${unit(l.ingredientId)}`,
   }));
   const steps = [...dish.component_steps].sort((a, b) => a.step_no - b.step_no);
+  const said = (text: string) =>
+    stepText(text, (id) => {
+      const i = ingredients.find((x) => x.id === id);
+      return i ? [i.qty, i.name].filter(Boolean).join(' ') : null;
+    });
   const goesWith = [...cat.snap.pairings]
     .filter(([k]) => k.split('|').includes(dish.id))
     .sort((a, b) => b[1] - a[1])
@@ -135,7 +141,7 @@ export default async function DishPage({ params }: { params: Promise<{ slug: str
           prepTime: minutes(dish.prep_minutes),
           totalTime: minutes(dish.total_minutes),
           recipeIngredient: ingredients.map((i) => (i.qty ? `${i.qty} ${i.name}` : i.name)),
-          recipeInstructions: steps.map((s) => ({ '@type': 'HowToStep', text: s.cue ? `${s.text} ${s.cue}` : s.text })),
+          recipeInstructions: steps.map((s) => ({ '@type': 'HowToStep', text: s.cue ? `${said(s.text)} ${s.cue}` : said(s.text) })),
           url: `${siteUrl()}/dish/${dish.id}`,
         }
       : null;
@@ -212,7 +218,7 @@ export default async function DishPage({ params }: { params: Promise<{ slug: str
           <ol className="mt-1 grid list-decimal gap-3 pl-6">
             {steps.map((s) => (
               <li key={s.step_no} className="type-cook-step">
-                {s.text}
+                {said(s.text)}
                 {s.heat && <span className="block type-label text-ink-2">{t(`recipe.heat.${s.heat}`)}</span>}
                 {s.cue && <span className="block type-body-m text-ink-2">{s.cue}</span>}
               </li>

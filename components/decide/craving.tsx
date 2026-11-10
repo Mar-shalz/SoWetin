@@ -1,7 +1,7 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { setLanguage } from '@/app/(app)/actions';
 import { SearchIcon } from '@/components/ui/icons';
 import type { Craving } from '@/lib/ai/craving';
@@ -58,6 +58,11 @@ export function CravingField({ busy, onFind }: { busy: boolean; onFind: (text: s
   const t = useTranslations();
   const [text, setText] = useState('');
   const [examples, setExamples] = useState(false);
+  const shown = useRef<HTMLDivElement>(null);
+  // The examples open under the field; bring them up above the sticky Pick for me bar.
+  useEffect(() => {
+    if (examples) shown.current?.scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  }, [examples]);
   const run = (value: string) => {
     const v = value.trim();
     if (!v || busy) return;
@@ -85,7 +90,7 @@ export function CravingField({ busy, onFind }: { busy: boolean; onFind: (text: s
           aria-label={t('home.craving.placeholder')}
           placeholder={t('home.craving.placeholder')}
           enterKeyHint="search"
-          className="min-h-12 min-w-0 flex-1 bg-transparent type-input outline-none placeholder:text-ink-3"
+          className="sw-field min-h-12 min-w-0 flex-1 bg-transparent type-input placeholder:text-ink-3"
         />
         <button
           type="submit"
@@ -101,7 +106,7 @@ export function CravingField({ busy, onFind }: { busy: boolean; onFind: (text: s
         </p>
       )}
       {examples && !text && (
-        <div className="mt-2">
+        <div ref={shown} className="mt-2 scroll-mb-52">
           <p className="type-caption text-ink-2">{t('craving.try')}</p>
           <div className="mt-1 flex flex-wrap gap-2">
             {t('craving.examples')

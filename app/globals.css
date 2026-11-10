@@ -18,6 +18,10 @@ body {
   outline: 3px solid var(--color-focus);
   outline-offset: 2px;
 }
+/* A field inside a pill: the pill draws the ring (focus-within), so the field doesn't draw a second one. */
+.sw-field:focus-visible {
+  outline: none;
+}
 
 /* Motion tiers (doc 10, section 2). MotionTier sets <html data-motion="full|lite|reduced">. Before it runs, the
    phone's own reduced-motion setting still applies. Transform and opacity only (doc 12). */
@@ -106,6 +110,25 @@ html[data-motion='reduced'] .sw-heart[aria-pressed='true'] {
     animation: sw-fade 150ms linear both;
   }
   html:not([data-motion]) .sw-heart[aria-pressed='true'] {
+    animation: none;
+  }
+}
+
+/* M-16 cook mode step change: a short slide in from the side; Reduced is an instant change. */
+@keyframes sw-step {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+}
+.sw-step {
+  animation: sw-step var(--sw-duration-fast) var(--ease-enter);
+}
+html[data-motion='reduced'] .sw-step {
+  animation: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion]) .sw-step {
     animation: none;
   }
 }

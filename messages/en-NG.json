@@ -167,7 +167,9 @@
     "storage": "Keeps for",
     "serve": "Serve with",
     "notYet": "The written method for this one is still on its way.",
-    "equipment": "You'll need"
+    "equipment": "You'll need",
+    "order": "Start the {component} first. It takes longest.",
+    "cookWithMe": "Cook with me"
   },
   "market": {
     "title": "Market list",
@@ -296,7 +298,8 @@
         "no": "No",
         "added": "Added. I'll find what goes with it next time."
       }
-    }
+    },
+    "ingredients": "Ingredients"
   },
   "videos": {
     "note": {

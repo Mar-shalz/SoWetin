@@ -167,7 +167,9 @@
     "storage": "E go last",
     "serve": "Chop am with",
     "notYet": "The written method for this one never ready.",
-    "equipment": "Wetin you go need"
+    "equipment": "Wetin you go need",
+    "order": "Start the {component} first. Na im dey take pass.",
+    "cookWithMe": "Cook am with me"
   },
   "market": {
     "title": "Market list",
@@ -296,7 +298,8 @@
         "no": "No",
         "added": "I don add am. Next time I go find wetin go with am."
       }
-    }
+    },
+    "ingredients": "Ingredients"
   },
   "videos": {
     "note": {

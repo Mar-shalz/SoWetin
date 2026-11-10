@@ -15,6 +15,7 @@ import { ShareButton } from '@/components/plate/share-button';
 import { IngredientName } from '@/components/plate/swaps';
 import { body, display } from '@/app/fonts/fonts';
 import { shareCard } from '@/lib/share/card';
+import { roundAmount, stepText } from '@/lib/plates/step-text';
 import { allergenLine, allergenTags } from '@/lib/plates/allergens';
 import { SaveButton } from '@/components/plate/save-button';
 import { Videos, type VideoRef } from '@/components/plate/videos';
@@ -32,7 +33,7 @@ type Method = {
   videos: (VideoRef & { rank: number | null; status: string })[];
 };
 const round = (n: number) => Math.round(n / C.PRICE_ROUNDING_NGN) * C.PRICE_ROUNDING_NGN;
-const amount = (n: number) => (n >= 10 ? Math.round(n) : Math.round(n * 10) / 10);
+const amount = roundAmount;
 
 // S-004 written method first and S-006 market list, for one plate and a people count (doc 07, GET /plates/{plateKey}).
 // Ask Chef sits under each dish's method (S-019), the allergen line under the videos (S-004 item 9).
@@ -56,6 +57,7 @@ export default async function PlatePage({ params, searchParams }: { params: Prom
   // Cooking order (doc 07): the component that takes longest starts first.
   const order = [...ids].sort((a, b) => (cat.display.get(b)?.totalMinutes ?? 0) - (cat.display.get(a)?.totalMinutes ?? 0));
   const allPublished = ids.every((id) => cat.display.get(id)?.status === 'published');
+  const cooked = order.filter((id) => methods.get(id)?.component_steps.length);
   const unit = (id: string) => cat.book.ingredients[id]?.canonicalUnit ?? 'g';
   const chef = await chefSetup(allergenTags(cat.snap));
   const share = shareCard(cat, key, String(people));
@@ -129,6 +131,19 @@ export default async function PlatePage({ params, searchParams }: { params: Prom
         <h2 id="cook" className="type-title-l">
           {t('recipe.title')}
         </h2>
+        {cooked.length > 1 && (
+          <>
+            <p>{t('recipe.order', { component: cat.display.get(cooked[0])?.name ?? cooked[0] })}</p>
+            {/* S-004 component tabs as jump links: every dish stays on the page, one tap away. */}
+            <nav aria-label={t('recipe.title')} className="sticky top-0 z-10 -mx-4 flex gap-2 overflow-x-auto bg-cream px-4 py-2">
+              {cooked.map((id) => (
+                <a key={id} href={`#c-${id}`} className="flex min-h-12 shrink-0 items-center rounded-pill border-2 border-ink bg-surface px-4 type-label">
+                  {cat.display.get(id)?.name ?? id}
+                </a>
+              ))}
+            </nav>
+          </>
+        )}
         {ids.some((id) => methods.get(id)?.component_steps.length) && (
           <Link
             href={`/plate/${encodeURIComponent(decodeURIComponent(key))}/cook?people=${people}`}
@@ -143,7 +158,7 @@ export default async function PlatePage({ params, searchParams }: { params: Prom
           const servings = cookServings({ id, batchServingsMin: c.batchServingsMin, lines: [] }, people);
           const steps = [...(m?.component_steps ?? [])].sort((a, b) => a.step_no - b.step_no);
           return (
-            <article key={id} className="rounded-lg border-2 border-ink bg-surface p-4">
+            <article key={id} id={`c-${id}`} className="scroll-mt-20 rounded-lg border-2 border-ink bg-surface p-4">
               {cat.display.get(id)?.picture && (
                 <Image
                   src={pictureUrl(cat.display.get(id)!.picture)!}
@@ -174,7 +189,12 @@ export default async function PlatePage({ params, searchParams }: { params: Prom
                 <ol className="mt-1 grid list-decimal gap-3 pl-6">
                   {steps.map((s) => (
                     <li key={s.step_no} className="type-cook-step">
-                      {s.text}
+                      {stepText(s.text, (ing) => {
+                        const l = c.lines.find((x) => x.ingredientId === ing);
+                        if (!l) return null;
+                        const name = cat.names.get(ing) ?? ing;
+                        return l.qtyPerServing === null ? name : `${amount(l.qtyPerServing * servings)} ${unit(ing)} ${name}`;
+                      })}
                       {(s.heat || s.timer_seconds) && (
                         <span className="mt-1 block type-label text-ink-2">
                           {[s.heat && t(`recipe.heat.${s.heat}`), s.timer_seconds && t('plate.why.time', { minutes: Math.round(s.timer_seconds / 60) })]
@@ -188,6 +208,14 @@ export default async function PlatePage({ params, searchParams }: { params: Prom
                 </ol>
               ) : (
                 <p className="mt-1 text-ink-2">{t('recipe.notYet')}</p>
+              )}
+              {!!steps.length && (
+                <Link
+                  href={`/plate/${encodeURIComponent(decodeURIComponent(key))}/cook?people=${people}&start=${id}`}
+                  className="mt-3 flex min-h-12 items-center justify-center rounded-pill border-2 border-ink bg-surface px-4 type-label"
+                >
+                  {t('recipe.cookWithMe')}
+                </Link>
               )}
               {!!m?.tips.length && (
                 <>

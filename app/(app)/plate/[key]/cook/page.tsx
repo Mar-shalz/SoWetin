@@ -11,7 +11,7 @@ type Method = {
 };
 
 // S-005 Cook mode: the plate's steps, component by component in cooking order (longest first, doc 07).
-export default async function CookPage({ params, searchParams }: { params: Promise<{ key: string }>; searchParams: Promise<{ people?: string }> }) {
+export default async function CookPage({ params, searchParams }: { params: Promise<{ key: string }>; searchParams: Promise<{ people?: string; start?: string }> }) {
   const [{ key }, sp] = await Promise.all([params, searchParams]);
   const people = Math.min(C.PEOPLE_MAX, Math.max(C.PEOPLE_MIN, Number(sp.people) || C.PEOPLE_DEFAULT));
   const { cat, client } = await catalogueForRequest();
@@ -27,6 +27,13 @@ export default async function CookPage({ params, searchParams }: { params: Promi
     .map((id) => ({
       id,
       name: cat.display.get(id)?.name ?? id,
+      batchServingsMin: cat.snap.components.get(id)?.batchServingsMin ?? 1,
+      lines: (cat.snap.components.get(id)?.lines ?? []).map((l) => ({
+        id: l.ingredientId,
+        name: cat.names.get(l.ingredientId) ?? l.ingredientId,
+        qtyPerServing: l.qtyPerServing,
+        unit: cat.book.ingredients[l.ingredientId]?.canonicalUnit ?? 'g',
+      })),
       steps: [...(methods.get(id)?.component_steps ?? [])]
         .sort((a, b) => a.step_no - b.step_no)
         .map(({ text, cue, heat, timer_seconds }) => ({ text, cue, heat, timer_seconds })),
@@ -43,7 +50,9 @@ export default async function CookPage({ params, searchParams }: { params: Promi
       price={cost ? { low: cost.outlayLowNgn, high: cost.outlayHighNgn, date: cost.oldestPriceDate } : null}
       fonts={{ display: display.style.fontFamily, body: body.style.fontFamily }}
       title={ids.map((id) => cat.display.get(id)?.name ?? id).join(' + ')}
-      back={`/plate/${encodeURIComponent(plateKey)}?people=${people}`}
+      back={`/plate/${encodeURIComponent(plateKey)}`}
+      people={people}
+      start={components.some((c) => c.id === sp.start) ? sp.start : undefined}
       pot={pot && pot.moreMeals > 0 ? { id: pot.componentId, name: cat.display.get(pot.componentId)?.name ?? pot.componentId } : null}
     />
   );
