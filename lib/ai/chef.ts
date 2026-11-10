@@ -33,13 +33,14 @@ the examples provided (consistent spelling: dey, wetin, una, abeg, don, sabi, oy
 and ingredient names exactly as given, and keep any allergy warning short and plain.`;
 
 export function chefSchema(dishIds: string[], allIds: string[], allergens: string[]) {
-  const one = (list: string[]) => (list.length ? z.enum(list as [string, ...string[]]) : z.never());
+  // No nulls and no empty enums: Gemini rejects both. An empty list can only come back empty.
+  const one = (list: string[]) => (list.length ? z.enum(list as [string, ...string[]]) : z.string());
   return z.object({
     answer: z.string().min(1),
-    substitutions: z.array(z.object({ replace: one(dishIds), with: one(allIds), note: z.string().max(300) })).max(3),
-    new_allergens: z.array(one(allergens)).max(allergens.length),
+    substitutions: z.array(z.object({ replace: one(dishIds), with: one(allIds), note: z.string().max(300) })).max(dishIds.length && allIds.length ? 3 : 0),
+    new_allergens: allergens.length ? z.array(z.enum(allergens as [string, ...string[]])).max(allergens.length) : z.array(z.string()).max(0),
     declined: z.boolean(),
-    decline_reason: z.enum(['medical', 'other']).nullable(),
+    decline_reason: z.enum(['medical', 'other', 'none']),
   });
 }
 

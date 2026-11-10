@@ -52,6 +52,9 @@ describe('craving pre-pass (doc 03, 7.1)', () => {
   });
 });
 
+// The AI answers with 0, -1 and "none" where the message says nothing (no nulls for Gemini).
+const AI_NONE = { ...EMPTY, budget_ngn: 0, people: 0, mode: 'none', meal_time: 'none', max_total_minutes: 0, spice_max: -1, clarify: 'none' };
+
 describe('craving parse with the AI', () => {
   const answer = (json: object) =>
     (async () => Response.json({ candidates: [{ content: { parts: [{ text: JSON.stringify(json) }] }, finishReason: 'STOP' }] })) as unknown as typeof fetch;
@@ -60,7 +63,7 @@ describe('craving parse with the AI', () => {
 
   it('keeps the code reading of money and people, and the AI reading of the rest', async () => {
     const r = await parseCraving('swallow under 2k, something peppery', vocab, scene, ai, false, answer({
-      ...EMPTY,
+      ...AI_NONE,
       budget_ngn: 5000,
       boost_tags: ['peppery'],
       plate_types: ['soup_swallow'],
@@ -72,7 +75,7 @@ describe('craving parse with the AI', () => {
   });
 
   it('falls back to the pre-pass when the AI names something outside the catalogue', async () => {
-    const r = await parseCraving('2k jollof', vocab, scene, ai, false, answer({ ...EMPTY, include_components: ['made-up-dish'] }));
+    const r = await parseCraving('2k jollof', vocab, scene, ai, false, answer({ ...AI_NONE, include_components: ['made-up-dish'] }));
     expect(r).toEqual({ source: 'prepass', craving: expect.objectContaining({ budget_ngn: 2000, include_components: [] }) });
   });
 

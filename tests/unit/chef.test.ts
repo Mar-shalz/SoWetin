@@ -31,7 +31,7 @@ const answer = (json: object, seen?: string[]) =>
     seen?.push(String(init?.body));
     return Response.json({ candidates: [{ content: { parts: [{ text: JSON.stringify(json) }] }, finishReason: 'STOP' }] });
   }) as unknown as typeof fetch;
-const base = { answer: 'Use smoked catfish. Flake it in at the same step.', substitutions: [], new_allergens: [], declined: false, decline_reason: null };
+const base = { answer: 'Use smoked catfish. Flake it in at the same step.', substitutions: [], new_allergens: [], declined: false, decline_reason: 'none' };
 
 describe('Ask Chef (doc 03, 7.2)', () => {
   it('works out the allergens a swap adds from the catalogue, even when the model says none', async () => {
