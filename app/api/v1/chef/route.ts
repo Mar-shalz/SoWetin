@@ -58,6 +58,7 @@ export async function POST(request: Request) {
     },
     catalogue,
     allergens,
+    [], // shortcut: no avoid or allergy lists until profiles (M3); askChef filters swaps against them once they exist
     C.PIDGIN_ENABLED && asked === 'pcm' ? { code: 'pcm', examples: pidginExamples() } : { code: 'en-NG' },
     ai,
   );

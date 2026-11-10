@@ -54,6 +54,8 @@ export async function askChef(
   dish: ChefDish,
   catalogue: Map<string, ChefIngredient>,
   allergens: string[],
+  // Ingredients the person avoids or is allergic to, sent as plain names, never labelled as allergies (doc 03, 7.2).
+  avoids: string[],
   // In Pidgin, approved app strings as the style reference, so Chef sounds like the rest of the app (doc 03, 7.2).
   lang: { code: 'en-NG' } | { code: 'pcm'; examples: string[] },
   ai: Pick<GeminiCall, 'key' | 'model' | 'timeoutMs' | 'thinking'>,
@@ -69,6 +71,7 @@ export async function askChef(
     'Steps:',
     ...dish.steps.map((s, i) => `${i + 1}. ${s.text}${s.heat ? ` [heat: ${s.heat}]` : ''}${s.cue ? ` (ready when: ${s.cue})` : ''}`),
     `Allergens in the dish: ${[...new Set(dish.lines.flatMap((l) => catalogue.get(l.id)?.allergens ?? []))].join(', ') || 'none'}`,
+    ...(avoids.length ? [`The user avoids: ${avoids.map(name).join(', ')}`] : []),
   ].join('\n');
   const swapsFrom = [...catalogue.values()].map((i) => `${i.id}: ${i.name}`).join('\n');
   const r = await geminiJson(
@@ -86,7 +89,8 @@ export async function askChef(
   const parsed = schema.safeParse(r.json);
   if (!parsed.success) return { ok: false, reason: 'busy' };
   const a = parsed.data;
-  const substitutions = a.substitutions.filter((s) => s.replace !== s.with);
+  // BR-62: what the person avoids is filtered again here, whatever the model said.
+  const substitutions = a.substitutions.filter((s) => s.replace !== s.with && !avoids.includes(s.with));
   // What the swap brings in that the dish didn't have already, from the catalogue; plus anything the model flagged.
   const inDish = new Set(dish.lines.flatMap((l) => [...(catalogue.get(l.id)?.allergens ?? []), ...(catalogue.get(l.id)?.mayContain ?? [])]));
   const added = substitutions.flatMap((s) => [...(catalogue.get(s.with)?.allergens ?? []), ...(catalogue.get(s.with)?.mayContain ?? [])]);
