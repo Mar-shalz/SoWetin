@@ -10,7 +10,8 @@
     "pairings": "Pairings",
     "ingredients": "Ingredients",
     "settings": "Settings",
-    "videos": "Videos"
+    "videos": "Videos",
+    "ai": "AI"
   },
   "signIn": {
     "title": "Sign in to the admin",
@@ -342,5 +343,38 @@
       "ha": "Hausa",
       "other": "Other"
     }
+  },
+  "ai": {
+    "title": "AI",
+    "prompts": "Prompts in use",
+    "task": "Task",
+    "version": "Prompt version",
+    "model": "Model",
+    "tasks": {
+      "craving": "Craving search",
+      "chef": "Ask Chef",
+      "draft": "Recipe drafts",
+      "scout": "Price scout"
+    },
+    "calls": "Last {count, plural, one {# call} other {# calls}}",
+    "callsNote": "Recipe drafts and price scout reads. App users' craving and Chef calls aren't logged yet. That needs a server key.",
+    "col": {
+      "task": "Task",
+      "count": "Calls",
+      "ok": "Worked",
+      "fallback": "Fell back",
+      "refusal": "Refused",
+      "quota": "Quota hits",
+      "p50": "Typical time",
+      "p95": "Slowest 5%",
+      "tokens": "Tokens"
+    },
+    "seconds": "{s} s",
+    "tokens": "{in} in, {out} out",
+    "noCalls": "No AI calls yet.",
+    "evals": "Eval runs",
+    "noEvals": "No eval runs yet.",
+    "passed": "passed",
+    "failed": "failed"
   }
 }

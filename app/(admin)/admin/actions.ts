@@ -1,5 +1,6 @@
 'use server';
 
+import { OUTCOME } from '@/lib/ai/gemini';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
@@ -120,7 +121,6 @@ export async function setStatus(_: Msg, form: FormData): Promise<Msg> {
 const DISH_FOR_AI =
   'id, name, types, region, cuisine_family, local_names, aliases, total_minutes, batch_servings_min, equipment, component_ingredients(ingredient_id, optional, ingredients(name, canonical_unit))';
 type DraftOutcome = 'ok' | 'quota' | 'failed' | 'not_configured';
-const OUTCOME = { quota: 'quota', timeout: 'fallback_timeout', invalid: 'fallback_schema', stopped: 'fallback_refusal', failed: 'error' } as const;
 
 // One T3 call for one dish: logged in ai_calls (doc 03, 7.0 rule 8); a valid answer is kept as a draft for review.
 async function draftOne(supabase: Db, userId: string, id: string): Promise<DraftOutcome> {

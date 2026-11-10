@@ -12,6 +12,9 @@ type Answer = {
   usageMetadata?: { promptTokenCount?: number; candidatesTokenCount?: number; thoughtsTokenCount?: number };
 };
 
+// How a failed call is written in ai_calls.outcome (doc 07).
+export const OUTCOME = { quota: 'quota', timeout: 'fallback_timeout', invalid: 'fallback_schema', stopped: 'fallback_refusal', failed: 'error' } as const;
+
 export async function geminiJson(c: GeminiCall, fetchFn: typeof fetch = fetch): Promise<GeminiResult> {
   const started = Date.now();
   const latency = () => Date.now() - started;

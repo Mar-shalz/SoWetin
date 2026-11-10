@@ -24,6 +24,9 @@ export function AdminHeader({ email }: { email?: string }) {
         <Link href="/admin/videos" className="text-enamel underline">
           {t('nav.videos')}
         </Link>
+        <Link href="/admin/ai" className="text-enamel underline">
+          {t('nav.ai')}
+        </Link>
         <Link href="/admin/settings" className="text-enamel underline">
           {t('nav.settings')}
         </Link>

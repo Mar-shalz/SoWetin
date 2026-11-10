@@ -223,6 +223,20 @@ export async function runScout(_: Msg, form: FormData): Promise<Msg> {
     maxAgeDays: C.SCOUT_MAX_OBSERVATION_AGE_DAYS,
     maxPages: C.SCOUT_MAX_PAGES_PER_RUN,
   });
+  if (result.calls.length)
+    await supabase.from('ai_calls').insert(
+      result.calls.map((c) => ({
+        task: 'scout',
+        model: C.AI_MODEL_AUTHORING,
+        prompt_version: SCOUT_PROMPT_VERSION,
+        user_id: user.id,
+        input_tokens: c.input,
+        output_tokens: c.output,
+        latency_ms: c.latencyMs,
+        stop_reason: c.stop,
+        outcome: c.outcome,
+      })),
+    );
   const touched = [...new Set(result.kept.map((k) => k.ingredient_id))];
   const mids = async () =>
     new Map(

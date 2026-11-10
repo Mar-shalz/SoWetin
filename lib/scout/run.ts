@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { geminiJson, geminiSchema } from '@/lib/ai/gemini';
+import { geminiJson, geminiSchema, OUTCOME } from '@/lib/ai/gemini';
 import { htmlToText, robotsAllow } from './text';
 import { verify, type Extracted, type IngredientInfo, type Kept } from './verify';
 
@@ -8,7 +8,9 @@ import { verify, type Extracted, type IngredientInfo, type Kept } from './verify
 export const SCOUT_PROMPT_VERSION = 'scout-v1';
 export type Source = { id: string; name: string; domain: string };
 export type Rejected = { url: string; quote?: string; reason: string };
-export type ScoutResult = { kept: (Kept & { source_id: string; source_url: string })[]; rejected: Rejected[]; pagesRead: number };
+// calls: one entry per AI read, for the ai_calls log (doc 03, 7.0 rule 8).
+export type ScoutCall = { latencyMs: number; input?: number; output?: number; stop?: string; outcome: string };
+export type ScoutResult = { kept: (Kept & { source_id: string; source_url: string })[]; rejected: Rejected[]; pagesRead: number; calls: ScoutCall[] };
 type Cfg = { delayMs: number; timeoutMs: number; maxBytes: number; userAgent: string; maxAgeDays: number; maxPages: number };
 
 const SYSTEM = `You read one published food price report and list the prices it states for food sold in Lagos, Nigeria.
@@ -73,7 +75,7 @@ export async function scoutPages(
   cfg: Cfg,
   fetchFn: typeof fetch = fetch,
 ): Promise<ScoutResult> {
-  const result: ScoutResult = { kept: [], rejected: [], pagesRead: 0 };
+  const result: ScoutResult = { kept: [], rejected: [], pagesRead: 0, calls: [] };
   const ids = [...ingredients.keys()] as [string, ...string[]];
   const schema = extractSchema(ids);
   const jsonSchema = geminiSchema(z.toJSONSchema(schema));
@@ -111,6 +113,13 @@ export async function scoutPages(
         fetchFn,
       );
       const parsed = answer.ok ? schema.safeParse(answer.json) : null;
+      result.calls.push({
+        latencyMs: answer.latencyMs,
+        input: answer.usage?.input,
+        output: answer.usage?.output,
+        stop: answer.stop,
+        outcome: !answer.ok ? OUTCOME[answer.reason] : parsed?.success ? 'ok' : OUTCOME.invalid,
+      });
       if (!parsed?.success) {
         reject(answer.ok ? 'AI answer failed the schema' : `AI read failed (${answer.reason})`);
         continue;
