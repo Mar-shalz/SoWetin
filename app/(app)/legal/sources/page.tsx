@@ -39,6 +39,9 @@ export default async function SourcesPage() {
         </section>
       ))}
       <p className="type-caption text-ink-2">{t('legal.updated', { date: updated })}</p>
+      <Link href="/legal/privacy" className="text-enamel underline">
+        {t('legal.privacy.title')}
+      </Link>
     </main>
   );
 }

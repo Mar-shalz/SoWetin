@@ -20,6 +20,7 @@ export async function AllergenLine({ contains, may }: { contains: AllergenGroup[
     <section className="grid gap-1 rounded-md border border-line p-3">
       {line('detail.allergens.contains', contains)}
       {line('detail.allergens.may', may)}
+      <p className="type-caption text-ink-2">{t('detail.allergens.soon')}</p>
     </section>
   );
 }

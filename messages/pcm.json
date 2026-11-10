@@ -157,7 +157,8 @@
     "askChef": "Ask Chef",
     "allergens": {
       "contains": "E get {list} inside.",
-      "may": "E fit get {list} inside."
+      "may": "E fit get {list} inside.",
+      "soon": "Sign-up dey come. Then you fit set your allergy and we go hide food wey get am."
     }
   },
   "recipe": {
@@ -212,8 +213,8 @@
   },
   "recipes": {
     "note": {
-      "line": "SoWetin write am, and home cooks don test am. The measure and time na guide.",
-      "full": "SoWetin people dey write our recipe, AI dey help with the first draft, then person wey grow up with that food go cook am for real kitchen before we put am out. We no dey copy recipe from website or video. Cooker, pot and foodstuff no be the same everywhere, so take the measure and time as guide, and follow wetin you see, smell and taste."
+      "line": "AI draft am, SoWetin check am. Amounts and time na guide.",
+      "full": "Na AI dey draft our recipes, then SoWetin team dey check dem. Some na we write by hand. We no dey copy anybody recipe word for word. Cooker, pot and ingredients no dey the same, so take amounts and time as guide, and trust the signs: how e look, how e smell and how e taste."
     }
   },
   "filters": {
@@ -317,7 +318,7 @@
   },
   "ai": {
     "note": {
-      "full": "SoWetin dey use AI understand wetin you type, answer cooking question, help draft recipe and read price report wey dem publish. AI no dey set price by himself. Our code dey check every price wey e read against where e get am, and our people dey go market check. AI fit make mistake, so e no get last word for allergy or health matter. We no dey send your name, email or phone number go the AI service.",
+      "full": "SoWetin dey use AI understand wetin you type, answer cooking question, help draft recipe and read price report wey dem publish. Our AI na Google Gemini, and Google fit use wetin you type take improve their products, so no type private matter. AI no dey set price by himself. Our code dey check every price wey e read against where e get am, and our people dey go market check. AI fit make mistake, so e no get last word for allergy or health matter. We no dey send your name, email or phone number go the AI service.",
       "chef": "Chef na AI, e fit make mistake. For allergy matter, check the label and ask the seller.",
       "craving": "I use AI read wetin you type. If I no catch am well, tap one chip fix am."
     },
@@ -344,7 +345,48 @@
       "allergies": "Allergy",
       "partners": "Partner price"
     },
-    "updated": "We update am last for {date}"
+    "updated": "We update am last for {date}",
+    "privacy": {
+      "title": "Privacy notice",
+      "contact": "Write to us at {email}.",
+      "summary": "For short: you no need account. Wetin you save dey your phone, we no fit see am. Wetin you type for craving or Chef dey go Google AI, and Google fit keep am, so no type private matter. The English below na the main one.",
+      "short": {
+        "title": "The short version",
+        "body": "You don't need an account to use SoWetin. We don't ask for your name, email or phone number. What you save stays on your phone."
+      },
+      "phone": {
+        "title": "What stays on your phone",
+        "body": "Your saved plates, your history, what's in your house, your chop personality, your settings, and any name or photo you put on a card all stay in your browser on this phone. We can't see them. To delete them, clear this site's data in your browser."
+      },
+      "servers": {
+        "title": "What reaches our servers",
+        "body": "To pick plates, your phone sends your budget, how many people, cook or buy, meal time, your filters and what's in your house. We use them to answer, then let them go. We don't keep them or link them to you. Our host, Vercel, keeps short technical logs, like your IP address, to run and protect the service."
+      },
+      "ai": {
+        "title": "What you type to the AI",
+        "body": "When you type a craving or ask Chef, the text goes to Google's Gemini AI so it can read it. We remove email addresses and phone numbers first. We use Gemini's free tier, so Google may keep what you type, use it to improve its products, and have people review it. Please don't type anything private. AI features are off for people in the European Union, the wider EEA, Switzerland and the United Kingdom."
+      },
+      "videos": {
+        "title": "Videos",
+        "body": "Videos play in YouTube's privacy-enhanced player and only load when you tap one. Then YouTube's own privacy policy applies."
+      },
+      "cookies": {
+        "title": "Cookies",
+        "body": "We set one cookie, and only if you change the app's language, to remember your choice. Staff who sign in to our admin also get sign-in cookies. No ads, no tracking, no analytics."
+      },
+      "helpers": {
+        "title": "Who helps us run SoWetin",
+        "body": "Vercel hosts the app, with its servers in London. Supabase holds our food catalogue and prices in London. Google runs the AI. YouTube shows the videos you choose to play."
+      },
+      "rights": {
+        "title": "Your rights",
+        "body": "Under Nigeria's Data Protection Act 2023 you can ask what we hold about you and ask us to correct or delete it. We don't keep personal data about people who use the app, so what's about you is on your phone, where you control it."
+      },
+      "changes": {
+        "title": "Changes",
+        "body": "When this changes, we'll update this page and the date at the top."
+      }
+    }
   },
   "howWePrice": {
     "body": "Every week, our AI dey read plenty market price report wey dem publish, and our code dey check every number against the page wey e come from. Every month, our people dey go Lagos market by themselves. We dey take the middle of all those prices, so one odd price no go scatter am, then we show range because price dey move and every seller different. The date go show you how fresh e be. E include the smallest amount wey seller go sell give you. Na estimate, no be final price, so your market fit different."
@@ -378,7 +420,12 @@
     "history": "Nothing never log. Tap \"I don chop am\" after you chop, I go keep am."
   },
   "me": {
-    "onPhone": "You no need account yet. Wetin you save and your kitchen list go stay for this phone."
+    "onPhone": "You no need account yet. Wetin you save and your kitchen list go stay for this phone.",
+    "signup": {
+      "title": "Sign-up dey come",
+      "allergy": "Set your allergy one time, and picks go hide food wey no safe for you.",
+      "saves": "Make your saved plates and kitchen list follow you for any phone."
+    }
   },
   "video": {
     "watch": "Watch am for YouTube",

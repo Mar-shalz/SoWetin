@@ -106,7 +106,9 @@ export const APP_CONFIG = {
   IMPORT_FLAG_CHANGE_PCT: 40, // doc 04, section 7: a market check row this far from the current mid is flagged
   PRICE_FIRST_NOTE_ENABLED: true,
   DISH_PAGE_PEOPLE: 2, // doc 05, section 8: dish pages show amounts and the price for 2
-  SOURCES_PAGE_UPDATED: '2026-11-09', // "Last updated" on /legal/sources (doc 11, section 6.9); change it with the copy
+  SOURCES_PAGE_UPDATED: '2026-11-10', // "Last updated" on /legal/sources (doc 11, section 6.9); change it with the copy
+  PRIVACY_UPDATED: '2026-11-10', // "Last updated" on /legal/privacy; change it with the copy
+  PRIVACY_CONTACT_EMAIL: '', // where people write about their data; Victor to choose. The line is hidden while empty.
   PRICE_WIDE_SPREAD: 0.2, // S-023 names the moving ingredients when the plate's range is wider than this (doc 02)
   USE_COST_LINE_THRESHOLD: 0.75,
   LEFTOVER_SHOW_PCT: 25,

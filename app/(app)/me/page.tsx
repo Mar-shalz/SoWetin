@@ -16,6 +16,7 @@ export default async function MePage() {
   const links = [
     ['/saved', t('nav.saved')],
     ['/legal/sources', t('legal.sources.title')],
+    ['/legal/privacy', t('legal.privacy.title')],
   ] as const;
   return (
     <main className="mx-auto flex min-h-dvh max-w-app flex-col gap-4 px-4 pt-6">
@@ -32,6 +33,15 @@ export default async function MePage() {
           </li>
         ))}
       </ul>
+      <section aria-labelledby="signup" className="rounded-lg border-2 border-dashed border-ink-3 p-4">
+        <h2 id="signup" className="type-title-m">
+          {t('me.signup.title')}
+        </h2>
+        <ul className="mt-2 grid list-disc gap-1 pl-5">
+          <li>{t('me.signup.allergy')}</li>
+          <li>{t('me.signup.saves')}</li>
+        </ul>
+      </section>
       <MotionSetting />
       {C.PIDGIN_ENABLED && (
         <form action={setLanguage}>

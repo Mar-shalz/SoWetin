@@ -57,8 +57,8 @@ describe('admin rules in the database', () => {
     await expect(as('anon', 'select public.publish_blockers(c) from components c')).rejects.toThrow(/permission denied/);
   });
 
-  it('blocks publishing until BR-41 is met, then stamps it and bumps the snapshot', async () => {
-    expect(await blockers()).toEqual(['illustration', 'times', 'quantities', 'steps', 'tips', 'mistakes', 'storage', 'tested']);
+  it('blocks publishing until BR-41 is met (no kitchen test since D-37), then stamps it and bumps the snapshot', async () => {
+    expect(await blockers()).toEqual(['illustration', 'times', 'quantities', 'steps', 'tips', 'mistakes', 'storage']);
 
     const lines = (await db.query<{ id: string }>('select ingredient_id as id from component_ingredients where component_id = $1', [DISH])).rows;
     await apply(editor, {
@@ -72,10 +72,9 @@ describe('admin rules in the database', () => {
       mistakes: ["Don't rush the frying, or it tastes raw."],
       storage: '3 days in the fridge.',
     });
-    expect(await blockers()).toEqual(['illustration', 'tested']);
-    await expect(setStatus(editor, 'published')).rejects.toThrow('Not ready to publish: illustration, tested');
+    expect(await blockers()).toEqual(['illustration']);
+    await expect(setStatus(editor, 'published')).rejects.toThrow('Not ready to publish: illustration');
 
-    await apply(editor, { tested_at: '2026-11-09' });
     await as(editor, `update components set illustration_path = 'egusi-soup.webp' where id = $1`, [DISH]);
     const before = await version();
     await setStatus(editor, 'published');
@@ -84,7 +83,7 @@ describe('admin rules in the database', () => {
       'select reviewed_by, tested_by, published_at from components where id = $1',
       [DISH],
     );
-    expect(row).toMatchObject({ reviewed_by: EDITOR, tested_by: EDITOR });
+    expect(row).toMatchObject({ reviewed_by: EDITOR, tested_by: null });
     expect(row.published_at).not.toBeNull();
     expect(await version()).toBe(before + 1);
     expect(await count('anon', 'components')).toBe(1);

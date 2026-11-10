@@ -49,13 +49,13 @@ type Dish = {
 const DISH =
   'id, name, status, updated_at, local_names, aliases, description, prep_minutes, total_minutes, tips, mistakes, storage, serving_note, tested_at, illustration_path, publish_blockers, component_ingredients(ingredient_id, qty_per_serving, grp, optional, note, sort, ingredients(name, canonical_unit)), component_steps(step_no, text, cue, heat, timer_seconds, tip)';
 // Checklist items (doc 05, 5.3) the database can tick by itself, from publish_blockers. The rest need a person.
-const ITEMS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', 'picture'] as const;
+// Item 10 (cooked from the written steps) left the list with D-37; the kitchen test can still be recorded below.
+const ITEMS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '11', 'picture'] as const;
 const AUTO: Partial<Record<(typeof ITEMS)[number], Blocker[]>> = {
   '1': ['local_names'],
   '2': ['quantities'],
   '4': ['steps', 'cues'],
   '5': ['times'],
-  '10': ['tested'],
   '11': ['tips', 'mistakes', 'storage'],
   picture: ['illustration'],
 };

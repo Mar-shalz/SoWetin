@@ -15,6 +15,8 @@ test('admin pages need sign-in, keep the strict policy and stay out of search', 
   await expect(page.getByLabel('Password')).toHaveAttribute('type', 'password');
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/);
 
+  // Let the entrance motion finish, so contrast is measured on the settled page.
+  await page.evaluate(() => Promise.all(document.getAnimations().map((a) => a.finished)));
   const axe = await new AxeBuilder({ page }).analyze();
   expect(axe.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical')).toEqual([]);
   expect(cspErrors).toEqual([]);
