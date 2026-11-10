@@ -26,7 +26,7 @@ test('filters open, apply and show their count', async ({ page }) => {
 // S-024: the house row opens its sheet, and the sheet closes again.
 test("what's in the house opens and closes", async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: "What's in the house? Tap what you have." }).click();
+  await page.getByRole('button', { name: /What's in the house\?/ }).click();
   const sheet = page.getByRole('dialog', { name: "What's in the house?" });
   await expect(sheet).toBeVisible();
   await sheet.getByRole('button', { name: 'Close' }).click();
@@ -37,23 +37,39 @@ test("what's in the house opens and closes", async ({ page }) => {
 // and removing it puts the sentence's budget back.
 test('a craving becomes chips that can be removed', async ({ page }) => {
   await page.goto('/');
-  const field = page.getByRole('searchbox', { name: 'Craving something? Type am…' });
-  const find = page.getByRole('button', { name: 'Find', exact: true });
+  await page.getByRole('button', { name: /Craving something\?/ }).click();
+  const sheet = page.getByRole('dialog', { name: 'What are you craving?' });
+  const field = sheet.getByRole('searchbox', { name: 'Craving something? Type am…' });
+  const find = sheet.getByRole('button', { name: 'Find', exact: true });
+  await expect(field).toBeFocused();
   await expect(find).toBeDisabled();
-  await field.focus();
-  await expect(page.getByText('Try one:')).toBeVisible();
+  await expect(sheet.getByText('Try one:')).toBeVisible();
   await field.fill('something for 2k');
+  await expect(sheet.getByText('Try one:')).toBeHidden();
   await find.click();
+  await expect(sheet).toBeHidden();
   await expect(page.getByRole('button', { name: 'Remove ₦2,000' })).toBeVisible();
   await expect(page.getByLabel('₦2,000. Change it')).toBeVisible();
   await page.getByRole('button', { name: 'Remove ₦2,000' }).click();
   await expect(page.getByLabel('₦3,500. Change it')).toBeVisible();
 });
 
+// Victor, 10 November 2026: an empty craving field means no craving; its chips leave the screen.
+test('clearing the craving takes its chips away', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: /Craving something\?/ }).click();
+  await page.getByRole('searchbox').fill('food for 2k');
+  await page.getByRole('button', { name: 'Find', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Remove ₦2,000' })).toBeVisible();
+  await page.getByRole('button', { name: 'Clear the craving' }).click();
+  await expect(page.getByRole('button', { name: 'Remove ₦2,000' })).toBeHidden();
+  await expect(page.getByLabel('₦3,500. Change it')).toBeVisible();
+});
+
 // BR-134: food typed into "Anything else?" that the catalogue doesn't know stays on the list, marked as not in picks.
 test('typed house items the catalogue does not know stay on the list', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: "What's in the house? Tap what you have." }).click();
+  await page.getByRole('button', { name: /What's in the house\?/ }).click();
   const sheet = page.getByRole('dialog', { name: "What's in the house?" });
   await sheet.getByLabel('Anything else?').fill('zobo leaves');
   await sheet.getByRole('button', { name: 'Find', exact: true }).click();

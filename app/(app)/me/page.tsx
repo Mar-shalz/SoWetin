@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { BottomNav } from '@/components/nav/bottom-nav';
 import { MotionSetting } from '@/components/nav/motion-tier';
+import { PersonalityCard } from '@/components/play/personality-card';
+import { ChevronIcon } from '@/components/ui/icons';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
 import { setLanguage } from '../actions';
 
@@ -12,7 +14,6 @@ export default async function MePage() {
   const t = await getTranslations();
   const locale = await getLocale();
   const links = [
-    ['/play', t('persona.entry.title')],
     ['/saved', t('nav.saved')],
     ['/legal/sources', t('legal.sources.title')],
   ] as const;
@@ -20,11 +21,13 @@ export default async function MePage() {
     <main className="mx-auto flex min-h-dvh max-w-app flex-col gap-4 px-4 pt-6">
       <h1 className="type-display-l">{t('nav.me')}</h1>
       <p className="text-ink-2">{t('me.onPhone')}</p>
+      {C.TASTE_GAME_ENABLED && <PersonalityCard />}
       <ul className="grid gap-3">
         {links.map(([href, label]) => (
           <li key={href}>
-            <Link href={href} className="flex min-h-14 items-center rounded-lg border-2 border-ink bg-surface px-4 type-label">
+            <Link href={href} className="flex min-h-14 items-center justify-between gap-3 rounded-lg border-2 border-ink bg-surface px-4 type-label">
               {label}
+              <ChevronIcon size={20} />
             </Link>
           </li>
         ))}

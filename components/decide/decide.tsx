@@ -4,11 +4,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { CravingChips, CravingField, chipsOf, clampBudget, clampPeople, withoutChip, type ActiveCraving, type CravingReply } from '@/components/decide/craving';
+import { CravingChips, CravingSheet, chipsOf, clampBudget, clampPeople, withoutChip, type ActiveCraving, type CravingReply } from '@/components/decide/craving';
 import { PriceSheet } from '@/components/decide/price-sheet';
 import { SaveButton } from '@/components/plate/save-button';
 import { EMPTY_KITCHEN, kitchenForApi, lagosToday as today, saveKitchen, useKitchen, type Kitchen } from '@/components/decide/kitchen';
-import { CaretIcon, ChevronIcon, HouseIcon, SlidersIcon } from '@/components/ui/icons';
+import { CaretIcon, CloseIcon, HouseIcon, LogoMark, SlidersIcon, SparkleIcon } from '@/components/ui/icons';
 import type { HouseOptions } from '@/lib/catalogue/db';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
 import type { MealTime } from '@/lib/engine/time';
@@ -35,7 +35,7 @@ const activeFilters = (f: Filters) => [f.meal_time, f.plate_types.length, f.max_
 // S-001 Decide: the top bar with Filters (S-007), the one-sentence answers, the craving field (S-008), Pick for me or
 // three plates (S-003), a Swap per dish (BR-37), and the price receipt (S-023).
 // shortcut: native pickers and <dialog> sheets; the motion of doc 10 (Kòkò thinking, M-19) comes with the M2 polish.
-export function Decide({ greeting, house }: { greeting: ReactNode; house: HouseOptions }) {
+export function Decide({ greeting, house, promo }: { greeting: ReactNode; house: HouseOptions; promo?: ReactNode }) {
   const t = useTranslations();
   const [budget, setBudget] = useState<number>(C.FIRST_VISIT_DEFAULT_BUDGET);
   const [people, setPeople] = useState<number>(C.PEOPLE_DEFAULT);
@@ -52,6 +52,15 @@ export function Decide({ greeting, house }: { greeting: ReactNode; house: HouseO
   const [craving, setCraving] = useState<ActiveCraving | null>(null);
   const [cravingNote, setCravingNote] = useState<'thinking' | 'offTopic' | 'fallback' | null>(null);
   const [cravingRuns, setCravingRuns] = useState(0);
+  const [cravingText, setCravingText] = useState('');
+  const [cravingOpen, setCravingOpen] = useState(false);
+  const cravingSheet = useRef<HTMLDialogElement>(null);
+  // The sheet's contents mount when it opens, so the field starts from the craving in play and takes the focus.
+  useEffect(() => {
+    if (!cravingOpen) return;
+    cravingSheet.current?.showModal();
+    cravingSheet.current?.querySelector('input')?.focus(); // React's autoFocus runs before the dialog opens
+  }, [cravingOpen]);
   const answer = useRef<HTMLElement>(null);
   const sheet = useRef<HTMLDialogElement>(null);
   const houseSheet = useRef<HTMLDialogElement>(null);
@@ -200,6 +209,19 @@ export function Decide({ greeting, house }: { greeting: ReactNode; house: HouseO
     void pick(deckSize, { ...o, craving: keep ? next : null });
   }
 
+  // An empty craving field means no craving: its chips, notes and picks leave the screen, and the sentence goes back.
+  function clearCraving() {
+    if (!craving) return;
+    const { before } = craving;
+    setBudget(before.budget);
+    setPeople(before.people);
+    setMode(before.mode);
+    setCraving(null);
+    setCravingNote(null);
+    setResult(null);
+    setCravingText('');
+  }
+
   function withoutCraving() {
     if (!craving) return;
     const { before } = craving;
@@ -263,7 +285,10 @@ export function Decide({ greeting, house }: { greeting: ReactNode; house: HouseO
   return (
     <>
       <header className="flex min-h-14 items-center justify-between gap-2">
-        <span className="type-title-l">{C.APP_NAME}</span>
+        <span className="flex items-center gap-2 type-title-l">
+          <LogoMark size={30} />
+          {C.APP_NAME}
+        </span>
         <div className="flex items-center gap-2">
           <button
             type="button"
@@ -283,16 +308,20 @@ export function Decide({ greeting, house }: { greeting: ReactNode; house: HouseO
       </header>
       <FiltersSheet dialog={sheet} filters={filters} onApply={applyFilters} />
 
-      {greeting}
+      <section className="mt-3 rounded-xl border-2 border-ink bg-surface p-5 shadow-button">
+        {greeting}
 
-      <p className="mt-6 flex flex-wrap items-center gap-x-2 gap-y-3 type-title-l">
+        <p className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-3 type-title-l">
         {sentence.map((part, i) => {
           if (i % 2) {
             const a = answers[part as keyof typeof answers];
             return (
               <span key={i} className="inline-flex items-center">
                 <span className="relative inline-flex min-h-12 items-center gap-1 rounded-pill border-2 border-ink bg-palm-100 px-3 shadow-button focus-within:outline-3 focus-within:outline-offset-2 focus-within:outline-focus">
-                  {a.label}
+                  {/* Keyed by the value, so a new answer pops in (M-03). */}
+                  <span key={a.value} className="sw-pop">
+                    {a.label}
+                  </span>
                   <CaretIcon size={20} />
                   <select
                     aria-label={t('home.sentence.edit', { value: a.label })}
@@ -314,22 +343,35 @@ export function Decide({ greeting, house }: { greeting: ReactNode; house: HouseO
           const words = (glued(i - 1) ? part.slice(1) : part).trim();
           return words && <span key={i}>{words}</span>;
         })}
-      </p>
-      <p className="mt-3 type-caption text-ink-2">{t('home.sentence.hint')}</p>
-      {cooking && (
-        <button
-          type="button"
-          onClick={() => {
-            setHouseOpens(houseOpens + 1);
-            houseSheet.current?.showModal();
-          }}
-          className="mt-6 flex min-h-14 w-full items-center gap-3 rounded-lg border-2 border-ink bg-surface px-4 text-left type-label"
-        >
-          <HouseIcon />
-          <span className="flex-1">{listed.length ? t('home.house.summary', { items: listed.join(', ') }) : t('home.house.empty')}</span>
-          <ChevronIcon />
-        </button>
-      )}
+        </p>
+        <p className="mt-3 type-caption text-ink-2">{t('home.sentence.hint')}</p>
+      </section>
+
+      {/* Two optional ways in, side by side: what's at home, and a craving in your own words. */}
+      <div className="mt-4 grid grid-cols-2 gap-3">
+        {cooking && (
+          <Tile
+            icon={<HouseIcon size={20} />}
+            title={t('house.title')}
+            hint={listed.length ? listed.join(', ') : t('home.house.hint')}
+            on={!!listed.length}
+            onOpen={() => {
+              setHouseOpens(houseOpens + 1);
+              houseSheet.current?.showModal();
+            }}
+          />
+        )}
+        <Tile
+          icon={<SparkleIcon size={20} />}
+          title={t('home.craving.cta')}
+          hint={craving ? `“${cravingText}”` : t('home.craving.hint')}
+          on={!!craving}
+          wide={!cooking}
+          onOpen={() => setCravingOpen(true)}
+          onClear={craving ? clearCraving : undefined}
+          clearLabel={t('craving.clear')}
+        />
+      </div>
       <dialog
         ref={houseSheet}
         aria-labelledby="house-title"
@@ -346,7 +388,27 @@ export function Decide({ greeting, house }: { greeting: ReactNode; house: HouseO
           }}
         />
       </dialog>
-      <CravingField busy={busy} onFind={find} />
+      <dialog
+        ref={cravingSheet}
+        aria-labelledby="craving-title"
+        onClose={() => {
+          setCravingOpen(false);
+          if (!cravingText.trim()) clearCraving();
+        }}
+        className="mx-auto mb-0 mt-auto max-h-[85dvh] w-full max-w-app rounded-t-xl border-2 border-ink bg-surface p-5 text-ink backdrop:bg-overlay"
+      >
+        {cravingOpen && (
+          <CravingSheet
+            text={cravingText}
+            setText={setCravingText}
+            busy={busy}
+            onFind={(text) => {
+              cravingSheet.current?.close();
+              void find(text);
+            }}
+          />
+        )}
+      </dialog>
 
       <section ref={answer} aria-live="polite" className="sw-deal mt-6 grid scroll-mt-4 gap-4">
         {cravingNote === 'thinking' ? <p className="text-ink-2">{t('craving.thinking')}</p> : slow && <p className="text-ink-2">{t('reveal.slow')}</p>}
@@ -379,6 +441,7 @@ export function Decide({ greeting, house }: { greeting: ReactNode; house: HouseO
         )}
         {notice && <p className="text-ink-2">{notice}</p>}
       </section>
+      {promo && <div className="mt-6">{promo}</div>}
 
       <div className="sticky bottom-14 mt-auto bg-cream pb-2 pt-3">
         <button
@@ -911,6 +974,46 @@ function HouseText({ options, kitchen }: { options: HouseOptions; kitchen: Kitch
             </li>
           ))}
         </ul>
+      )}
+    </div>
+  );
+}
+
+// One of the two optional ways in on Decide: an icon, a name, a hint or what's chosen, and × to clear where it applies.
+function Tile({
+  icon,
+  title,
+  hint,
+  on,
+  wide,
+  onOpen,
+  onClear,
+  clearLabel,
+}: {
+  icon: ReactNode;
+  title: string;
+  hint: string;
+  on: boolean;
+  wide?: boolean;
+  onOpen: () => void;
+  onClear?: () => void;
+  clearLabel?: string;
+}) {
+  return (
+    <div className={`relative ${wide ? 'col-span-2' : ''}`}>
+      <button
+        type="button"
+        onClick={onOpen}
+        className={`flex h-full min-h-28 w-full flex-col items-start gap-2 rounded-lg border-2 border-ink p-3 text-left shadow-button ${on ? 'bg-palm-100' : 'bg-surface'}`}
+      >
+        <span className="grid size-9 place-items-center rounded-pill border-2 border-ink bg-egusi">{icon}</span>
+        <span className="type-label">{title}</span>
+        <span className="line-clamp-2 type-caption text-ink-2">{hint}</span>
+      </button>
+      {onClear && (
+        <button type="button" onClick={onClear} aria-label={clearLabel} className="absolute right-1 top-1 grid size-12 place-items-center rounded-pill">
+          <CloseIcon size={18} />
+        </button>
       )}
     </div>
   );

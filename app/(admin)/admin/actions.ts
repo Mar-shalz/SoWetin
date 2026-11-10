@@ -40,7 +40,8 @@ export async function signIn(_: SignInState, form: FormData): Promise<SignInStat
   const { error } = await supabase.auth.signInWithPassword({ email: email.data, password: password.data });
   if (error) {
     console.error('signIn', error.status, error.code);
-    return { error: error.status === 429 ? t('signIn.wait') : t('signIn.wrong') };
+    // Only a credentials refusal reads as a wrong password; a captcha or rate limit says what really happened.
+    return { error: error.status === 429 ? t('signIn.wait') : error.code === 'captcha_failed' ? t('signIn.captcha') : t('signIn.wrong') };
   }
   redirect('/admin/mfa');
 }

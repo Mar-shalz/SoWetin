@@ -1,7 +1,7 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { setLanguage } from '@/app/(app)/actions';
 import { SearchIcon } from '@/components/ui/icons';
 import type { Craving } from '@/lib/ai/craving';
@@ -53,73 +53,88 @@ export function withoutChip(c: Craving, id: string): Craving {
   return { ...c, [field]: field === 'vegetarian' ? false : null };
 }
 
-// S-001 item 7 and S-008: the field, Find (it looks off until there's text), and example chips on focus.
-export function CravingField({ busy, onFind }: { busy: boolean; onFind: (text: string) => void }) {
+// S-008 in a sheet (Victor, 10 November 2026): the home screen shows a "Craving something?" tile and the field opens here,
+// so the page stays calm. The examples sit in the same frame as the field, and only while it's focused and empty.
+export function CravingSheet({ text, setText, busy, onFind }: { text: string; setText: (s: string) => void; busy: boolean; onFind: (text: string) => void }) {
   const t = useTranslations();
-  const [text, setText] = useState('');
-  const [examples, setExamples] = useState(false);
-  const shown = useRef<HTMLDivElement>(null);
-  // The examples open under the field; bring them up above the sticky Pick for me bar.
-  useEffect(() => {
-    if (examples) shown.current?.scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
-  }, [examples]);
+  const [focused, setFocused] = useState(true);
   const run = (value: string) => {
     const v = value.trim();
     if (!v || busy) return;
     setText(v);
-    setExamples(false);
     onFind(v);
   };
+  // Tapping an example mustn't blur the field first, or the examples would vanish under the finger.
+  const keep = (e: { preventDefault: () => void }) => e.preventDefault();
   return (
-    <div className="mt-3">
-      <form
-        role="search"
-        onSubmit={(e) => {
-          e.preventDefault();
-          run(text);
-        }}
-        className="flex min-h-14 items-center gap-2 rounded-pill border-2 border-ink bg-surface pl-4 pr-2 focus-within:outline-3 focus-within:outline-offset-2 focus-within:outline-focus"
-      >
-        <SearchIcon size={20} />
-        <input
-          type="search"
-          value={text}
-          maxLength={C.CRAVING_MAX_CHARS}
-          onChange={(e) => setText(e.target.value)}
-          onFocus={() => setExamples(true)}
-          aria-label={t('home.craving.placeholder')}
-          placeholder={t('home.craving.placeholder')}
-          enterKeyHint="search"
-          className="sw-field min-h-12 min-w-0 flex-1 bg-transparent type-input placeholder:text-ink-3"
-        />
-        <button
-          type="submit"
-          disabled={!text.trim() || busy}
-          className="min-h-12 shrink-0 rounded-pill border-2 border-ink bg-palm px-4 type-label disabled:border-ink-3 disabled:bg-sunken disabled:text-ink-3"
+    <>
+      <div className="flex items-center justify-between gap-3">
+        <h2 id="craving-title" className="type-title-l">
+          {t('craving.sheet.title')}
+        </h2>
+        <form method="dialog">
+          <button className="min-h-12 px-3 type-label underline">{t('house.close')}</button>
+        </form>
+      </div>
+      <div className="mt-4 overflow-hidden rounded-xl border-2 border-ink bg-surface focus-within:outline-3 focus-within:outline-offset-2 focus-within:outline-focus">
+        <form
+          role="search"
+          onSubmit={(e) => {
+            e.preventDefault();
+            run(text);
+          }}
+          className="flex min-h-14 items-center gap-2 pl-4 pr-2"
         >
-          {t('craving.find')}
-        </button>
-      </form>
+          <SearchIcon size={20} />
+          <input
+            autoFocus
+            type="search"
+            value={text}
+            maxLength={C.CRAVING_MAX_CHARS}
+            onChange={(e) => setText(e.target.value)}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
+            aria-label={t('home.craving.placeholder')}
+            placeholder={t('home.craving.placeholder')}
+            enterKeyHint="search"
+            className="sw-field min-h-12 min-w-0 flex-1 bg-transparent type-input placeholder:text-ink-3"
+          />
+          <button
+            type="submit"
+            disabled={!text.trim() || busy}
+            className="min-h-12 shrink-0 rounded-pill border-2 border-ink bg-palm px-4 type-label disabled:border-ink-3 disabled:bg-sunken disabled:text-ink-3"
+          >
+            {t('craving.find')}
+          </button>
+        </form>
+        {focused && !text && (
+          <div className="sw-pop border-t-2 border-line px-4 pb-4 pt-3">
+            <p className="type-caption text-ink-2">{t('craving.try')}</p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {t('craving.examples')
+                .split(' · ')
+                .map((e) => (
+                  <button
+                    key={e}
+                    type="button"
+                    onPointerDown={keep}
+                    onMouseDown={keep}
+                    onClick={() => run(e)}
+                    className="min-h-12 rounded-pill border-2 border-ink-3 bg-cream px-4 type-label"
+                  >
+                    {e}
+                  </button>
+                ))}
+            </div>
+          </div>
+        )}
+      </div>
       {text.length >= C.CRAVING_COUNTER_FROM && (
         <p className="mt-1 text-right type-caption text-ink-2" aria-live="polite">
           {text.length}/{C.CRAVING_MAX_CHARS}
         </p>
       )}
-      {examples && !text && (
-        <div ref={shown} className="mt-2 scroll-mb-52">
-          <p className="type-caption text-ink-2">{t('craving.try')}</p>
-          <div className="mt-1 flex flex-wrap gap-2">
-            {t('craving.examples')
-              .split(' · ')
-              .map((e) => (
-                <button key={e} type="button" onClick={() => run(e)} className="min-h-12 rounded-pill border-2 border-ink-3 bg-surface px-4 type-label">
-                  {e}
-                </button>
-              ))}
-          </div>
-        </div>
-      )}
-    </div>
+    </>
   );
 }
 

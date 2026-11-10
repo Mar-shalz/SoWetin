@@ -22,7 +22,8 @@
     "submitting": "Signing in…",
     "notConfigured": "Sign-in isn't set up on this copy of the app.",
     "wrong": "That email and password don't match. Try again.",
-    "wait": "Too many tries. Wait a minute, then try again."
+    "wait": "Too many tries. Wait a minute, then try again.",
+    "captcha": "Sign-in is blocked by the bot check (captcha) in Supabase. Turn it off there for now, or add the Turnstile key to the app."
   },
   "mfa": {
     "title": "Enter your authenticator code",

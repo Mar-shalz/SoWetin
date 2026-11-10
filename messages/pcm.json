@@ -27,10 +27,13 @@
     },
     "house": {
       "empty": "Wetin dey house? Tap wetin you get.",
-      "summary": "{items}"
+      "summary": "{items}",
+      "hint": "Cook with wetin you get"
     },
     "craving": {
-      "placeholder": "You dey crave something? Type am…"
+      "placeholder": "You dey crave something? Type am…",
+      "cta": "You dey crave something?",
+      "hint": "Talk am your way"
     },
     "cta": {
       "pick": "Pick am for me",
@@ -61,7 +64,11 @@
     "clarify": {
       "cook": "I go cook",
       "buy": "I go buy"
-    }
+    },
+    "sheet": {
+      "title": "Wetin you dey crave?"
+    },
+    "clear": "Comot the craving"
   },
   "plate": {
     "price": {

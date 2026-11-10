@@ -9,3 +9,13 @@ export function seededRandom(seed: string): () => number {
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
 }
+
+// Fisher-Yates over a copy. The caller passes the randomness, so the engine stays pure and tests can seed it.
+export function shuffle<T>(list: readonly T[], random: () => number): T[] {
+  const out = [...list];
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}

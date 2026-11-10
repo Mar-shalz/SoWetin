@@ -21,9 +21,12 @@ export default async function AppLayout({ children }: LayoutProps<'/'>) {
     <html lang={await getLocale()} className={`${display.variable} ${body.variable}`}>
       <body>
         <NextIntlClientProvider>
-          <Offline />
-          <MotionTier />
-          {children}
+          {/* On laptops the app sits in a phone-sized frame (globals.css, .app-frame); on phones it fills the screen. */}
+          <div className="app-frame">
+            <Offline />
+            <MotionTier />
+            {children}
+          </div>
         </NextIntlClientProvider>
       </body>
     </html>

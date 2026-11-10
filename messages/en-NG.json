@@ -27,10 +27,13 @@
     },
     "house": {
       "empty": "What's in the house? Tap what you have.",
-      "summary": "{items}"
+      "summary": "{items}",
+      "hint": "Cook with what you have"
     },
     "craving": {
-      "placeholder": "Craving something? Type am…"
+      "placeholder": "Craving something? Type am…",
+      "cta": "Craving something?",
+      "hint": "Say it your way"
     },
     "cta": {
       "pick": "Pick for me",
@@ -61,7 +64,11 @@
     "clarify": {
       "cook": "Cooking",
       "buy": "Buying"
-    }
+    },
+    "sheet": {
+      "title": "What are you craving?"
+    },
+    "clear": "Clear the craving"
   },
   "plate": {
     "price": {

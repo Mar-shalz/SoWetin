@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
+import { shuffle } from '@/lib/engine/rng';
 import { personaFor, type Persona } from '@/lib/engine/persona';
 import { store } from '@/lib/device/store';
 
@@ -31,11 +32,12 @@ const H = 1920;
 export function Game({ cards, fonts }: { cards: GameCard[]; fonts: { display: string; body: string } }) {
   const t = useTranslations('persona');
   const [answers, setAnswers] = useState<Record<string, boolean>>({});
+  const [deck, setDeck] = useState(cards);
   const [done, setDone] = useState(false);
   const [copied, setCopied] = useState(false);
   const canvas = useRef<HTMLCanvasElement>(null);
   const answered = Object.keys(answers).length;
-  const card = cards[answered];
+  const card = deck[answered];
   const persona = done || !card ? personaFor(answers, C) : null;
 
   const answer = (yum: boolean) => card && setAnswers({ ...answers, [card.id]: yum });
@@ -59,6 +61,10 @@ export function Game({ cards, fonts }: { cards: GameCard[]; fonts: { display: st
     ctx.fillRect(0, 0, W, H);
     ctx.fillStyle = colour('cream');
     ctx.fillRect(60, 60, W - 120, H - 120);
+    // The SoWetin mark and name at the top, so the card says where it's from wherever it travels.
+    const logo = new window.Image();
+    logo.onload = () => ctx.drawImage(logo, W / 2 - 60, 120, 120, 120);
+    logo.src = '/icon.svg';
     ctx.fillStyle = colour('ink');
     ctx.textAlign = 'center';
     // Canvas font shorthand is weight, size, family, in that order.
@@ -77,7 +83,8 @@ export function Game({ cards, fonts }: { cards: GameCard[]; fonts: { display: st
       ctx.fillText(line.trim(), W / 2, y);
       return y + size * 1.25;
     };
-    let y = text(t('eyebrow'), 260, 48, 600, fonts.body);
+    text(C.APP_NAME, 300, 52, 800, fonts.display);
+    let y = text(t('eyebrow'), 400, 48, 600, fonts.body);
     y = text(t(`${persona}.name`), y + 60, 120, 800, fonts.display);
     y = text(t(`${persona}.line`), y + 60, 52, 500, fonts.body);
     y = text(t(`${persona}.traits`), y + 80, 44, 700, fonts.body);
@@ -117,6 +124,7 @@ export function Game({ cards, fonts }: { cards: GameCard[]; fonts: { display: st
           <button
             type="button"
             onClick={() => {
+              setDeck(shuffle(cards, Math.random));
               setAnswers({});
               setDone(false);
             }}
@@ -132,8 +140,8 @@ export function Game({ cards, fonts }: { cards: GameCard[]; fonts: { display: st
   return (
     <section className="grid gap-4">
       {/* A native progress bar: no inline style, which the strict CSP would block. */}
-      <progress value={answered} max={cards.length} aria-label={t('progress', { n: answered, total: cards.length })} className="h-2 w-full accent-palm" />
-      <p className="type-label text-ink-2">{t('progress', { n: answered + 1, total: cards.length })}</p>
+      <progress value={answered} max={deck.length} aria-label={t('progress', { n: answered, total: deck.length })} className="h-2 w-full accent-palm" />
+      <p className="type-label text-ink-2">{t('progress', { n: answered + 1, total: deck.length })}</p>
       <article className="grid gap-3 rounded-lg border-2 border-ink bg-surface p-4">
         {card.picture ? (
           <Image src={card.picture} alt="" width={640} height={480} className="aspect-[4/3] w-full rounded-md object-cover" />

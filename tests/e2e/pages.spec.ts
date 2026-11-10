@@ -14,6 +14,8 @@ for (const [path, heading] of [
     await page.goto(path);
     await expect(page.getByRole('heading', { level: 1, name: heading })).toBeVisible();
     await expect(page.getByRole('navigation', { name: 'Main' })).toBeVisible();
+    // Let the entrance motion finish, so contrast is measured on the settled page.
+    await page.evaluate(() => Promise.all(document.getAnimations().map((a) => a.finished)));
     const axe = await new AxeBuilder({ page }).analyze();
     expect(axe.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical')).toEqual([]);
     expect(cspErrors).toEqual([]);

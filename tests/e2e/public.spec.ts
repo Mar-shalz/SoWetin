@@ -8,6 +8,8 @@ test('where this comes from has one section per kind of content', async ({ page 
   await page.goto('/legal/sources');
   await expect(page.getByRole('heading', { level: 1, name: 'Where this comes from' })).toBeVisible();
   for (const id of ['prices', 'recipes', 'videos', 'ai', 'allergies', 'partners']) await expect(page.locator(`section#${id}`)).toBeVisible();
+  // Let the entrance motion finish, so contrast is measured on the settled page.
+  await page.evaluate(() => Promise.all(document.getAnimations().map((a) => a.finished)));
   const axe = await new AxeBuilder({ page }).analyze();
   expect(axe.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical')).toEqual([]);
   expect(cspErrors).toEqual([]);

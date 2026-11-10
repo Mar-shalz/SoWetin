@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 import { Decide } from '@/components/decide/decide';
 import { BottomNav } from '@/components/nav/bottom-nav';
+import { PersonalityCard } from '@/components/play/personality-card';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
 import { catalogueHealth } from '@/lib/db/health';
 import { mealTimeAt } from '@/lib/engine/time';
@@ -25,6 +26,7 @@ export default async function DecidePage() {
 
       <Decide
         house={cat?.house ?? { cooked: [], foodstuff: [], basic: [] }}
+        promo={C.TASTE_GAME_ENABLED && <PersonalityCard />}
         greeting={
           <h1 className="mt-2">
             {cut > 0 && <span className="block type-body-l text-ink-2">{greeting.slice(0, cut + 1)}</span>}

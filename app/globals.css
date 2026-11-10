@@ -132,3 +132,98 @@ html[data-motion='reduced'] .sw-step {
     animation: none;
   }
 }
+
+/* Laptops and desktops: the app sits in a phone-sized frame on a dotted palm table, so it reads as an app and not a
+   stretched web page (Victor, 10 November 2026). The frame scrolls inside, so sticky bars stay at its bottom. */
+@media (min-width: 768px) {
+  html,
+  body {
+    background-color: var(--color-palm-100);
+    background-image: radial-gradient(color-mix(in srgb, var(--color-palm) 35%, transparent) 1.5px, transparent 1.5px);
+    background-size: 28px 28px;
+  }
+  .app-frame {
+    max-width: calc(var(--container-app) + 4px);
+    height: calc(100dvh - 48px);
+    margin: 24px auto;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border: 2px solid var(--color-ink);
+    border-radius: 40px;
+    background: var(--color-cream);
+    box-shadow:
+      0 6px 0 var(--color-ink),
+      0 30px 60px -20px rgb(28 21 18 / 0.35);
+    scrollbar-width: none;
+  }
+  .app-frame > main {
+    min-height: 100%;
+  }
+  dialog {
+    margin-bottom: 24px;
+    border-radius: 28px;
+  }
+}
+
+/* More motion people can feel (doc 10): every button and pill gives under the finger, pages rise in, a changed answer
+   pops, the active tab pops. Reduced turns all of it off. */
+@keyframes sw-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+@keyframes sw-pop {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.4;
+  }
+  70% {
+    transform: scale(1.06);
+  }
+}
+button:not(:disabled):active,
+a:active,
+summary:active {
+  transform: scale(0.97);
+  transition: transform var(--sw-duration-micro) var(--ease-standard);
+}
+.shadow-button:active {
+  transform: translateY(3px);
+}
+main > * {
+  animation: sw-enter var(--sw-duration-base) var(--ease-enter) both;
+}
+main > :nth-child(2) {
+  animation-delay: 30ms;
+}
+main > :nth-child(3) {
+  animation-delay: 60ms;
+}
+main > :nth-child(4) {
+  animation-delay: 90ms;
+}
+main > :nth-child(5) {
+  animation-delay: 120ms;
+}
+main > :nth-child(n + 6) {
+  animation-delay: 150ms;
+}
+.sw-pop {
+  animation: sw-pop var(--sw-duration-slow) var(--ease-spin-stop) both;
+}
+/* The bars stay put while the page rises under them. */
+main > nav,
+main > .sticky {
+  animation: none;
+}
+html[data-motion='reduced'] main > *,
+html[data-motion='reduced'] .sw-pop {
+  animation: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion]) main > *,
+  html:not([data-motion]) .sw-pop {
+    animation: none;
+  }
+}
