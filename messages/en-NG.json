@@ -578,6 +578,13 @@
       "_": "Language",
       "en": "English",
       "pcm": "Naija Pidgin"
+    },
+    "motion": {
+      "_": "Motion",
+      "auto": "Auto ({tier})",
+      "full": "Full",
+      "lite": "Lite",
+      "reduced": "Reduced"
     }
   },
   "allergen": {

@@ -18,3 +18,94 @@ body {
   outline: 3px solid var(--color-focus);
   outline-offset: 2px;
 }
+
+/* Motion tiers (doc 10, section 2). MotionTier sets <html data-motion="full|lite|reduced">. Before it runs, the
+   phone's own reduced-motion setting still applies. Transform and opacity only (doc 12). */
+@keyframes sw-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px) rotate(var(--sw-deal-rotate, 0deg));
+  }
+}
+@keyframes sw-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes sw-sheet {
+  from {
+    transform: translateY(var(--sw-sheet-travel, 100%));
+  }
+}
+@keyframes sw-land {
+  0% {
+    transform: scale(0.96);
+  }
+  60% {
+    transform: scale(1.02);
+  }
+}
+@keyframes sw-heart {
+  40% {
+    transform: scale(1.3);
+  }
+}
+
+/* M-01 press: down 3 px and the hard shadow goes, in every tier (it isn't movement across the screen). */
+.shadow-button:active {
+  transform: translateY(3px);
+  box-shadow: var(--shadow-button-press);
+  transition: transform var(--sw-duration-micro) var(--ease-standard);
+}
+
+/* M-05 deal three cards (60 ms stagger, Full lands from -2, 0 and 2 degrees) and M-04's landing for a single plate. */
+.sw-deal > article {
+  animation: sw-rise var(--sw-duration-base) var(--ease-enter) both;
+}
+.sw-deal > article:nth-of-type(2) {
+  animation-delay: 60ms;
+}
+.sw-deal > article:nth-of-type(3) {
+  animation-delay: 120ms;
+}
+html[data-motion='full'] .sw-deal > article:nth-of-type(1) {
+  --sw-deal-rotate: -2deg;
+}
+html[data-motion='full'] .sw-deal > article:nth-of-type(3) {
+  --sw-deal-rotate: 2deg;
+}
+.sw-deal > article:only-of-type {
+  animation: sw-land var(--sw-duration-slow) var(--ease-spin-stop) both;
+}
+
+/* M-13 sheets rise and the scrim fades; Lite travels less. M-11 the saved heart pops. */
+dialog[open] {
+  animation: sw-sheet var(--sw-duration-slow) var(--ease-enter);
+}
+dialog[open]::backdrop {
+  animation: sw-fade var(--sw-duration-fast) linear;
+}
+html[data-motion='lite'] dialog[open] {
+  --sw-sheet-travel: 40%;
+}
+.sw-heart[aria-pressed='true'] {
+  animation: sw-heart 420ms var(--ease-standard);
+}
+
+/* Reduced: no movement, state changes are 150 ms fades or instant. */
+html[data-motion='reduced'] .sw-deal > article,
+html[data-motion='reduced'] dialog[open] {
+  animation: sw-fade 150ms linear both;
+}
+html[data-motion='reduced'] .sw-heart[aria-pressed='true'] {
+  animation: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion]) .sw-deal > article,
+  html:not([data-motion]) dialog[open] {
+    animation: sw-fade 150ms linear both;
+  }
+  html:not([data-motion]) .sw-heart[aria-pressed='true'] {
+    animation: none;
+  }
+}

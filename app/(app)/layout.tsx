@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { body, display } from '@/app/fonts/fonts';
+import { MotionTier } from '@/components/nav/motion-tier';
 import { Offline } from '@/components/nav/offline';
 import tokens from '@/design/tokens.json';
 import '../globals.css';
@@ -21,6 +22,7 @@ export default async function AppLayout({ children }: LayoutProps<'/'>) {
       <body>
         <NextIntlClientProvider>
           <Offline />
+          <MotionTier />
           {children}
         </NextIntlClientProvider>
       </body>

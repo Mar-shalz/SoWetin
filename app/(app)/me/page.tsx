@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { BottomNav } from '@/components/nav/bottom-nav';
+import { MotionSetting } from '@/components/nav/motion-tier';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
 import { setLanguage } from '../actions';
 
@@ -28,6 +29,7 @@ export default async function MePage() {
           </li>
         ))}
       </ul>
+      <MotionSetting />
       {C.PIDGIN_ENABLED && (
         <form action={setLanguage}>
           <fieldset>

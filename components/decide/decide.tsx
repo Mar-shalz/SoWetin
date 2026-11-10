@@ -348,7 +348,7 @@ export function Decide({ greeting, house }: { greeting: ReactNode; house: HouseO
       </dialog>
       <CravingField busy={busy} onFind={find} />
 
-      <section ref={answer} aria-live="polite" className="mt-6 grid scroll-mt-4 gap-4">
+      <section ref={answer} aria-live="polite" className="sw-deal mt-6 grid scroll-mt-4 gap-4">
         {cravingNote === 'thinking' ? <p className="text-ink-2">{t('craving.thinking')}</p> : slow && <p className="text-ink-2">{t('reveal.slow')}</p>}
         {failed && <p className="text-scotch">{t('error.generic')}</p>}
         {cravingNote === 'offTopic' && (

@@ -11,7 +11,7 @@ export function SaveButton({ plateKey, title, people }: { plateKey: string; titl
   const toggle = () =>
     store(SAVED, on ? saved.filter((p) => p.key !== plateKey) : [{ key: plateKey, title, people, at: new Date().toISOString() }, ...saved].slice(0, MAX_ITEMS));
   return (
-    <button type="button" aria-pressed={on} onClick={toggle} className="min-h-12 rounded-pill border-2 border-ink bg-surface px-4 type-label">
+    <button type="button" aria-pressed={on} onClick={toggle} className="sw-heart min-h-12 rounded-pill border-2 border-ink bg-surface px-4 type-label">
       {on ? t('saved.on') : t('plate.save')}
     </button>
   );
