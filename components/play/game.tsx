@@ -5,8 +5,7 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
-import { shuffle } from '@/lib/engine/rng';
-import { personaFor, type Persona } from '@/lib/engine/persona';
+import { personaFor, type Persona, type Points } from '@/lib/engine/persona';
 import { store } from '@/lib/device/store';
 
 export type GameCard = { id: string; name: string; picture: string | null };
@@ -29,16 +28,18 @@ const H = 1920;
 // S-018 Teach me your taste: 12 cards, Yum or Nah by button or arrow keys, "Finish now" after TASTE_GAME_MIN_ANSWERS.
 // S-028 Chop Personality: the card drawn on the phone, saved as an image, never with prices or a name (BR-152).
 // shortcut: no swipe, stamp motion or taste signals yet; answers stay on this phone (accounts bring signals, M3).
-export function Game({ cards, fonts }: { cards: GameCard[]; fonts: { display: string; body: string } }) {
+export function Game({ cards, points, fonts }: { cards: GameCard[]; points: Record<string, Points>; fonts: { display: string; body: string } }) {
   const t = useTranslations('persona');
   const [answers, setAnswers] = useState<Record<string, boolean>>({});
-  const [deck, setDeck] = useState(cards);
+  const deck = cards;
+  const [read, setRead] = useState<string | null | undefined>(undefined);
+  const [linkCopied, setLinkCopied] = useState(false);
   const [done, setDone] = useState(false);
   const [copied, setCopied] = useState(false);
   const canvas = useRef<HTMLCanvasElement>(null);
   const answered = Object.keys(answers).length;
   const card = deck[answered];
-  const persona = done || !card ? personaFor(answers, C) : null;
+  const persona = done || !card ? personaFor(answers, C, points) : null;
 
   const answer = (yum: boolean) => card && setAnswers({ ...answers, [card.id]: yum });
   useEffect(() => {
@@ -93,7 +94,19 @@ export function Game({ cards, fonts }: { cards: GameCard[]; fonts: { display: st
     store('sw_persona', persona);
   }, [persona, t, fonts]);
 
+  // The AI read (Victor, 10 November 2026). Our code decides the personality; the AI only describes it.
+  useEffect(() => {
+    if (!persona || read !== undefined) return;
+    const ids = (yum: boolean) => Object.keys(answers).filter((id) => answers[id] === yum);
+    fetch('/api/v1/persona', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ persona, yum: ids(true), nah: ids(false) }) })
+      .then((r) => (r.ok ? r.json() : { line: null }))
+      .then((r: { line: string | null }) => setRead(r.line))
+      .catch(() => setRead(null));
+  }, [persona, read, answers]);
+
   if (persona) {
+    const link = `${window.location.origin}/play?d=${deck.map((c) => c.id).join('.')}&f=1`;
+    const shareText = t('share.text', { name: t(`${persona}.name`), link });
     const save = () =>
       canvas.current?.toBlob((blob) => {
         if (!blob) return;
@@ -106,6 +119,12 @@ export function Game({ cards, fonts }: { cards: GameCard[]; fonts: { display: st
         <p className="type-label text-ink-2">{t('eyebrow')}</p>
         <h1 className="type-display-l">{t(`${persona}.name`)}</h1>
         <p className="type-body-l">{t(`${persona}.line`)}</p>
+        {read !== null && (
+          <div aria-live="polite" className="rounded-md bg-sunken p-3">
+            <p className="type-caption text-ink-2">{t('ai.label')}</p>
+            <p className="mt-1">{read ?? t('ai.loading')}</p>
+          </div>
+        )}
         <canvas ref={canvas} width={W} height={H} className="w-full rounded-lg border-2 border-ink" aria-label={t(`${persona}.name`)} role="img" />
         <div className="grid gap-2">
           <button type="button" onClick={save} className="min-h-14 rounded-pill border-2 border-ink bg-palm type-title-m">
@@ -118,20 +137,28 @@ export function Game({ cards, fonts }: { cards: GameCard[]; fonts: { display: st
           >
             {copied ? t('copied') : t('copy')}
           </button>
+          <a
+            href={`https://wa.me/?text=${encodeURIComponent(shareText)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex min-h-12 items-center justify-center rounded-pill border-2 border-ink bg-surface type-label"
+          >
+            {t('share.whatsapp')}
+          </a>
+          <button
+            type="button"
+            onClick={() => navigator.clipboard?.writeText(link).then(() => setLinkCopied(true))}
+            className="min-h-12 rounded-pill border-2 border-ink bg-surface type-label"
+          >
+            {linkCopied ? t('share.copied') : t('share.copy')}
+          </button>
           <Link href="/" className="flex min-h-12 items-center justify-center rounded-pill border-2 border-ink bg-surface type-label">
             {t('pick')}
           </Link>
-          <button
-            type="button"
-            onClick={() => {
-              setDeck(shuffle(cards, Math.random));
-              setAnswers({});
-              setDone(false);
-            }}
-            className="min-h-12 type-label underline"
-          >
+          {/* A fresh deal from the server. */}
+          <Link href="/play" className="flex min-h-12 items-center justify-center type-label underline">
             {t('again')}
-          </button>
+          </Link>
         </div>
       </section>
     );

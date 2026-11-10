@@ -20,12 +20,55 @@ export const GAME_CARDS: Record<string, Partial<Record<Persona, number>>> = {
   ukwa: { comfort: 2, explorer: 1 },
 };
 
-export function personaFor(answers: Record<string, boolean>, cfg: Pick<AppConfig, 'PERSONA_EVERYTHING_MIN_YUMS' | 'PERSONA_CONNOISSEUR_MAX_YUMS'>): Persona {
-  const yums = Object.keys(GAME_CARDS).filter((card) => answers[card]);
+export type Points = Partial<Record<Persona, number>>;
+export type GameDish = { id: string; types: string[]; tags: string[]; region: string; spice: number; minutes: number; mealTimes: string[] };
+
+// Points for any catalogue dish, so a game can deal any 12 (Victor, 10 November 2026). Hand-set weights win.
+export function personaPoints(d: GameDish): Points {
+  if (GAME_CARDS[d.id]) return GAME_CARDS[d.id];
+  const p: Points = {};
+  const add = (k: Persona, n: number) => (p[k] = (p[k] ?? 0) + n);
+  if (d.types.includes('swallow') || d.types.includes('soup')) add('swallow', 2);
+  if (d.spice >= 3 || d.tags.includes('peppery')) add('pepper', 2);
+  if (d.types.includes('rice') || d.tags.includes('base_rice') || d.tags.includes('party_food')) add('jollof', 2);
+  if (d.tags.includes('street_food') || d.types.includes('snack')) add('street', 2);
+  if (!['pan_nigerian', 'yoruba'].includes(d.region)) add('explorer', 2); // beyond the Lagos everyday
+  if (d.tags.includes('comfort') || d.tags.includes('base_beans') || d.tags.includes('base_yam')) add('comfort', 1);
+  if (d.mealTimes.includes('breakfast') || d.tags.includes('breakfast_friendly')) add('breakfast', 2);
+  if (d.minutes <= 20 || d.tags.includes('quick')) add('quick', 2);
+  return p;
+}
+
+// A balanced deck: dishes grouped by the personality they lean to, dealt round-robin so every group shows up.
+export function dealDeck(pool: GameDish[], size: number, random: () => number): string[] {
+  const lean = (d: GameDish) => Object.entries(personaPoints(d)).sort((a, b) => (b[1] ?? 0) - (a[1] ?? 0))[0]?.[0] ?? 'everything';
+  const groups = new Map<string, string[]>();
+  for (const d of pool) groups.set(lean(d), [...(groups.get(lean(d)) ?? []), d.id]);
+  const shuffled = [...groups.values()].map((ids) => shuffleIds(ids, random));
+  const deck: string[] = [];
+  for (let round = 0; deck.length < size && shuffled.some((g) => g.length > round); round++)
+    for (const g of shuffleIds(shuffled.map((_, i) => String(i)), random).map((i) => shuffled[Number(i)])) if (g[round] && deck.length < size) deck.push(g[round]);
+  return shuffleIds(deck, random);
+}
+function shuffleIds(list: string[], random: () => number): string[] {
+  const out = [...list];
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
+export function personaFor(
+  answers: Record<string, boolean>,
+  cfg: Pick<AppConfig, 'PERSONA_EVERYTHING_MIN_YUMS' | 'PERSONA_CONNOISSEUR_MAX_YUMS'>,
+  cards: Record<string, Points> = GAME_CARDS,
+): Persona {
+  const yums = Object.keys(cards).filter((card) => answers[card]);
   if (yums.length >= cfg.PERSONA_EVERYTHING_MIN_YUMS) return 'everything';
   if (yums.length <= cfg.PERSONA_CONNOISSEUR_MAX_YUMS) return 'connoisseur';
   const points: Partial<Record<Persona, number>> = {};
-  for (const card of yums) for (const [p, n] of Object.entries(GAME_CARDS[card])) points[p as Persona] = (points[p as Persona] ?? 0) + n;
+  for (const card of yums) for (const [p, n] of Object.entries(cards[card])) points[p as Persona] = (points[p as Persona] ?? 0) + (n ?? 0);
   // Ties go to the fixed order of PERSONAS, never to the order the cards were answered.
   return PERSONAS.reduce((best, p) => ((points[p] ?? 0) > (points[best] ?? 0) ? p : best), PERSONAS[0]);
 }

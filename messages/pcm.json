@@ -555,7 +555,18 @@
     "nah": "Nah",
     "finish": "Finish am now",
     "progress": "{n} of {total}",
-    "copied": "E don copy"
+    "copied": "E don copy",
+    "ai": {
+      "label": "Your read · AI",
+      "loading": "I dey read your plates…"
+    },
+    "share": {
+      "text": "I be {name} for SoWetin. Play the same 12 plates make you see your own: {link}",
+      "whatsapp": "Send my game for WhatsApp",
+      "copy": "Copy my game link",
+      "copied": "Link don copy"
+    },
+    "friend": "Na the same 12 plates wey your padi play. See wetin you go get."
   },
   "frame": {
     "title": "Show your pot",

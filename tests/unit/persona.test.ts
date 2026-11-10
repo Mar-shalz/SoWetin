@@ -15,3 +15,17 @@ describe('chop personality game order (Victor, 10 November 2026)', () => {
     expect(inOrder(a)).toBe(inOrder(b));
   });
 });
+
+describe('dynamic decks (Victor, 10 November 2026)', () => {
+  it('scores any catalogue dish and deals a balanced deck that a link can repeat', async () => {
+    const { POOL, parseDeck } = await import('@/lib/play/pool');
+    const { dealDeck, personaPoints } = await import('@/lib/engine/persona');
+    const deck = dealDeck(POOL, 12, seededRandom('x'));
+    expect(new Set(deck).size).toBe(12);
+    expect(parseDeck(deck.join('.'))).toEqual(deck);
+    expect(parseDeck('egusi-soup.not-a-dish.egusi-soup')).toEqual(['egusi-soup']);
+    expect(deck).not.toEqual(dealDeck(POOL, 12, seededRandom('y')));
+    const leans = new Set(deck.map((id) => Object.keys(personaPoints(POOL.find((d) => d.id === id)!))[0]));
+    expect(leans.size).toBeGreaterThanOrEqual(4);
+  });
+});
