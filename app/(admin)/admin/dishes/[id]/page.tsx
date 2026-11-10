@@ -52,12 +52,10 @@ const DISH =
 // Item 10 (cooked from the written steps) left the list with D-37; the kitchen test can still be recorded below.
 const ITEMS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '11', 'picture'] as const;
 const AUTO: Partial<Record<(typeof ITEMS)[number], Blocker[]>> = {
-  '1': ['local_names'],
   '2': ['quantities'],
   '4': ['steps', 'cues'],
   '5': ['times'],
   '11': ['tips', 'mistakes', 'storage'],
-  picture: ['illustration'],
 };
 const BLANK_STEP_ROWS = 3;
 const h2 = 'type-title-m';
@@ -146,7 +144,7 @@ export default async function ReviewPage({ params }: { params: Promise<{ id: str
           </ul>
         </section>
 
-        {!live && (
+        {(
           <section className={card} aria-labelledby="draft">
             <h2 id="draft" className={h2}>
               {t('review.draftTitle')}
@@ -205,7 +203,7 @@ export default async function ReviewPage({ params }: { params: Promise<{ id: str
           </section>
         )}
 
-        {!live && (
+        {(
           <section className={card} aria-labelledby="method">
             <h2 id="method" className={h2}>
               {t('review.methodTitle')}
@@ -290,7 +288,7 @@ export default async function ReviewPage({ params }: { params: Promise<{ id: str
           ) : (
             <p className="mt-2">{t('review.pictureNone')}</p>
           )}
-          {!live && (
+          {(
             <ActionForm action={uploadPicture} submit={t('review.pictureUpload')} pending={t('review.pictureUploading')} className="mt-3">
               {idField}
               <p className="mb-2 text-ink-2">{t('review.pictureHint')}</p>
@@ -304,7 +302,7 @@ export default async function ReviewPage({ params }: { params: Promise<{ id: str
             {t('review.testedTitle')}
           </h2>
           <p className="mt-2">{dish.tested_at ? t('review.testedDone', { date: dish.tested_at }) : t('review.testedNone')}</p>
-          {!live && (
+          {(
             <ActionForm action={markTested} submit={t('review.testedMark')} pending={t('review.testedMarking')} className="mt-3">
               {idField}
               <Input label={t('review.testedDate')} type="date" name="tested_at" required max={today} defaultValue={today} className="max-w-xs" />

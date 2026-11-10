@@ -58,7 +58,7 @@ describe('admin rules in the database', () => {
   });
 
   it('blocks publishing until BR-41 is met (no kitchen test since D-37), then stamps it and bumps the snapshot', async () => {
-    expect(await blockers()).toEqual(['illustration', 'times', 'quantities', 'steps', 'tips', 'mistakes', 'storage']);
+    expect(await blockers()).toEqual(['times', 'quantities', 'steps', 'tips', 'mistakes', 'storage']);
 
     const lines = (await db.query<{ id: string }>('select ingredient_id as id from component_ingredients where component_id = $1', [DISH])).rows;
     await apply(editor, {
@@ -72,10 +72,8 @@ describe('admin rules in the database', () => {
       mistakes: ["Don't rush the frying, or it tastes raw."],
       storage: '3 days in the fridge.',
     });
-    expect(await blockers()).toEqual(['illustration']);
-    await expect(setStatus(editor, 'published')).rejects.toThrow('Not ready to publish: illustration');
+    expect(await blockers()).toEqual([]); // a picture and local names are optional since D-39
 
-    await as(editor, `update components set illustration_path = 'egusi-soup.webp' where id = $1`, [DISH]);
     const before = await version();
     await setStatus(editor, 'published');
     const [row] = await as<{ reviewed_by: string; tested_by: string; published_at: string | null }>(
@@ -90,14 +88,16 @@ describe('admin rules in the database', () => {
     expect(await count('anon', 'component_steps')).toBe(2);
   });
 
-  it('freezes a published dish until it is unpublished', async () => {
-    await expect(apply(editor, { storage: 'changed' })).rejects.toThrow(/Unpublish egusi-soup/);
-    await expect(as(editor, `insert into component_steps (component_id, step_no, text) values ($1, 9, 'Serve.')`, [DISH])).rejects.toThrow(
-      /Unpublish egusi-soup/,
-    );
+  it('edits a published dish in place, never into one that could not be published (D-39)', async () => {
     const before = await version();
+    await apply(editor, { storage: 'changed' });
+    expect(await version()).toBeGreaterThan(before);
+    await as(editor, `insert into component_steps (component_id, step_no, text) values ($1, 9, 'Serve.')`, [DISH]);
+    await expect(apply(editor, { steps: [] })).rejects.toThrow(/still needs: steps/);
+    await expect(apply(editor, { storage: '' })).rejects.toThrow(/Not ready to publish: storage/);
+    const v = await version();
     await setStatus(editor, 'draft');
-    expect(await version()).toBe(before + 1);
+    expect(await version()).toBe(v + 1);
     expect(await count('anon', 'components')).toBe(0);
   });
 

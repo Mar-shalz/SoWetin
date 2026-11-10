@@ -71,6 +71,7 @@ export const APP_CONFIG = {
   AI_RUNTIME_THINKING: 'minimal' as const,
   AI_DRAFT_TIMEOUT_MS: 90000,
   AI_DRAFT_BATCH: 3,
+  AUTOFILL_PAUSE_MS: 4000, // pause between dishes in Fill and publish with AI, to stay under the free tier's per-minute limit
   CRAVING_MAX_CHARS: 200,
   CRAVING_COUNTER_FROM: 150,
   REEL_NAMES_MAX: 16, // dish names the Pick for me spin shows (doc 10, M-04) // S-008: the character counter shows from here

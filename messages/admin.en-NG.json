@@ -84,7 +84,7 @@
   },
   "review": {
     "back": "All dishes",
-    "frozen": "Published dishes can't be edited. Unpublish it, edit it, then publish it again.",
+    "frozen": "Published. Changes you save go live straight away. Unpublish it to take it out of picks.",
     "publishTitle": "Publish",
     "needs": "Before you can publish: {list}.",
     "pictureLater": "Every dish needs a picture before it can be published.",
@@ -377,5 +377,24 @@
     "noEvals": "No eval runs yet.",
     "passed": "passed",
     "failed": "failed"
+  },
+  "autofill": {
+    "title": "Fill and publish with AI",
+    "body": "AI writes each dish's method, it goes straight in, and the dish is published if nothing is missing. Keep this page open while it runs. You can edit any dish at any time, published or not.",
+    "start": "Start",
+    "running": "Running…",
+    "stop": "Stop",
+    "count": "{published} published out of {tried} tried.",
+    "published": "{name}: published",
+    "failed": "{name}: the AI draft failed, skipped for now",
+    "blocked": "{name}: still needs {missing}",
+    "end": {
+      "done": "Every dish has been tried.",
+      "quota": "The free AI limit ran out for today. Start again tomorrow.",
+      "not_configured": "AI drafts aren't set up yet. Add GEMINI_API_KEY in Vercel.",
+      "failed": "Something went wrong. Try again.",
+      "published": "",
+      "blocked": ""
+    }
   }
 }

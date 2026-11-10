@@ -181,27 +181,79 @@ export async function requestDrafts(): Promise<Msg> {
   return draftMsg('ok', count);
 }
 
-export async function acceptDraft(_: Msg, form: FormData): Promise<Msg> {
-  const { supabase, user } = await requireStaff();
-  const draftId = z.uuid().safeParse(form.get('draft'));
-  if (!draftId.success) return invalid('draft');
+// Copies a waiting AI draft into the dish. Names a person already wrote win; the draft only adds to them.
+async function applyDraft(supabase: Db, userId: string, draftId: string): Promise<{ id: string } | { error: string }> {
   const { data: d } = await supabase
     .from('content_drafts')
     .select('component_id, payload, components(local_names, aliases)')
-    .eq('id', draftId.data)
+    .eq('id', draftId)
     .eq('status', 'needs_review')
     .maybeSingle();
   const method = d && methodFromDraft(d.payload);
-  if (!d || !method) return invalid('draft');
-  // Names a person already wrote win; the draft only adds to them.
+  if (!d || !method) return { error: 'draft' };
   const current = d.components as unknown as { local_names: Record<string, string>; aliases: string[] };
   method.local_names = { ...method.local_names, ...current.local_names };
   method.aliases = [...new Set([...current.aliases, ...method.aliases])];
   const { error } = await supabase.rpc('apply_method', { cid: d.component_id, m: method });
-  if (error) return failed(error);
-  await supabase.from('content_drafts').update({ status: 'accepted', reviewed_by: user.id }).eq('id', draftId.data);
-  revalidatePath(`/admin/dishes/${d.component_id}`);
+  if (error) return { error: error.message };
+  await supabase.from('content_drafts').update({ status: 'accepted', reviewed_by: userId }).eq('id', draftId);
+  return { id: d.component_id as string };
+}
+
+export async function acceptDraft(_: Msg, form: FormData): Promise<Msg> {
+  const { supabase, user } = await requireStaff();
+  const draftId = z.uuid().safeParse(form.get('draft'));
+  if (!draftId.success) return invalid('draft');
+  const r = await applyDraft(supabase, user.id, draftId.data);
+  if ('error' in r) return r.error === 'draft' ? invalid('draft') : { error: t('errors.save') };
+  revalidatePath(`/admin/dishes/${r.id}`);
   return { ok: t('review.draftUsed') };
+}
+
+export type AutofillStep = {
+  id?: string;
+  name?: string;
+  outcome: 'published' | 'blocked' | 'failed' | 'quota' | 'not_configured' | 'done';
+  missing?: string[];
+};
+
+// D-39 (Victor, 10 November 2026): "Fill and publish with AI". One dish per call so the page can loop, pace itself for
+// the free tier and show progress: use a waiting draft or ask the AI for one, copy it in, then publish if nothing is
+// missing. Dishes already tried this run come in `skip`, so a dish that fails can't stop the run.
+export async function autofillNext(skip: string[]): Promise<AutofillStep> {
+  const { supabase, user } = await requireStaff();
+  const done = z.array(DISH_ID).max(1000).safeParse(skip);
+  if (!done.success) return { outcome: 'failed' };
+  const { data } = await supabase
+    .from('components')
+    .select('id, name, component_steps(count), content_drafts(id, status)')
+    .eq('status', 'draft')
+    .order('popularity_prior', { ascending: false });
+  const next = ((data ?? []) as { id: string; name: string; component_steps: { count: number }[]; content_drafts: { id: string; status: string }[] }[]).find(
+    (c) => !done.data.includes(c.id),
+  );
+  if (!next) return { outcome: 'done' };
+  const step = { id: next.id, name: next.name };
+  if (!next.component_steps[0]?.count) {
+    let draft = next.content_drafts.find((d) => d.status === 'needs_review')?.id;
+    if (!draft) {
+      const r = await draftOne(supabase, user.id, next.id);
+      if (r !== 'ok') return { ...step, outcome: r === 'quota' ? 'quota' : r === 'not_configured' ? 'not_configured' : 'failed' };
+      const { data: fresh } = await supabase
+        .from('content_drafts')
+        .select('id')
+        .eq('component_id', next.id)
+        .eq('status', 'needs_review')
+        .limit(1)
+        .maybeSingle();
+      draft = fresh?.id as string | undefined;
+    }
+    if (!draft || 'error' in (await applyDraft(supabase, user.id, draft))) return { ...step, outcome: 'failed' };
+  }
+  const { error } = await supabase.from('components').update({ status: 'published' }).eq('id', next.id);
+  revalidatePath('/admin');
+  if (error) return { ...step, outcome: 'blocked', missing: error.message.replace(/^Not ready to publish: /, '').split(', ') };
+  return { ...step, outcome: 'published' };
 }
 
 export async function rejectDraft(_: Msg, form: FormData): Promise<Msg> {
