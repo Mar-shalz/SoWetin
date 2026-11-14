@@ -399,5 +399,11 @@
       "published": "",
       "blocked": ""
     }
+  },
+  "bulkPictures": {
+    "title": "Upload dish pictures",
+    "body": "Choose many pictures at once. Name each file after the dish, like egusi-soup.jpg. A new picture replaces the old one.",
+    "progress": "{done} of {total} uploaded",
+    "failed": "These didn't upload: {list}"
   }
 }

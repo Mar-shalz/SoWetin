@@ -5,6 +5,7 @@ import { requireStaff } from '@/lib/admin/guard';
 import { t, type Blocker } from '@/lib/admin/t';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
 import { Autofill } from '@/components/admin/autofill';
+import { BulkPictures } from '@/components/admin/bulk-pictures';
 import { requestDrafts } from './actions';
 
 // AI drafts run inside this page's actions, a few at a time.
@@ -38,6 +39,7 @@ export default async function AdminHome() {
         </p>
         <ActionForm action={requestDrafts} submit={t('home.draftNext', { count: C.AI_DRAFT_BATCH })} pending={t('home.drafting')} />
         <Autofill />
+        <BulkPictures />
         <table className="mt-8 w-full border-collapse text-left">
           <thead>
             <tr className="border-b-2 border-ink type-label">
