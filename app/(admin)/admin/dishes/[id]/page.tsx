@@ -10,7 +10,7 @@ import { t, type Blocker } from '@/lib/admin/t';
 import type { T3Draft } from '@/lib/ai/t3';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
 import { pictureUrl } from '@/lib/db/env';
-import { acceptDraft, markTested, rejectDraft, requestDraft, saveMethod, setStatus, uploadPicture } from '../../actions';
+import { acceptDraft, markTested, rejectDraft, requestDraft, makePicture, saveMethod, setStatus, uploadPicture } from '../../actions';
 
 // AI drafts run inside this page's actions.
 export const maxDuration = 120;
@@ -144,7 +144,7 @@ export default async function ReviewPage({ params }: { params: Promise<{ id: str
           </ul>
         </section>
 
-        {(
+        {
           <section className={card} aria-labelledby="draft">
             <h2 id="draft" className={h2}>
               {t('review.draftTitle')}
@@ -201,9 +201,9 @@ export default async function ReviewPage({ params }: { params: Promise<{ id: str
               </>
             )}
           </section>
-        )}
+        }
 
-        {(
+        {
           <section className={card} aria-labelledby="method">
             <h2 id="method" className={h2}>
               {t('review.methodTitle')}
@@ -271,7 +271,7 @@ export default async function ReviewPage({ params }: { params: Promise<{ id: str
               <Input label={t('review.servingNote')} name="serving_note" defaultValue={dish.serving_note ?? ''} />
             </ActionForm>
           </section>
-        )}
+        }
 
         <section className={card} aria-labelledby="picture">
           <h2 id="picture" className={h2}>
@@ -288,13 +288,18 @@ export default async function ReviewPage({ params }: { params: Promise<{ id: str
           ) : (
             <p className="mt-2">{t('review.pictureNone')}</p>
           )}
-          {(
-            <ActionForm action={uploadPicture} submit={t('review.pictureUpload')} pending={t('review.pictureUploading')} className="mt-3">
-              {idField}
-              <p className="mb-2 text-ink-2">{t('review.pictureHint')}</p>
-              <Input label={t('review.pictureFile')} type="file" name="picture" required accept="image/webp,image/png,image/jpeg,image/avif" />
-            </ActionForm>
-          )}
+          {
+            <>
+              <ActionForm quiet action={makePicture} submit={t('review.pictureAi')} pending={t('review.pictureAiMaking')} className="mt-3">
+                {idField}
+              </ActionForm>
+              <ActionForm action={uploadPicture} submit={t('review.pictureUpload')} pending={t('review.pictureUploading')} className="mt-3">
+                {idField}
+                <p className="mb-2 text-ink-2">{t('review.pictureHint')}</p>
+                <Input label={t('review.pictureFile')} type="file" name="picture" required accept="image/webp,image/png,image/jpeg,image/avif" />
+              </ActionForm>
+            </>
+          }
         </section>
 
         <section className={card} aria-labelledby="tested">
@@ -302,12 +307,12 @@ export default async function ReviewPage({ params }: { params: Promise<{ id: str
             {t('review.testedTitle')}
           </h2>
           <p className="mt-2">{dish.tested_at ? t('review.testedDone', { date: dish.tested_at }) : t('review.testedNone')}</p>
-          {(
+          {
             <ActionForm action={markTested} submit={t('review.testedMark')} pending={t('review.testedMarking')} className="mt-3">
               {idField}
               <Input label={t('review.testedDate')} type="date" name="tested_at" required max={today} defaultValue={today} className="max-w-xs" />
             </ActionForm>
-          )}
+          }
         </section>
       </main>
     </>

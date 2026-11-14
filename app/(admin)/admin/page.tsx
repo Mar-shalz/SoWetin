@@ -8,7 +8,7 @@ import { Autofill } from '@/components/admin/autofill';
 import { requestDrafts } from './actions';
 
 // AI drafts run inside this page's actions, a few at a time.
-export const maxDuration = 120;
+export const maxDuration = 300;
 
 type Row = {
   id: string;

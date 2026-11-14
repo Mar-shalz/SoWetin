@@ -151,7 +151,10 @@
     "pictureUploading": "Uploading…",
     "pictureSaved": "Picture saved.",
     "pictureTooBig": "That picture is over 900 KB. Export it smaller and try again.",
-    "pictureType": "That file isn’t a WebP, PNG, JPEG or AVIF picture."
+    "pictureType": "That file isn’t a WebP, PNG, JPEG or AVIF picture.",
+    "pictureAi": "Make a picture with AI",
+    "pictureAiMaking": "Making the picture… about 30 seconds",
+    "pictureAiFailed": "The AI picture didn't work. Check OPENAI_API_KEY in Vercel, or upload one."
   },
   "heat": {
     "low": "Low",
@@ -380,7 +383,7 @@
   },
   "autofill": {
     "title": "Fill and publish with AI",
-    "body": "AI writes each dish's method, it goes straight in, and the dish is published if nothing is missing. Keep this page open while it runs. You can edit any dish at any time, published or not.",
+    "body": "AI writes each dish's method, it goes straight in, makes a picture if the dish has none, and publishes the dish if nothing is missing. Keep this page open while it runs. You can edit any dish at any time.",
     "start": "Start",
     "running": "Running…",
     "stop": "Stop",

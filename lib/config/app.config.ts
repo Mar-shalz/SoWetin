@@ -71,6 +71,7 @@ export const APP_CONFIG = {
   AI_RUNTIME_THINKING: 'minimal' as const,
   AI_DRAFT_TIMEOUT_MS: 90000,
   AI_DRAFT_BATCH: 3,
+  AI_IMAGE_MODEL: 'gpt-image-1', // dish pictures, OpenAI images API, paid per image (Victor, 14 November 2026)
   AUTOFILL_PAUSE_MS: 4000, // pause between dishes in Fill and publish with AI, to stay under the free tier's per-minute limit
   CRAVING_MAX_CHARS: 200,
   CRAVING_COUNTER_FROM: 150,

@@ -9,6 +9,7 @@ import { requireStaff } from '@/lib/admin/guard';
 import { DISH_ID, methodFromForm } from '@/lib/admin/method';
 import { PICTURE_EXT, pictureType } from '@/lib/admin/picture';
 import { t } from '@/lib/admin/t';
+import { dishPicture } from '@/lib/ai/picture';
 import { methodFromDraft, t3Draft, T3_PROMPT_VERSION, type T3Dish } from '@/lib/ai/t3';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
 import { db, type Db } from '@/lib/db/server';
@@ -226,10 +227,10 @@ export async function autofillNext(skip: string[]): Promise<AutofillStep> {
   if (!done.success) return { outcome: 'failed' };
   const { data } = await supabase
     .from('components')
-    .select('id, name, component_steps(count), content_drafts(id, status)')
+    .select('id, name, illustration_path, component_steps(count), content_drafts(id, status)')
     .eq('status', 'draft')
     .order('popularity_prior', { ascending: false });
-  const next = ((data ?? []) as { id: string; name: string; component_steps: { count: number }[]; content_drafts: { id: string; status: string }[] }[]).find(
+  const next = ((data ?? []) as { id: string; name: string; illustration_path: string | null; component_steps: { count: number }[]; content_drafts: { id: string; status: string }[] }[]).find(
     (c) => !done.data.includes(c.id),
   );
   if (!next) return { outcome: 'done' };
@@ -250,6 +251,7 @@ export async function autofillNext(skip: string[]): Promise<AutofillStep> {
     }
     if (!draft || 'error' in (await applyDraft(supabase, user.id, draft))) return { ...step, outcome: 'failed' };
   }
+  if (!next.illustration_path) await aiPicture(supabase, next.id, next.name); // optional: publishing doesn't wait on it
   const { error } = await supabase.from('components').update({ status: 'published' }).eq('id', next.id);
   revalidatePath('/admin');
   if (error) return { ...step, outcome: 'blocked', missing: error.message.replace(/^Not ready to publish: /, '').split(', ') };
@@ -272,6 +274,29 @@ export async function rejectDraft(_: Msg, form: FormData): Promise<Msg> {
 
 function lagosToday() {
   return new Intl.DateTimeFormat('en-CA', { timeZone: C.TIMEZONE }).format(new Date());
+}
+
+// Makes a picture with AI and stores it like an upload. Returns false when there's no key or the image call fails.
+async function aiPicture(supabase: Db, id: string, name: string): Promise<boolean> {
+  const key = process.env.OPENAI_API_KEY;
+  if (!key) return false;
+  const bytes = await dishPicture(name, key, C.AI_IMAGE_MODEL);
+  const type = bytes && pictureType(bytes);
+  if (!bytes || !type || bytes.length > C.PICTURE_MAX_BYTES * 2) return false;
+  const path = `${id}/${Date.now()}.${PICTURE_EXT[type]}`;
+  const up = await supabase.storage.from('illustrations').upload(path, bytes, { contentType: type, upsert: false });
+  if (up.error) return false;
+  return !(await supabase.from('components').update({ illustration_path: path }).eq('id', id)).error;
+}
+
+export async function makePicture(_: Msg, form: FormData): Promise<Msg> {
+  const { supabase } = await requireStaff();
+  const id = DISH_ID.safeParse(form.get('id'));
+  if (!id.success) return invalid('id');
+  const { data } = await supabase.from('components').select('name').eq('id', id.data).maybeSingle();
+  if (!data || !(await aiPicture(supabase, id.data, data.name as string))) return { error: t('review.pictureAiFailed') };
+  revalidatePath(`/admin/dishes/${id.data}`);
+  return { ok: t('review.pictureSaved') };
 }
 
 // BR-41 needs a picture of the actual dish. Stored under a new name each time, so nothing cached ever shows an old one.
