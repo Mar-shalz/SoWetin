@@ -1,10 +1,8 @@
-import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 import { Decide } from '@/components/decide/decide';
 import { BottomNav } from '@/components/nav/bottom-nav';
 import { PersonalityCard } from '@/components/play/personality-card';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
-import { catalogueHealth } from '@/lib/db/health';
 import { mealTimeAt } from '@/lib/engine/time';
 import { catalogueForRequest } from '@/lib/plates/serve';
 
@@ -16,13 +14,6 @@ export default async function DecidePage() {
   const { cat } = await catalogueForRequest();
   return (
     <main className="mx-auto flex min-h-dvh max-w-app flex-col px-4">
-      <p className="-mx-4 bg-ink px-4 py-2 type-caption text-cream">
-        {t('preview.m0')}
-        {/* Streams in after the page, so a slow database never delays the first paint. */}
-        <Suspense fallback={null}>
-          <DatabaseStatus />
-        </Suspense>
-      </p>
 
       <Decide
         house={cat?.house ?? { cooked: [], foodstuff: [], basic: [] }}
@@ -40,7 +31,3 @@ export default async function DecidePage() {
   );
 }
 
-async function DatabaseStatus() {
-  const [health, t] = await Promise.all([catalogueHealth(), getTranslations('preview')]);
-  return health && <span className="block">{t('db', { ingredients: health.ingredients, published: health.published })}</span>;
-}

@@ -1151,7 +1151,8 @@ function BudgetSheet({ open, onClose, budget, onUse }: { open: boolean; onClose:
   useEffect(() => {
     if (open) dialog.current?.showModal();
   }, [open]);
-  const n = Number(value.replace(/[^0-9]/g, ''));
+  // Whole naira only: digits and thousand commas, no kobo (Victor, 14 November 2026).
+  const n = /^[0-9][0-9,]*$/.test(value.trim()) ? Number(value.replace(/,/g, '')) : NaN;
   const ok = n >= C.BUDGET_MIN && n <= C.BUDGET_MAX;
   return (
     <dialog
