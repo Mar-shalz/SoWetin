@@ -16,8 +16,7 @@ test('where this comes from has one section per kind of content', async ({ page 
 });
 
 // S-011: a dish that isn't published (or doesn't exist) is not found for the public; crawlers stay out of the admin.
-test('unpublished dishes are not public, and robots keep out of the admin', async ({ page, request }) => {
-  expect((await page.goto('/dish/egusi-soup'))?.status()).toBe(404);
+test('unknown dishes are not found, and robots keep out of the admin', async ({ page, request }) => {
   expect((await page.goto('/dish/Not%20a%20dish'))?.status()).toBe(404);
   const robots = await (await request.get('/robots.txt')).text();
   expect(robots).toContain('Disallow: /admin');

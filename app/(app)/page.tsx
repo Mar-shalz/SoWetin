@@ -4,6 +4,7 @@ import { BottomNav } from '@/components/nav/bottom-nav';
 import { PersonalityCard } from '@/components/play/personality-card';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
 import { mealTimeAt } from '@/lib/engine/time';
+import { pictureUrl } from '@/lib/db/env';
 import { catalogueForRequest } from '@/lib/plates/serve';
 
 // S-001 Decide: the sentence, the house row, the craving field, Pick for me and the plate cards live in <Decide>.
@@ -18,7 +19,7 @@ export default async function DecidePage() {
       <Decide
         house={cat?.house ?? { cooked: [], foodstuff: [], basic: [] }}
         promo={C.TASTE_GAME_ENABLED && <PersonalityCard />}
-        reelNames={cat ? [...cat.display.values()].map((d) => d.name).slice(0, C.REEL_NAMES_MAX) : []}
+        reelItems={cat ? [...cat.display.values()].slice(0, C.REEL_NAMES_MAX).map((d) => ({ name: d.name, picture: pictureUrl(d.picture) })) : []}
         greeting={
           <h1 className="mt-2">
             {cut > 0 && <span className="block type-body-l text-ink-2">{greeting.slice(0, cut + 1)}</span>}

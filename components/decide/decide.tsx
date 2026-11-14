@@ -30,6 +30,7 @@ const TIMES = [30, 45, 60];
 const SLOW_MS = 3000;
 const REEL_MIN = 3; // fewer real dish names than this and the spin would loop the same one
 const REEL_COLS = 3;
+export type ReelItem = { name: string; picture: string | null };
 const NOTE_KEY = 'sw_price_note_seen';
 
 const lagosToday = () => new Intl.DateTimeFormat('en-CA', { timeZone: C.TIMEZONE }).format(new Date());
@@ -39,7 +40,7 @@ const activeFilters = (f: Filters) => [f.meal_time, f.plate_types.length, f.max_
 // S-001 Decide: the top bar with Filters (S-007), the one-sentence answers, the craving field (S-008), Pick for me or
 // three plates (S-003), a Swap per dish (BR-37), and the price receipt (S-023).
 // shortcut: native pickers and <dialog> sheets; the motion of doc 10 (Kòkò thinking, M-19) comes with the M2 polish.
-export function Decide({ greeting, house, promo, reelNames = [] }: { greeting: ReactNode; house: HouseOptions; promo?: ReactNode; reelNames?: string[] }) {
+export function Decide({ greeting, house, promo, reelItems = [] }: { greeting: ReactNode; house: HouseOptions; promo?: ReactNode; reelItems?: ReelItem[] }) {
   const t = useTranslations();
   const [budget, setBudget] = useState<number>(C.FIRST_VISIT_DEFAULT_BUDGET);
   const [people, setPeople] = useState<number>(C.PEOPLE_DEFAULT);
@@ -69,7 +70,7 @@ export function Decide({ greeting, house, promo, reelNames = [] }: { greeting: R
   // S-003 is its own screen: ?view=plates on the same page, so the phone's back button and ours both return to Decide.
   const params = useSearchParams();
   const pushed = useRef(false);
-  const [reel, setReel] = useState<{ final: string[] | null } | null>(null);
+  const [reel, setReel] = useState<{ final: ReelItem[] | null } | null>(null);
   const skip = useRef<(() => void) | null>(null);
   const [budgetOpen, setBudgetOpen] = useState(false);
   const sheet = useRef<HTMLDialogElement>(null);
@@ -153,14 +154,14 @@ export function Decide({ greeting, house, promo, reelNames = [] }: { greeting: R
     toPlates();
     // M-04: one plate spins up from real dish names while the request runs, then lands. Lite spins shorter; Reduced fades.
     const tier = document.documentElement.dataset.motion;
-    const spin = size === 1 && tier !== 'reduced' && reelNames.length >= REEL_MIN;
+    const spin = size === 1 && tier !== 'reduced' && reelItems.length >= REEL_MIN;
     const started = Date.now();
     if (spin) setReel({ final: null });
     const r = await post<Result>('/api/v1/suggestions', { ...scene(o), deck_size: size });
     if (spin) {
       const total = tier === 'lite' ? tokens.motion.duration['spin-lite'] : tokens.motion.duration.spin;
       await wait(Math.max(0, total - (Date.now() - started)));
-      const final = r?.plates[0]?.slots.slice(0, REEL_COLS).map((s) => s.component.name) ?? [];
+      const final = r?.plates[0]?.slots.slice(0, REEL_COLS).map((s) => ({ name: s.component.name, picture: s.component.picture ?? null })) ?? [];
       setReel({ final });
       if (final.length) await wait(tokens.motion.stagger['reel-stop'] * (final.length - 1) + tokens.motion.duration.slow);
       setReel(null);
@@ -483,7 +484,7 @@ export function Decide({ greeting, house, promo, reelNames = [] }: { greeting: R
 
       {onPlates && (
       <section ref={answer} aria-live="polite" className="sw-deal mt-4 grid scroll-mt-4 gap-4">
-        {reel && <Reel names={reelNames} final={reel.final} onSkip={() => skip.current?.()} />}
+        {reel && <Reel items={reelItems} final={reel.final} onSkip={() => skip.current?.()} />}
         {cravingNote === 'thinking' ? <p className="text-ink-2">{t('craving.thinking')}</p> : slow && <p className="text-ink-2">{t('reveal.slow')}</p>}
         {failed && <p className="text-scotch">{t('error.generic')}</p>}
         {cravingNote === 'offTopic' && (
@@ -1119,26 +1120,37 @@ function Tile({
 
 // M-04 reveal, simplified: one window per slot spins through real dish names while the request runs, then each stops on
 // the chosen dish, left to right. Tap to skip. Hidden from screen readers; the plate itself is announced (doc 10, 4).
-function Reel({ names, final, onSkip }: { names: string[]; final: string[] | null; onSkip: () => void }) {
-  const strip = [...names, ...names];
+function Reel({ items, final, onSkip }: { items: ReelItem[]; final: ReelItem[] | null; onSkip: () => void }) {
+  const strip = [...items, ...items];
   const cols = final?.length || REEL_COLS;
+  // A dish picture when there is one, else its name, in each window.
+  const face = (it: ReelItem, dim = false) =>
+    it.picture ? (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src={`/_next/image?url=${encodeURIComponent(it.picture)}&w=384&q=60`} alt="" className="h-24 w-full object-cover" />
+    ) : (
+      <span className={`flex h-24 items-center justify-center px-2 text-center type-title-m ${dim ? 'text-ink-2' : ''}`}>{it.name}</span>
+    );
   return (
-    <div aria-hidden onClick={onSkip} className="sw-reel grid gap-2 rounded-lg border-2 border-ink bg-surface p-4">
-      {Array.from({ length: cols }, (_, i) => (
-        <span key={i} className="block h-12 overflow-hidden rounded-md border-2 border-ink bg-cream">
-          {final ? (
-            <span className="sw-reel-stop flex h-12 items-center justify-center px-2 text-center type-title-m">{final[i]}</span>
-          ) : (
-            <span className="sw-reel-spin block">
-              {strip.map((n, j) => (
-                <span key={j} className="flex h-12 items-center justify-center px-2 text-center type-title-m text-ink-2">
-                  {n}
-                </span>
-              ))}
-            </span>
-          )}
-        </span>
-      ))}
+    // Centred over the screen while it spins (Victor, 14 November 2026). Tap to skip.
+    <div aria-hidden onClick={onSkip} className="fixed inset-0 z-30 grid place-items-center bg-overlay p-6">
+      <div className="sw-reel grid w-full max-w-app gap-2 rounded-xl border-2 border-ink bg-surface p-4 shadow-button">
+        {Array.from({ length: cols }, (_, i) => (
+          <span key={i} className="block h-24 overflow-hidden rounded-md border-2 border-ink bg-cream">
+            {final ? (
+              <span className="sw-reel-stop block">{face(final[i] ?? { name: '', picture: null })}</span>
+            ) : (
+              <span className="sw-reel-spin block">
+                {strip.map((it, j) => (
+                  <span key={j} className="block h-24">
+                    {face(it, true)}
+                  </span>
+                ))}
+              </span>
+            )}
+          </span>
+        ))}
+      </div>
     </div>
   );
 }
