@@ -74,6 +74,13 @@ export function unitQty(unitText: string, info: IngredientInfo): number | null {
   return null;
 }
 
+// The quote's own size ("Carrot 5 kg", "(Paint Bucket)") beats the unit word the AI chose, so a 5 kg pack never
+// lands as a heap. Also run on stored scout rows at every rebuild.
+export function unitAgrees(unitText: string, quote: string, info: IngredientInfo): boolean {
+  const said = unitQty(quote, info);
+  return !said || said === unitQty(unitText, info);
+}
+
 // A month ("2026-09") counts from its middle, so a report for September is neither too young nor too old.
 export function periodDate(period: string): string | null {
   const m = period.match(/^(\d{4})-(\d{2})(?:-(\d{2}))?$/);
@@ -88,6 +95,7 @@ export function verify(o: Extracted, page: string, info: IngredientInfo | undefi
   if (!pricesIn(o.quote).includes(o.price_ngn)) return { ok: false, reason: 'price not in the quote' };
   const qty = unitQty(o.unit_text, info);
   if (!qty) return { ok: false, reason: 'unit not convertible' };
+  if (!unitAgrees(o.unit_text, o.quote, info)) return { ok: false, reason: 'unit differs from the quote' };
   const on = periodDate(o.period);
   if (!on) return { ok: false, reason: 'no date' };
   const age = (Date.parse(today) - Date.parse(on)) / 86_400_000;

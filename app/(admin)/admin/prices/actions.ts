@@ -9,6 +9,7 @@ import { t } from '@/lib/admin/t';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
 import type { Db } from '@/lib/db/server';
 import { SCOUT_PROMPT_VERSION, scoutPages } from '@/lib/scout/run';
+import { unitAgrees, type IngredientInfo } from '@/lib/scout/verify';
 
 // A-04 (doc 04, sections 3 and 7). Admins only; the database checks the same (migration 20261109030000).
 const MAX_CSV_BYTES = 500_000;
@@ -51,15 +52,30 @@ async function recompute(supabase: Db, ingredientIds: string[]) {
     supabase
       .from('price_observations')
       .select(
-        'ingredient_id, area_id, price_ngn, unit_canonical_qty, unit_label, observed_on, market, source, source_id, confirmed_outlier, price_sources(name, kind, weight, bias_factor)',
+        'ingredient_id, area_id, price_ngn, unit_canonical_qty, unit_label, observed_on, market, source, source_id, source_quote, confirmed_outlier, price_sources(name, kind, weight, bias_factor)',
       )
       .in('ingredient_id', ingredientIds),
-    supabase.from('ingredients').select('id, retail_factor').in('id', ingredientIds),
+    supabase.from('ingredients').select('id, retail_factor, canonical_unit, market_units(label, canonical_qty, area_id)').in('id', ingredientIds),
   ]);
   const factor = new Map((ings ?? []).map((i) => [i.id, i.retail_factor === null ? null : Number(i.retail_factor)]));
+  const info = new Map(
+    (ings ?? []).map((i) => [
+      i.id as string,
+      {
+        canonicalUnit: i.canonical_unit as IngredientInfo['canonicalUnit'],
+        units: ((i.market_units ?? []) as { label: string; canonical_qty: number; area_id: string }[]).map((u) => ({ label: u.label, qty: Number(u.canonical_qty) })),
+      },
+    ]),
+  );
   const groups = new Map<string, ObservationRow[]>();
-  for (const o of (obs ?? []) as unknown as (ObservationRow & { ingredient_id: string; area_id: string })[])
-    groups.set(`${o.ingredient_id}|${o.area_id}`, [...(groups.get(`${o.ingredient_id}|${o.area_id}`) ?? []), o]);
+  for (const o of (obs ?? []) as unknown as (ObservationRow & { ingredient_id: string; area_id: string; source_quote: string | null })[]) {
+    // Scout rows saved before the quote-size check (8f46268) can't be edited here, so the rebuild skips the wrong ones.
+    const i = info.get(o.ingredient_id);
+    const bad = o.source === 'ai_scout' && o.source_quote && i && !unitAgrees(o.unit_label ?? '', o.source_quote, i);
+    // An empty group still runs below, so a price point built only from bad rows is deleted.
+    const key = `${o.ingredient_id}|${o.area_id}`;
+    groups.set(key, bad ? (groups.get(key) ?? []) : [...(groups.get(key) ?? []), o]);
+  }
   const keep = [];
   for (const [key, rows] of groups) {
     const [ingredient, area] = key.split('|');

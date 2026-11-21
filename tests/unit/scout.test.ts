@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { toObservation } from '@/lib/admin/prices';
 import { scoutPages } from '@/lib/scout/run';
 import { htmlToText, robotsAllow } from '@/lib/scout/text';
-import { pricesIn, unitQty, verify, type IngredientInfo } from '@/lib/scout/verify';
+import { pricesIn, unitAgrees, unitQty, verify, type IngredientInfo } from '@/lib/scout/verify';
 
 const rice: IngredientInfo = { canonicalUnit: 'g', units: [{ label: 'derica', qty: 780 }] };
 const oil: IngredientInfo = { canonicalUnit: 'ml', units: [] };
@@ -46,6 +46,19 @@ describe('price scout checks (doc 04, section 6.3)', () => {
     expect(unitQty('2 kilogrammes', chicken)).toBe(2000);
     expect(unitQty('per kg', oil)).toBeNull();
     expect(unitQty('litre', oil)).toBe(1000);
+  });
+
+  it('lets the size written in the quote beat the unit the AI chose', () => {
+    const carrot: IngredientInfo = { canonicalUnit: 'g', units: [{ label: 'heap', qty: 500 }] };
+    const beans: IngredientInfo = { canonicalUnit: 'g', units: [{ label: 'cup', qty: 250 }, { label: 'paint bucket', qty: 3000 }] };
+    expect(unitAgrees('heap', 'Carrot 5 kg ₦15,900', carrot)).toBe(false);
+    expect(unitAgrees('cup', 'Beans - White (Paint Bucket) ₦8,700', beans)).toBe(false);
+    expect(unitAgrees('paint bucket', 'Beans - White (Paint Bucket) ₦8,700', beans)).toBe(true);
+    expect(unitAgrees('50kg bag', 'Local rice: N105,000 per 50kg bag', rice)).toBe(true);
+    expect(unitAgrees('heap', 'Carrots now N1,500 a heap', carrot)).toBe(true);
+    const page = 'Carrot 5 kg ₦15,900';
+    const o = { ingredient: 'carrot', unit_text: 'heap', price_ngn: 15900, market: 'Lagos', area: 'Lagos', period: '2026-11-21', quote: page };
+    expect(verify(o, page, carrot, '2026-11-21', 45)).toEqual({ ok: false, reason: 'unit differs from the quote' });
   });
 
   it('maps market words (paint, tuber, bag) to our own units instead of rejecting them', () => {
