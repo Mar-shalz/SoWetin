@@ -67,7 +67,7 @@ export const APP_CONFIG = {
   // T3 drafts run on Gemini's free tier (Victor, 9 November 2026). The free limits show in Google AI Studio.
   AI_MODEL_AUTHORING: 'gemini-3.6-flash',
   // Free drafting providers tried before Gemini (Groq, then Mistral Experiment). Model ids: check each provider's free model list.
-  AI_GROQ_MODEL: 'llama-3.3-70b-versatile',
+  AI_GROQ_MODEL: 'openai/gpt-oss-120b', // llama-3.3-70b-versatile returned 404 for this key (Nov 2026); this id is in the key's model list
   AI_CEREBRAS_MODEL: 'gpt-oss-120b', // Cerebras production model per its docs, Nov 2026 (llama3.1-8b was scheduled for retirement)
   AI_CLOUDFLARE_MODEL: '@cf/meta/llama-3.3-70b-instruct-fp8-fast',
   AI_MISTRAL_MODEL: 'mistral-small-latest',
