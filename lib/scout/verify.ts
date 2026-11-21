@@ -82,8 +82,18 @@ export function unitQty(unitText: string, info: IngredientInfo): number | null {
 export function unitAgrees(unitText: string, quote: string, info: IngredientInfo): boolean {
   const said = unitQty(quote, info);
   if (said) return said === unitQty(unitText, info);
+  // A size or count the quote never states ("1 kg" from a bare "₦7,740") is the AI's guess.
+  if (/\d/.test(unitText)) return false;
   const word = normalise(unitText).match(MARKET_WORD)?.[1];
   return !word || new RegExp(`\\b${word}s?\\b`).test(normalise(quote));
+}
+
+// Shop lines for a made product ("Garlic Powder 45 g", "Baby Carrots In Water") are not the raw ingredient,
+// unless the ingredient itself is that product (curry-powder, tomato-paste, seasoning-cube).
+const PROCESSED = /\b(powder|paste|salt|granules?|seasoning|sauce|rub|perinaise|stix|puree|chips|flakes|in water)\b/;
+export function processed(ingredientId: string, quote: string): boolean {
+  const word = normalise(quote).match(PROCESSED)?.[1];
+  return !!word && !ingredientId.includes(word.replace(/s$/, '').split(' ')[0]);
 }
 
 // A month ("2026-09") counts from its middle, so a report for September is neither too young nor too old.
@@ -101,6 +111,7 @@ export function verify(o: Extracted, page: string, info: IngredientInfo | undefi
   const qty = unitQty(o.unit_text, info);
   if (!qty) return { ok: false, reason: 'unit not convertible' };
   if (!unitAgrees(o.unit_text, o.quote, info)) return { ok: false, reason: 'unit differs from the quote' };
+  if (processed(o.ingredient, o.quote)) return { ok: false, reason: 'processed product' };
   const on = periodDate(o.period);
   if (!on) return { ok: false, reason: 'no date' };
   const age = (Date.parse(today) - Date.parse(on)) / 86_400_000;

@@ -9,7 +9,7 @@ import { t } from '@/lib/admin/t';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
 import type { Db } from '@/lib/db/server';
 import { SCOUT_PROMPT_VERSION, scoutPages } from '@/lib/scout/run';
-import { unitAgrees, type IngredientInfo } from '@/lib/scout/verify';
+import { processed, unitAgrees, type IngredientInfo } from '@/lib/scout/verify';
 
 // A-04 (doc 04, sections 3 and 7). Admins only; the database checks the same (migration 20261109030000).
 const MAX_CSV_BYTES = 500_000;
@@ -82,9 +82,12 @@ async function recompute(supabase: Db, ingredientIds: string[]) {
   for (const o of obs as unknown as (ObservationRow & { ingredient_id: string; area_id: string; source_quote: string | null })[]) {
     // Scout rows saved before the quote-size check (8f46268) can't be edited here, so the rebuild skips the wrong ones.
     const i = info.get(o.ingredient_id);
-    const bad = o.source === 'ai_scout' && o.source_quote && i && !unitAgrees(o.unit_label ?? '', o.source_quote, i);
+    const bad =
+      o.source === 'ai_scout' &&
+      o.source_quote &&
+      i &&
+      (!unitAgrees(o.unit_label ?? '', o.source_quote, i) || processed(o.ingredient_id, o.source_quote));
     // An empty group still runs below, so a price point built only from bad rows is deleted.
-    if (/carrot|beans|garlic/.test(o.ingredient_id)) console.info('recompute-debug', JSON.stringify({ id: o.ingredient_id, area: o.area_id, unit: o.unit_label, qty: o.unit_canonical_qty, price: o.price_ngn, source: o.source, quote: o.source_quote, bad, units: i?.units }));
     const key = `${o.ingredient_id}|${o.area_id}`;
     groups.set(key, bad ? (groups.get(key) ?? []) : [...(groups.get(key) ?? []), o]);
   }

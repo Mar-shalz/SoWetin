@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { toObservation } from '@/lib/admin/prices';
 import { scoutPages } from '@/lib/scout/run';
 import { htmlToText, robotsAllow } from '@/lib/scout/text';
-import { pricesIn, unitAgrees, unitQty, verify, type IngredientInfo } from '@/lib/scout/verify';
+import { pricesIn, processed, unitAgrees, unitQty, verify, type IngredientInfo } from '@/lib/scout/verify';
 
 const rice: IngredientInfo = { canonicalUnit: 'g', units: [{ label: 'derica', qty: 780 }] };
 const oil: IngredientInfo = { canonicalUnit: 'ml', units: [] };
@@ -59,6 +59,13 @@ describe('price scout checks (doc 04, section 6.3)', () => {
     expect(unitAgrees('heap', 'Carrot (Fresh) ₦16,700', carrot)).toBe(false);
     expect(unitAgrees('cup', 'Beans - White ₦2,990', beans)).toBe(false);
     expect(unitAgrees('piece', 'Onions ₦420', eggs)).toBe(true);
+    expect(unitAgrees('1 kg', '₦7,740.00', beans)).toBe(false);
+    expect(unitAgrees('1 kg', 'Carrot 1 kg ₦3,500.00', carrot)).toBe(true);
+    expect(processed('garlic', 'Tesco Garlic Powder 45 g ₦7,310.00')).toBe(true);
+    expect(processed('carrot', 'Baby Carrots In Water ₦2,100')).toBe(true);
+    expect(processed('garlic', 'Garlic - Imported ~1 kg ₦5,900.00')).toBe(false);
+    expect(processed('curry-powder', 'Curry Powder 50 g ₦280')).toBe(false);
+    expect(processed('seasoning-cube', 'Seasoning cubes x50 ₦1,000')).toBe(false);
     const page = 'Carrot 5 kg ₦15,900';
     const o = { ingredient: 'carrot', unit_text: 'heap', price_ngn: 15900, market: 'Lagos', area: 'Lagos', period: '2026-11-21', quote: page };
     expect(verify(o, page, carrot, '2026-11-21', 45)).toEqual({ ok: false, reason: 'unit differs from the quote' });
