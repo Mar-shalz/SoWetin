@@ -17,11 +17,11 @@ export function OrderSoon() {
   return (
     <>
       <div className="flex gap-3">
-        <button type="button" onClick={() => open('bulk')} className={`${btn} bg-palm-100 shadow-button`}>
-          {t('bulk')}
-        </button>
         <button type="button" onClick={() => open('unit')} className={`${btn} bg-surface`}>
           {t('unit')}
+        </button>
+        <button type="button" onClick={() => open('bulk')} className={`${btn} bg-palm-100 shadow-button`}>
+          {t('bulk')}
         </button>
       </div>
       <dialog

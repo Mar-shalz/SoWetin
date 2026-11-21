@@ -380,7 +380,7 @@ export function Decide({ greeting, house, promo, reelItems = [] }: { greeting: R
 
       {!onPlates && (
         <>
-      <section className="mt-3 rounded-xl border-2 border-ink bg-surface p-4 shadow-button">
+      <section className="mt-3 rounded-xl border-2 border-ink bg-surface p-4 shadow-button flex flex-col justify-center">
         {greeting}
 
         <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-2 type-title-m">
@@ -408,7 +408,6 @@ export function Decide({ greeting, house, promo, reelItems = [] }: { greeting: R
                     ))}
                   </select>
                 </span>
-                {glued(i)}
               </span>
             );
           }
@@ -1125,7 +1124,7 @@ function Reel({ items, final, onSkip }: { items: ReelItem[]; final: ReelItem[] |
   const face = (it: ReelItem, dim = false) =>
     it.picture ? (
       // eslint-disable-next-line @next/next/no-img-element
-      <img src={`/_next/image?url=${encodeURIComponent(it.picture)}&w=384&q=60`} alt="" className="h-24 w-full object-cover" />
+      <img src={`/_next/image?url=${encodeURIComponent(it.picture)}&w=384&q=75`} alt="" className="h-24 w-full object-cover" />
     ) : (
       <span className={`flex h-24 items-center justify-center px-2 text-center type-title-m ${dim ? 'text-ink-2' : ''}`}>{it.name}</span>
     );

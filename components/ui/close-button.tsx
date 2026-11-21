@@ -4,7 +4,7 @@ import { CloseIcon } from '@/components/ui/icons';
 export function CloseButton({ label }: { label: string }) {
   return (
     <form method="dialog" className="shrink-0">
-      <button aria-label={label} className="flex size-12 items-center justify-center rounded-xs bg-sunken">
+      <button aria-label={label} className="flex size-12 items-center justify-center rounded-xs border border-ink-3 bg-surface outline-none focus-visible:outline-none">
         <CloseIcon size={20} />
       </button>
     </form>

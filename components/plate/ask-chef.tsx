@@ -66,7 +66,7 @@ export function AskChef({ component, dish, people, en }: { component: string; di
         aria-labelledby={`chef-${component}`}
         className="mx-auto mb-0 mt-auto max-h-[85dvh] w-full max-w-app rounded-t-xl border-2 border-ink bg-surface p-5 text-ink backdrop:bg-overlay"
       >
-        <div className="sticky top-0 z-10 -mx-5 -mt-5 flex items-center justify-between gap-3 bg-surface px-5 pb-2 pt-5">
+        <div className="sticky top-0 z-10 -mx-5 -mt-5 flex items-center justify-between gap-3 bg-surface px-5 pb-5 pt-5">
           <h2 id={`chef-${component}`} className="type-title-l">
             {dish}
           </h2>
@@ -77,7 +77,7 @@ export function AskChef({ component, dish, people, en }: { component: string; di
             e.preventDefault();
             void ask(q);
           }}
-          className="mt-3 flex gap-2"
+          className="mt-1 flex gap-2"
         >
           <input {...NO_AUTOFILL}
             value={q}

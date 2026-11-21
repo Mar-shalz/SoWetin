@@ -87,7 +87,7 @@ dialog[open] {
   animation: sw-sheet var(--sw-duration-slow) var(--ease-enter);
 }
 dialog[open]::backdrop {
-  animation: sw-fade var(--sw-duration-fast) linear;
+  animation: sw-fade var(--sw-duration-slow) var(--ease-enter);
 }
 html[data-motion='lite'] dialog[open] {
   --sw-sheet-travel: 40%;
