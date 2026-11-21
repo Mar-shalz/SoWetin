@@ -26,7 +26,7 @@ export function pricesIn(quote: string): number[] {
   return out;
 }
 
-const SIZE = /(\d+(?:\.\d+)?)\s?(kg|kilo(?:gram)?s?|g|grams?|l|litres?|liters?|cl|ml)\b/;
+const SIZE = /(\d+(?:\.\d+)?)\s?(kg|kilo(?:gram(?:me)?)?s?|g|grams?|l|litres?|liters?|cl|ml)\b/;
 const FACTOR: Record<string, [number, 'g' | 'ml']> = {
   kg: [1000, 'g'],
   kilo: [1000, 'g'],
@@ -44,9 +44,15 @@ export function unitQty(unitText: string, info: IngredientInfo): number | null {
   const text = normalise(unitText);
   const known = info.units.find((u) => normalise(u.label) === text);
   if (known) return known.qty;
+  // Shops write counted packs as "8 g x50" or "pack of 50": for a counted ingredient the count wins over the weight.
+  const count = info.canonicalUnit === 'piece' && text.match(/\bx\s?(\d+)\b|\bpack of (\d+)\b|^(\d+)\s?(?:cubes?|pcs)$/);
+  if (count) return Number(count[1] ?? count[2] ?? count[3]);
+  // "per kilogramme" with no number means one.
+  const bare = text.match(/^(?:per |a |one )?(kg|kilo(?:gram(?:me)?)?s?|litres?|liters?)$/);
+  if (bare) return (bare[1].startsWith('k') ? 'g' : 'ml') === info.canonicalUnit ? 1000 : null;
   const m = text.match(SIZE);
   if (m) {
-    const word = m[2].replace(/s$/, '').replace('kilogram', 'kilo');
+    const word = m[2].replace(/s$/, '').replace(/kilogram(me)?/, 'kilo');
     const [factor, unit] = FACTOR[word] ?? [0, 'g'];
     return factor && unit === info.canonicalUnit ? Number(m[1]) * factor : null;
   }

@@ -35,6 +35,19 @@ describe('price scout checks (doc 04, section 6.3)', () => {
     expect(unitQty('bag', rice)).toBeNull();
   });
 
+  it('reads shop packs and a bare kilogramme', () => {
+    const chicken: IngredientInfo = { canonicalUnit: 'g', units: [] };
+    expect(unitQty('8 g x50', eggs)).toBe(50);
+    expect(unitQty('pack of 50', eggs)).toBe(50);
+    expect(unitQty('100 cubes', eggs)).toBe(100);
+    expect(unitQty('8 g x50', chicken)).toBe(8);
+    expect(unitQty('kilogramme', chicken)).toBe(1000);
+    expect(unitQty('per kg', chicken)).toBe(1000);
+    expect(unitQty('2 kilogrammes', chicken)).toBe(2000);
+    expect(unitQty('per kg', oil)).toBeNull();
+    expect(unitQty('litre', oil)).toBe(1000);
+  });
+
   it('maps market words (paint, tuber, bag) to our own units instead of rejecting them', () => {
     const garri: IngredientInfo = { canonicalUnit: 'g', units: [{ label: 'cup', qty: 250 }, { label: 'paint bucket', qty: 3000 }, { label: '50 kg bag', qty: 50000 }] };
     const yam: IngredientInfo = { canonicalUnit: 'g', units: [{ label: 'small tuber', qty: 1200 }, { label: 'medium tuber', qty: 2000 }, { label: 'big tuber', qty: 3000 }] };

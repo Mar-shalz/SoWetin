@@ -7,7 +7,7 @@ import { verify, type Extracted, type IngredientInfo, type Kept } from './verify
 // The price scout (doc 04, section 6.3), free-tier version (D-35): an admin gives this week's report pages instead of a
 // web search; our code fetches each page politely, the AI lists the prices it states, and our code checks every one.
 export const SCOUT_PROMPT_VERSION = 'scout-v1';
-export type Source = { id: string; name: string; domain: string };
+export type Source = { id: string; name: string; domain: string; kind?: string };
 export type Rejected = { url: string; quote?: string; reason: string };
 // calls: one entry per AI read, for the ai_calls log (doc 03, 7.0 rule 8).
 export type ScoutCall = { latencyMs: number; input?: number; output?: number; stop?: string; outcome: string };
@@ -110,8 +110,10 @@ export async function scoutPages(
       lastHit.set(url.host, Date.now());
       result.pagesRead++;
       // Same free chain as dish drafts (Groq, Cerebras, Mistral, then Gemini), so one provider's quota doesn't stop the scout.
+      // An admin registers a shop only after checking it sells in Lagos; its page shows the price on sale the day we read it.
+      const shop = source.kind === 'online_store' ? `This page is a Lagos online shop with no date. Use period ${today} and area "Lagos".\n\n` : '';
       const answer = await draftJson(
-        { system: SYSTEM, prompt: `Ingredient ids:\n${list}\n\n<page url="${url.href}">\n${page}\n</page>`, schema: jsonSchema, timeoutMs: ai.timeoutMs },
+        { system: SYSTEM, prompt: `${shop}Ingredient ids:\n${list}\n\n<page url="${url.href}">\n${page}\n</page>`, schema: jsonSchema, timeoutMs: ai.timeoutMs },
         { key: ai.key, model: ai.model },
         fetchFn,
       );

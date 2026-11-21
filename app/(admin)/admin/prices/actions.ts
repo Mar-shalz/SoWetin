@@ -194,7 +194,7 @@ export async function runScout(_: Msg, form: FormData): Promise<Msg> {
   if (urls.length > C.SCOUT_MAX_PAGES_PER_RUN) return { error: t('prices.scout.tooMany', { max: C.SCOUT_MAX_PAGES_PER_RUN }) };
 
   const [{ data: sources }, { data: ings }] = await Promise.all([
-    supabase.from('price_sources').select('id, name, domain').eq('active', true).not('terms_checked_at', 'is', null),
+    supabase.from('price_sources').select('id, name, domain, kind').eq('active', true).not('terms_checked_at', 'is', null),
     supabase.from('ingredients').select('id, name, canonical_unit, market_units(label, canonical_qty, area_id)'),
   ]);
   if (!sources?.length) return { error: t('prices.scout.noSources') };
