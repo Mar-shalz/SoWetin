@@ -84,6 +84,7 @@ async function recompute(supabase: Db, ingredientIds: string[]) {
     const i = info.get(o.ingredient_id);
     const bad = o.source === 'ai_scout' && o.source_quote && i && !unitAgrees(o.unit_label ?? '', o.source_quote, i);
     // An empty group still runs below, so a price point built only from bad rows is deleted.
+    if (/carrot|beans|garlic/.test(o.ingredient_id)) console.info('recompute-debug', JSON.stringify({ id: o.ingredient_id, area: o.area_id, unit: o.unit_label, qty: o.unit_canonical_qty, price: o.price_ngn, source: o.source, quote: o.source_quote, bad, units: i?.units }));
     const key = `${o.ingredient_id}|${o.area_id}`;
     groups.set(key, bad ? (groups.get(key) ?? []) : [...(groups.get(key) ?? []), o]);
   }
