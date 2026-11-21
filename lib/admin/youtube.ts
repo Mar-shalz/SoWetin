@@ -28,3 +28,20 @@ export async function videoInfo(id: string, fetchFn: typeof fetch = fetch): Prom
   const thumb = typeof j.thumbnail_url === 'string' && j.thumbnail_url.startsWith('https://i.ytimg.com/') ? j.thumbnail_url : null;
   return { title: j.title.slice(0, 200), channel: j.author_name.slice(0, 120), thumbnail: thumb };
 }
+
+export type Found = { id: string; title: string; channel: string; thumbnail: string | null };
+
+// YouTube Data API search (needs YOUTUBE_API_KEY): embeddable videos only, so the app can play them.
+// shortcut: one search costs 100 of the free 10,000 daily units, so about 100 dishes a day; it does not check the video matches our recipe.
+export async function searchVideos(query: string, key: string, max = 1, fetchFn: typeof fetch = fetch): Promise<Found[]> {
+  const q = new URLSearchParams({ part: 'snippet', type: 'video', videoEmbeddable: 'true', maxResults: String(max), q: query, key });
+  const res = await fetchFn(`https://www.googleapis.com/youtube/v3/search?${q}`, { signal: AbortSignal.timeout(10000) }).catch(() => null);
+  if (!res?.ok) return [];
+  const j = (await res.json().catch(() => null)) as { items?: { id?: { videoId?: string }; snippet?: { title?: string; channelTitle?: string; thumbnails?: { medium?: { url?: string } } } }[] } | null;
+  return (j?.items ?? []).flatMap((i) => {
+    const id = i.id?.videoId;
+    const thumb = i.snippet?.thumbnails?.medium?.url;
+    if (!id || !/^[A-Za-z0-9_-]{11}$/.test(id) || !i.snippet?.title) return [];
+    return [{ id, title: i.snippet.title.slice(0, 200), channel: (i.snippet.channelTitle ?? '').slice(0, 120), thumbnail: thumb?.startsWith('https://i.ytimg.com/') ? thumb : null }];
+  });
+}

@@ -1,6 +1,8 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { NO_AUTOFILL } from '@/components/ui/no-autofill';
+import { CloseButton } from '@/components/ui/close-button';
 import { useRef, useState } from 'react';
 import { setSwap, useSwaps } from '@/components/plate/swaps';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
@@ -9,7 +11,6 @@ import { APP_CONFIG as C } from '@/lib/config/app.config';
 export type ChefEnglish = { note: string; medical: string; allergy: string; allergens: Record<string, string> } | null;
 type Sub = { replace: string; with: string; note: string; replace_name: string; with_name: string };
 type Reply = { state: 'ok'; answer: string; declined: boolean; substitutions: Sub[]; new_allergens: string[] } | { state: 'busy' | 'quota' };
-const SUGGEST = ['noCrayfish', 'lessOil', 'burning'] as const;
 
 function Both({ text, en, className }: { text: string; en?: string | null; className?: string }) {
   return (
@@ -20,7 +21,7 @@ function Both({ text, en, className }: { text: string; en?: string | null; class
   );
 }
 
-// S-019 Ask Chef: a bottom sheet for one dish. Suggested questions, free text up to CHEF_QUESTION_MAX_CHARS, the answer
+// S-019 Ask Chef: a bottom sheet for one dish. Free text up to CHEF_QUESTION_MAX_CHARS, the answer
 // labelled "Chef tip · AI", swaps as chips that change this recipe for this visit, an allergy box when a swap adds an
 // allergen, and the fixed Chef line under every answer.
 export function AskChef({ component, dish, people, en }: { component: string; dish: string; people: number; en: ChefEnglish }) {
@@ -65,20 +66,11 @@ export function AskChef({ component, dish, people, en }: { component: string; di
         aria-labelledby={`chef-${component}`}
         className="mx-auto mb-0 mt-auto max-h-[85dvh] w-full max-w-app rounded-t-xl border-2 border-ink bg-surface p-5 text-ink backdrop:bg-overlay"
       >
-        <div className="flex items-center justify-between gap-3">
+        <div className="sticky top-0 z-10 -mx-5 -mt-5 flex items-center justify-between gap-3 bg-surface px-5 pb-2 pt-5">
           <h2 id={`chef-${component}`} className="type-title-l">
             {dish}
           </h2>
-          <form method="dialog">
-            <button className="min-h-12 px-3 type-label underline">{t('chef.close')}</button>
-          </form>
-        </div>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {SUGGEST.map((k) => (
-            <button key={k} type="button" disabled={busy} onClick={() => ask(t(`chef.suggest.${k}`))} className={`${pill} border-ink-3 bg-surface`}>
-              {t(`chef.suggest.${k}`)}
-            </button>
-          ))}
+          <CloseButton label={t('chef.close')} />
         </div>
         <form
           onSubmit={(e) => {
@@ -87,7 +79,7 @@ export function AskChef({ component, dish, people, en }: { component: string; di
           }}
           className="mt-3 flex gap-2"
         >
-          <input
+          <input {...NO_AUTOFILL}
             value={q}
             maxLength={C.CHEF_QUESTION_MAX_CHARS}
             onChange={(e) => setQ(e.target.value)}

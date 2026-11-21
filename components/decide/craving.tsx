@@ -1,6 +1,8 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
+import { NO_AUTOFILL } from '@/components/ui/no-autofill';
+import { CloseButton } from '@/components/ui/close-button';
 import { useState } from 'react';
 import { setLanguage } from '@/app/(app)/actions';
 import { CloseIcon, SearchIcon } from '@/components/ui/icons';
@@ -72,9 +74,7 @@ export function CravingSheet({ text, setText, busy, onFind }: { text: string; se
         <h2 id="craving-title" className="type-title-l">
           {t('craving.sheet.title')}
         </h2>
-        <form method="dialog">
-          <button className="min-h-12 px-3 type-label underline">{t('house.close')}</button>
-        </form>
+        <CloseButton label={t('house.close')} />
       </div>
       <div className="mt-4 overflow-hidden rounded-xl border-2 border-ink bg-surface focus-within:border-focus focus-within:shadow-[0_0_0_1px_var(--color-focus)]">
         <form
@@ -86,7 +86,7 @@ export function CravingSheet({ text, setText, busy, onFind }: { text: string; se
           className="flex min-h-14 items-center gap-2 pl-4 pr-2"
         >
           <SearchIcon size={20} />
-          <input
+          <input {...NO_AUTOFILL}
             autoFocus
             type="text"
             value={text}

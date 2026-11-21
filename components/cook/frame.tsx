@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { NO_AUTOFILL } from '@/components/ui/no-autofill';
 import { useEffect, useRef, useState } from 'react';
 import { formatNaira } from '@/lib/i18n/money';
 
@@ -118,7 +119,7 @@ export function Frame({ plate, price, fonts, onDone }: { plate: string; price: F
           </label>
           <label className="grid gap-1">
             <span className="type-label">{t('frame.name.label')}</span>
-            <input
+            <input {...NO_AUTOFILL}
               value={name}
               maxLength={30}
               onChange={(e) => setName(e.target.value)}

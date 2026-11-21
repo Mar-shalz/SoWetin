@@ -1,6 +1,8 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { NO_AUTOFILL } from '@/components/ui/no-autofill';
+import { CloseButton } from '@/components/ui/close-button';
 import { useEffect, useRef, useState } from 'react';
 import { formatNaira } from '@/lib/i18n/money';
 import { sharePath, shortDate, type ShareCard } from '@/lib/share/path';
@@ -129,14 +131,12 @@ export function ShareButton({ card, fonts }: { card: ShareCard; fonts: { display
           <h2 id="share-title" className="type-title-l">
             {t('plate.more.share._')}
           </h2>
-          <form method="dialog">
-            <button className="min-h-12 px-3 type-label underline">{t('chef.close')}</button>
-          </form>
+          <CloseButton label={t('chef.close')} />
         </div>
         <canvas ref={canvas} width={W} height={H} role="img" aria-label={card.title} className="mt-3 w-full rounded-lg border-2 border-ink" />
         <label className="mt-3 grid gap-1">
           <span className="type-label">{t('frame.name.label')}</span>
-          <input value={name} maxLength={30} onChange={(e) => setName(e.target.value)} className="min-h-12 rounded-md border border-ink-3 bg-sunken px-3 type-input" />
+          <input {...NO_AUTOFILL} value={name} maxLength={30} onChange={(e) => setName(e.target.value)} className="min-h-12 rounded-md border border-ink-3 bg-sunken px-3 type-input" />
         </label>
         <div className="mt-4 grid gap-2">
           {canShareFiles && (

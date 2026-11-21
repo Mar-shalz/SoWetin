@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
+import { NO_AUTOFILL } from '@/components/ui/no-autofill';
 import { DishCard } from '@/components/explore/dish-card';
 import type { Item } from '@/lib/catalogue/shelves';
 
@@ -19,16 +20,12 @@ export function ExploreSearch({ items }: { items: Item[] }) {
       <label className="grid gap-1">
         <span className="sr-only">{t('explore.search')}</span>
         <input
-          type="search"
-          name="dish-search"
-          autoComplete="off"
-          autoCorrect="off"
+          {...NO_AUTOFILL}
+          type="text"
+          name="q-dish"
           autoCapitalize="none"
-          spellCheck={false}
           enterKeyHint="search"
           inputMode="search"
-          data-lpignore="true"
-          data-1p-ignore
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder={t('explore.search')}

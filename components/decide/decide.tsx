@@ -1,6 +1,8 @@
 'use client';
 
 import Image from 'next/image';
+import { NO_AUTOFILL } from '@/components/ui/no-autofill';
+import { CloseButton } from '@/components/ui/close-button';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -378,10 +380,10 @@ export function Decide({ greeting, house, promo, reelItems = [] }: { greeting: R
 
       {!onPlates && (
         <>
-      <section className="mt-3 rounded-xl border-2 border-ink bg-surface p-5 shadow-button">
+      <section className="mt-3 rounded-xl border-2 border-ink bg-surface p-4 shadow-button">
         {greeting}
 
-        <p className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-3 type-title-l">
+        <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-2 type-title-m">
         {sentence.map((part, i) => {
           if (i % 2) {
             const a = answers[part as keyof typeof answers];
@@ -414,7 +416,7 @@ export function Decide({ greeting, house, promo, reelItems = [] }: { greeting: R
           return words && <span key={i}>{words}</span>;
         })}
         </p>
-        <p className="mt-3 type-caption text-ink-2">{t('home.sentence.hint')}</p>
+        <p className="mt-2 type-caption text-ink-2">{t('home.sentence.hint')}</p>
       </section>
 
       {/* Two optional ways in, side by side: what's at home, and a craving in your own words. */}
@@ -583,9 +585,7 @@ function FiltersSheet({ dialog, filters, onApply }: { dialog: React.RefObject<HT
         <h2 id="filters-title" className="type-title-l">
           {t('title')}
         </h2>
-        <form method="dialog">
-          <button className="min-h-12 px-3 type-label underline">{t('close')}</button>
-        </form>
+        <CloseButton label={t('close')} />
       </div>
       {group(t('mealTitle'), [
         option(t('mealNow'), !draft.meal_time, () => setDraft({ ...draft, meal_time: null })),
@@ -916,9 +916,7 @@ function HouseSheet({ options, kitchen, onShow }: { options: HouseOptions; kitch
         <h2 id="house-title" className="type-title-l">
           {t('title')}
         </h2>
-        <form method="dialog">
-          <button className="min-h-12 px-3 type-label underline">{t('close')}</button>
-        </form>
+        <CloseButton label={t('close')} />
       </div>
       <p className="text-ink-2">{t('subtitle')}</p>
       {!!options.cooked.length && (
@@ -1010,7 +1008,7 @@ function HouseText({ options, kitchen }: { options: HouseOptions; kitchen: Kitch
           {t('house.text.label')}
         </label>
         <div className="mt-2 flex gap-2">
-          <input
+          <input {...NO_AUTOFILL}
             id="house-text"
             value={text}
             maxLength={C.CRAVING_MAX_CHARS}
@@ -1180,9 +1178,7 @@ function BudgetSheet({ open, onClose, budget, onUse }: { open: boolean; onClose:
         <h2 id="budget-title" className="type-title-l">
           {t('home.budget.title')}
         </h2>
-        <form method="dialog">
-          <button className="min-h-12 px-3 type-label underline">{t('house.close')}</button>
-        </form>
+        <CloseButton label={t('house.close')} />
       </div>
       <form
         onSubmit={(e) => {
@@ -1196,7 +1192,7 @@ function BudgetSheet({ open, onClose, budget, onUse }: { open: boolean; onClose:
         <label htmlFor="budget-amount" className="type-label">
           {t('home.budget.label')}
         </label>
-        <input
+        <input {...NO_AUTOFILL}
           id="budget-amount"
           inputMode="numeric"
           autoComplete="off"

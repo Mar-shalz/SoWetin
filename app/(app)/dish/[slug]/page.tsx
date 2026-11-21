@@ -11,6 +11,7 @@ import { AllergenLine } from '@/components/plate/allergen-line';
 import { AskChef } from '@/components/plate/ask-chef';
 import { chefSetup } from '@/components/plate/chef-setup';
 import { IngredientName } from '@/components/plate/swaps';
+import { OrderSoon } from '@/components/plate/order-soon';
 import { Videos, type VideoRef } from '@/components/plate/videos';
 import { allergenLine, allergenTags } from '@/lib/plates/allergens';
 import { roundAmount, stepText } from '@/lib/plates/step-text';
@@ -166,6 +167,7 @@ export default async function DishPage({ params }: { params: Promise<{ slug: str
         <h1 className="type-display-l">{dish.name}</h1>
         {!!Object.keys(dish.local_names).length && <p className="text-ink-2">{Object.values(dish.local_names).join(' · ')}</p>}
       </div>
+      <OrderSoon />
       {dish.description && <p className="type-body-l">{dish.description}</p>}
 
       {cost && (

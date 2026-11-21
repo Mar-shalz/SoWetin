@@ -4,7 +4,7 @@ import { AdminHeader } from '@/components/admin/header';
 import { requireStaff } from '@/lib/admin/guard';
 import { t } from '@/lib/admin/t';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
-import { addVideo, changeVideo } from './actions';
+import { addVideo, changeVideo, findVideos } from './actions';
 
 type Video = {
   id: string;
@@ -19,7 +19,9 @@ type Video = {
 const LANGUAGES = ['en', 'pcm', 'yo', 'ig', 'ha', 'other'] as const;
 
 // A-05 Videos (doc 05, section 7): paste a YouTube link per dish, order them (the first is the primary), hide broken ones.
-// shortcut: no candidate search or weekly health check yet; both need a YouTube API key and a scheduled job.
+// shortcut: Find videos approves the top search result per dish; no weekly health check yet (needs a scheduled job).
+export const maxDuration = 300;
+
 export default async function VideosPage() {
   const { supabase, user } = await requireStaff();
   const [{ data: comps }, { data: vids }] = await Promise.all([
@@ -42,6 +44,7 @@ export default async function VideosPage() {
           <h1 className="type-title-l">{t('videos.title')}</h1>
           <p className="mt-2 text-ink-2">{t('videos.intro', { max: C.MAX_VIDEOS_PER_COMPONENT })}</p>
         </div>
+        <ActionForm action={findVideos} submit={t('videos.find')} pending={t('videos.finding')} className="grid gap-3" />
         <ActionForm
           action={addVideo}
           submit={t('videos.add')}

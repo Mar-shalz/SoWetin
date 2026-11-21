@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { CloseButton } from '@/components/ui/close-button';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
@@ -272,9 +273,7 @@ export function CookMode({
           <h2 id="cook-ingredients" className="type-title-l">
             {t('ingredients')}
           </h2>
-          <form method="dialog">
-            <button className="min-h-12 px-3 type-label underline">{t('close')}</button>
-          </form>
+          <CloseButton label={t('close')} />
         </div>
         {components.map((c) => (
           <section key={c.id} className="mt-4">

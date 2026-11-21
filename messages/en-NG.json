@@ -679,11 +679,6 @@
   "chef": {
     "label": "Chef tip · AI",
     "placeholder": "Ask about this dish",
-    "suggest": {
-      "noCrayfish": "No crayfish, what can I use?",
-      "lessOil": "Can I use less oil?",
-      "burning": "How do I stop it burning?"
-    },
     "allergyWarning": "Heads up: this swap adds {allergens}.",
     "medical": "That one's for a doctor or dietitian, not me. Here's a cooking tip instead.",
     "busy": "Chef stepped out. Try again in a bit.",
@@ -712,5 +707,16 @@
       "cook": "Cook this",
       "pick": "Pick something for me"
     }
+  },
+  "orderSoon": {
+    "bulk": "Order in bulk",
+    "unit": "Order per unit",
+    "badge": "Coming soon",
+    "bulkTitle": "Bulk ordering is on the way",
+    "bulkBody": "Soon you will order everything for this dish in one go, in the quantities a market trip needs. We are still building it.",
+    "unitTitle": "Per unit ordering is on the way",
+    "unitBody": "Soon you will order only the pieces you need, one unit at a time, and get them at your door. We are still building it.",
+    "back": "Back to the dish",
+    "close": "Close"
   }
 }

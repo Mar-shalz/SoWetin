@@ -679,11 +679,6 @@
   "chef": {
     "label": "Chef tip · AI",
     "placeholder": "Ask anything about this food",
-    "suggest": {
-      "noCrayfish": "Crayfish no dey, wetin I fit use?",
-      "lessOil": "I fit use small oil?",
-      "burning": "How I go stop am from burning?"
-    },
     "allergyWarning": "Hold on: this change go add {allergens}.",
     "medical": "That one na for doctor or dietitian, no be me. See cooking tip instead.",
     "busy": "Chef step out small. Try again small time.",
@@ -712,5 +707,16 @@
       "cook": "Cook am",
       "pick": "Pick something for me"
     }
+  },
+  "orderSoon": {
+    "bulk": "Order for bulk",
+    "unit": "Order per unit",
+    "badge": "E dey come soon",
+    "bulkTitle": "Bulk order dey come",
+    "bulkBody": "Soon you go fit order everything for this dish for one go, for the quantity wey market trip need. We still dey build am.",
+    "unitTitle": "Per unit order dey come",
+    "unitBody": "Soon you go fit order only the pieces wey you need, one unit at a time, and dem go bring am reach your door. We still dey build am.",
+    "back": "Go back to the dish",
+    "close": "Close"
   }
 }

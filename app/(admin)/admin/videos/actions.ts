@@ -5,7 +5,7 @@ import { z } from 'zod';
 import type { Msg } from '@/components/admin/action-form';
 import { requireStaff } from '@/lib/admin/guard';
 import { t } from '@/lib/admin/t';
-import { videoInfo, youtubeId } from '@/lib/admin/youtube';
+import { searchVideos, videoInfo, youtubeId } from '@/lib/admin/youtube';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
 
 const SLUG = z.string().regex(/^[a-z0-9-]{1,80}$/);
@@ -68,4 +68,37 @@ export async function changeVideo(_: Msg, form: FormData): Promise<Msg> {
       .eq('id', id);
   revalidatePath('/admin/videos');
   return { ok: t('review.saved') };
+}
+
+// Find a video for dishes that have none: one YouTube search per dish, the top embeddable result is approved as the primary.
+// Staff can hide a wrong one afterwards. A few dishes per click keeps the search quota and the 300 second limit safe.
+export async function findVideos(): Promise<Msg> {
+  const { supabase, user } = await requireStaff();
+  const key = process.env.YOUTUBE_API_KEY;
+  if (!key) return { error: t('videos.noKey') };
+  const [{ data: comps }, { data: have }] = await Promise.all([
+    supabase.from('components').select('id, name').order('name'),
+    supabase.from('videos').select('component_id').eq('status', 'approved'),
+  ]);
+  const done = new Set((have ?? []).map((v) => v.component_id as string));
+  const todo = (comps ?? []).filter((c) => !done.has(c.id as string)).slice(0, C.VIDEO_FIND_PER_RUN);
+  let added = 0;
+  for (const c of todo) {
+    const [v] = await searchVideos(`${c.name} recipe how to cook Nigerian`, key);
+    if (!v) continue;
+    const { error } = await supabase.from('videos').insert({
+      component_id: c.id,
+      youtube_id: v.id,
+      title: v.title,
+      channel_title: v.channel,
+      thumbnail_url: v.thumbnail,
+      rank: 1,
+      status: 'approved',
+      approved_by: user.id,
+      last_checked_at: new Date().toISOString(),
+    });
+    if (!error) added++;
+  }
+  revalidatePath('/admin/videos');
+  return { ok: t('videos.found', { added, left: Math.max(0, (comps?.length ?? 0) - done.size - added) }) };
 }

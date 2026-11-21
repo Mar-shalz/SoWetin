@@ -23,7 +23,7 @@ export default async function DecidePage() {
         greeting={
           <h1 className="mt-2">
             {cut > 0 && <span className="block type-body-l text-ink-2">{greeting.slice(0, cut + 1)}</span>}
-            <span className="block type-display-xl">{greeting.slice(cut + 1).trim()}</span>
+            <span className="block type-display-l">{greeting.slice(cut + 1).trim()}</span>
           </h1>
         }
       />

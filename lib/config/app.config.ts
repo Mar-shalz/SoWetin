@@ -95,6 +95,7 @@ export const APP_CONFIG = {
   CATERING_MIN_PEOPLE: 15,
   MAX_VIDEOS_PER_COMPONENT: 5,
   QUICK_VIDEO_MAX_MINUTES: 8,
+  VIDEO_FIND_PER_RUN: 20, // dishes searched per click of Find videos (100 quota units each of YouTube's free 10,000 a day)
   PIDGIN_ENABLED: false, // flips on once the Pidgin editor approves messages/pcm.json (BR-110)
   PIDGIN_OFFER_SNOOZE_DAYS: 30,
   SURVEY_CADENCE_DAYS: 30,
