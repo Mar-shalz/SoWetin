@@ -33,6 +33,30 @@ export const CaretIcon = (p: IconProps) => (
     <path d="m7 10 5 5 5-5" />
   </Icon>
 );
+// Social marks drawn as line icons in the same 24 px grid, so the share sheet needs no brand assets.
+export const WhatsAppIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="m3.5 20.5 1.3-4A8.5 8.5 0 1 1 8 19.3z" />
+    <path d="M9 8.5c0 3.6 2.9 6.5 6.5 6.5l1-1.6-2-1-1 .8a5 5 0 0 1-2.7-2.7l.8-1-1-2z" />
+  </Icon>
+);
+export const XIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M4 4h4l12 16h-4zM20 4l-6.6 7.5M4 20l6.6-7.5" />
+  </Icon>
+);
+export const InstagramIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <rect x="3" y="3" width="18" height="18" rx="5" />
+    <circle cx="12" cy="12" r="4" />
+    <circle cx="17.5" cy="6.5" r="0.5" />
+  </Icon>
+);
+export const FacebookIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M15 3h-2.5A3.5 3.5 0 0 0 9 6.5V9H7v3.5h2V21h3.5v-8.5H15l.5-3.5h-3V7a1 1 0 0 1 1-1H15z" />
+  </Icon>
+);
 export const HouseIcon = (p: IconProps) => (
   <Icon {...p}>
     <path d="M4 11 12 4l8 7v9h-5v-6H9v6H4z" />

@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
 import { personaFor, type Persona, type Points } from '@/lib/engine/persona';
 import { store } from '@/lib/device/store';
-import { CopyIcon, DownloadIcon, ShareIcon } from '@/components/ui/icons';
+import { CopyIcon, DownloadIcon, FacebookIcon, HouseIcon, InstagramIcon, ShareIcon, WhatsAppIcon, XIcon } from '@/components/ui/icons';
 import { CloseButton } from '@/components/ui/close-button';
 
 export type GameCard = { id: string; name: string; picture: string | null };
@@ -24,6 +24,15 @@ const COLOUR: Record<Persona, string> = {
   everything: 'ugu',
   connoisseur: 'enamel',
 };
+// The title and the AI read take the card's colour. Static class names so Tailwind keeps them. Egusi yellow and palm
+// orange are too light for text on cream, so those titles sit on their colour as a band instead (contrast, doc 12).
+const TITLE: Record<string, string> = {
+  enamel: 'text-enamel',
+  ugu: 'text-ugu',
+  palm: 'w-fit rounded-md bg-palm px-2',
+  egusi: 'w-fit rounded-md bg-egusi px-2',
+};
+const TINT: Record<string, string> = { enamel: 'bg-enamel-100', ugu: 'bg-ugu-100', palm: 'bg-palm-100', egusi: 'bg-egusi-100' };
 const W = 1080;
 const H = 1920;
 
@@ -98,6 +107,13 @@ export function Game({ cards, points, fonts }: { cards: GameCard[]; points: Reco
     store('sw_persona', persona);
   }, [persona, t, fonts]);
 
+  // The "Copied" toast clears itself.
+  useEffect(() => {
+    if (!linkCopied) return;
+    const id = setTimeout(() => setLinkCopied(false), C.TOAST_MS);
+    return () => clearTimeout(id);
+  }, [linkCopied]);
+
   // The AI read (Victor, 10 November 2026). Our code decides the personality; the AI only describes it.
   useEffect(() => {
     if (!persona || read !== undefined) return;
@@ -130,13 +146,20 @@ export function Game({ cards, points, fonts }: { cards: GameCard[]; points: Reco
       fallback();
     };
     const open = (url: string) => window.open(url, '_blank', 'noopener,noreferrer');
-    const tile = 'flex min-h-14 items-center gap-3 rounded-md border-2 border-ink bg-surface px-3.5 type-label';
+    // Name on the left, the network's mark on the right.
+    const tile = 'flex min-h-14 w-full items-center justify-between gap-3 rounded-md border-2 border-ink bg-surface px-3.5 type-label';
+    const square = 'grid size-14 shrink-0 place-items-center rounded-md border-2 border-ink bg-surface';
     return (
       <section className="grid gap-3.5">
-        <hr className="border-line" />
-        <h1 className="type-display-l">{t(`${persona}.name`)}</h1>
+        {/* Home sits where Back would, and stays on screen while the card scrolls. */}
+        <div className="sticky top-0 z-20 -mx-3.5 bg-cream px-3.5 py-2">
+          <Link href="/" aria-label={t('home')} className="grid size-12 place-items-center rounded-pill border-2 border-ink bg-surface">
+            <HouseIcon size={22} />
+          </Link>
+        </div>
+        <h1 className={`type-display-l ${TITLE[COLOUR[persona]]}`}>{t(`${persona}.name`)}</h1>
         {/* The AI read takes the line's place; the fixed line shows while it loads or when there is none. */}
-        <div aria-live="polite">
+        <div aria-live="polite" className={`rounded-md p-3 ${TINT[COLOUR[persona]]}`}>
           {typeof read === 'string' && <p className="type-caption text-ink-2">{t('ai.label')}</p>}
           <p className="type-body-l">{typeof read === 'string' ? read : t(`${persona}.line`)}</p>
         </div>
@@ -147,29 +170,16 @@ export function Game({ cards, points, fonts }: { cards: GameCard[]; points: Reco
               <DownloadIcon size={22} />
               {t('save')}
             </button>
-            <button
-              type="button"
-              onClick={copy}
-              aria-label={linkCopied ? t('share.copied') : t('share.copy')}
-              className="grid size-14 shrink-0 place-items-center rounded-md border-2 border-ink bg-surface"
-            >
-              <CopyIcon size={22} />
+            <button type="button" onClick={() => sheet.current?.showModal()} aria-label={t('share.sheet')} className={square}>
+              <ShareIcon size={22} />
             </button>
           </div>
-          <span aria-live="polite" className="sr-only">
-            {linkCopied ? t('share.copied') : ''}
-          </span>
           <div className="flex gap-3">
             <button type="button" onClick={sendGame} className="flex min-h-14 flex-1 items-center justify-center rounded-pill border-2 border-ink bg-surface type-title-m">
               {t('share.game')}
             </button>
-            <button
-              type="button"
-              onClick={() => sheet.current?.showModal()}
-              aria-label={t('share.sheet')}
-              className="grid size-14 shrink-0 place-items-center rounded-md border-2 border-ink bg-surface"
-            >
-              <ShareIcon size={22} />
+            <button type="button" onClick={copy} aria-label={t('share.copy')} className={square}>
+              <CopyIcon size={22} />
             </button>
           </div>
           {/* A fresh deal from the server. */}
@@ -177,6 +187,13 @@ export function Game({ cards, points, fonts }: { cards: GameCard[]; points: Reco
             {t('again')}
           </Link>
         </div>
+        {/* The toast: visible to everyone, announced to screen readers. */}
+        <p
+          role="status"
+          className={`pointer-events-none fixed inset-x-0 bottom-24 z-30 mx-auto w-fit rounded-pill bg-ink px-3.5 py-2 type-label text-cream ${linkCopied ? '' : 'sr-only'}`}
+        >
+          {linkCopied ? t('share.copied') : ''}
+        </p>
         <dialog
           ref={sheet}
           aria-labelledby="share-sheet"
@@ -190,19 +207,21 @@ export function Game({ cards, points, fonts }: { cards: GameCard[]; points: Reco
           </div>
           <ul className="grid gap-2">
             <li>
-              <button type="button" className={`${tile} w-full`} onClick={() => shareImage(() => open(`https://wa.me/?text=${encodeURIComponent(shareText)}`))}>
+              <button type="button" className={tile} onClick={() => shareImage(() => open(`https://wa.me/?text=${encodeURIComponent(shareText)}`))}>
                 {t('share.whatsapp')}
+                <WhatsAppIcon size={24} />
               </button>
             </li>
             <li>
-              <button type="button" className={`${tile} w-full`} onClick={() => open(`https://x.com/intent/post?text=${encodeURIComponent(shareText)}`)}>
+              <button type="button" className={tile} onClick={() => open(`https://x.com/intent/post?text=${encodeURIComponent(shareText)}`)}>
                 {t('share.x')}
+                <XIcon size={24} />
               </button>
             </li>
             <li>
               <button
                 type="button"
-                className={`${tile} w-full`}
+                className={tile}
                 onClick={() =>
                   shareImage(() => {
                     void save();
@@ -211,12 +230,14 @@ export function Game({ cards, points, fonts }: { cards: GameCard[]; points: Reco
                 }
               >
                 {t('share.instagram')}
+                <InstagramIcon size={24} />
               </button>
               {igSaved && <p className="mt-1 type-caption text-ink-2">{t('share.saved')}</p>}
             </li>
             <li>
-              <button type="button" className={`${tile} w-full`} onClick={() => open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`)}>
+              <button type="button" className={tile} onClick={() => open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`)}>
                 {t('share.facebook')}
+                <FacebookIcon size={24} />
               </button>
             </li>
           </ul>

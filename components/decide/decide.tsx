@@ -330,9 +330,8 @@ export function Decide({ greeting, house, promo, reelItems = [] }: { greeting: R
     },
   };
   // Odd entries are placeholder names: "I have {budget} for {people}..." becomes words and answer pills.
-  // Punctuation right after a pill stays glued to it, so a line never starts with a comma.
+  // Punctuation right after a pill is dropped (Victor, 21 November 2026): the pills read cleaner bare.
   const sentence = (t.raw('home.sentence._') as string).split(/\{(\w+)\}/);
-  const glued = (i: number) => (i % 2 ? (sentence[i + 1]?.match(/^[,.!?]/)?.[0] ?? '') : '');
   const nodes = sentence.map((part, i) => {
     if (i % 2) {
       const a = answers[part as keyof typeof answers];
@@ -361,11 +360,10 @@ export function Decide({ greeting, house, promo, reelItems = [] }: { greeting: R
               ))}
             </select>
           </span>
-          {glued(i)}
         </span>
       );
     }
-    const words = (glued(i - 1) ? part.slice(1) : part).trim();
+    const words = (i ? part.replace(/^[,.!?]/, '') : part).trim();
     return words && <span key={i}>{words}</span>;
   });
   const on = activeFilters(filters);
@@ -398,7 +396,6 @@ export function Decide({ greeting, house, promo, reelItems = [] }: { greeting: R
             >
               <BackIcon size={22} />
             </button>
-            <LogoMark size={30} />
           </span>
           <div className="flex items-center gap-2">
             {filtersButton}

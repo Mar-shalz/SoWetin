@@ -62,6 +62,7 @@ export const APP_CONFIG = {
   AI_PARSE_TIMEOUT_MS: 2500,
   AI_CHEF_FIRST_TOKEN_MS: 2000,
   AI_CHEF_TIMEOUT_MS: 8000,
+  TOAST_MS: 2500, // how long a "Copied" style toast stays up
   AI_QUOTA_ANON_DAILY: 15,
   AI_QUOTA_USER_DAILY: 60,
   // T3 drafts run on Gemini's free tier (Victor, 9 November 2026). The free limits show in Google AI Studio.
