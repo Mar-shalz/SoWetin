@@ -3,11 +3,12 @@ import Link from 'next/link';
 import type { Item } from '@/lib/catalogue/shelves';
 
 // A dish card for Explore shelves, lists and search (S-009, S-010): picture, name, local name, time.
-export function DishCard({ item, minutes }: { item: Item; minutes: string }) {
+// fill: the card stretches to its grid cell (See all and search lists); otherwise it is a fixed-width shelf card.
+export function DishCard({ item, minutes, fill = false }: { item: Item; minutes: string; fill?: boolean }) {
   return (
-    <Link href={`/dish/${item.id}`} className="grid w-40 shrink-0 gap-1 rounded-lg border-2 border-ink bg-surface p-2">
+    <Link href={`/dish/${item.id}`} className={`grid content-start gap-1 rounded-lg border-2 border-ink bg-surface p-2 ${fill ? 'w-full' : 'w-40 shrink-0'}`}>
       {item.picture ? (
-        <Image src={item.picture} alt="" width={320} height={240} sizes="160px" className="aspect-[4/3] w-full rounded-md object-cover" />
+        <Image src={item.picture} alt="" width={320} height={240} sizes={fill ? '(min-width: 480px) 224px, 45vw' : '160px'} className="aspect-[4/3] w-full rounded-md object-cover" />
       ) : (
         <span aria-hidden className="flex aspect-[4/3] w-full items-center justify-center rounded-md bg-palm-100 type-title-l">
           {item.name.charAt(0)}

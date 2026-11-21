@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { draftJson } from './draft-chain';
 import { geminiJson, geminiSchema, type GeminiCall } from './gemini';
 import { scrub } from './craving';
 
@@ -75,17 +76,15 @@ export async function askChef(
     ...(avoids.length ? [`The user avoids: ${avoids.map(name).join(', ')}`] : []),
   ].join('\n');
   const swapsFrom = [...catalogue.values()].map((i) => `${i.id}: ${i.name}`).join('\n');
-  const r = await geminiJson(
-    {
-      ...ai,
-      system: `${SYSTEM}\n\n<recipe>\n${recipe}\n</recipe>\n\n<ingredients for substitutions>\n${swapsFrom}\n</ingredients for substitutions>${
-        lang.code === 'pcm' ? `\n\n<pidgin examples>\n${lang.examples.join('\n')}\n</pidgin examples>` : ''
-      }`,
-      prompt: `<language>${lang.code === 'pcm' ? 'pcm' : 'en'}</language>\n<question>${scrub(question)}</question>`,
-      schema: geminiSchema(z.toJSONSchema(schema)),
-    },
-    fetchFn,
-  );
+  const call = {
+    system: `${SYSTEM}\n\n<recipe>\n${recipe}\n</recipe>\n\n<ingredients for substitutions>\n${swapsFrom}\n</ingredients for substitutions>${
+      lang.code === 'pcm' ? `\n\n<pidgin examples>\n${lang.examples.join('\n')}\n</pidgin examples>` : ''
+    }`,
+    prompt: `<language>${lang.code === 'pcm' ? 'pcm' : 'en'}</language>\n<question>${scrub(question)}</question>`,
+  };
+  let r = await geminiJson({ ...ai, ...call, schema: geminiSchema(z.toJSONSchema(schema)) }, fetchFn);
+  // Gemini's free tier is the first try (D-36). When it fails, the free providers (Groq, Cerebras...) answer instead.
+  if (!r.ok) r = await draftJson({ ...call, schema: z.toJSONSchema(schema), timeoutMs: ai.timeoutMs }, { key: ai.key, model: ai.model }, fetchFn);
   if (!r.ok) return { ok: false, reason: r.reason === 'quota' ? 'quota' : 'busy' };
   const parsed = schema.safeParse(r.json);
   if (!parsed.success) return { ok: false, reason: 'busy' };

@@ -38,9 +38,9 @@ export default async function ShelfPage({ params, searchParams }: { params: Prom
         ))}
       </nav>
       {list.length ? (
-        <div className="flex flex-wrap gap-3">
+        <div className="grid grid-cols-2 gap-3">
           {list.map((i) => (
-            <DishCard key={i.id} item={i} minutes={t('plate.why.time', { minutes: i.minutes })} />
+            <DishCard fill key={i.id} item={i} minutes={t('plate.why.time', { minutes: i.minutes })} />
           ))}
         </div>
       ) : (

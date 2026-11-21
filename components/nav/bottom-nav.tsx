@@ -16,6 +16,7 @@ export async function BottomNav({ current }: { current: (typeof TABS)[number][1]
   return (
     <nav
       aria-label={t('label')}
+      style={{ transform: 'translateY(var(--kb, 0px))' }}
       className="sticky bottom-0 z-10 -mx-4 mt-6 grid grid-cols-4 border-t-2 border-ink bg-surface px-2 pb-[max(env(safe-area-inset-bottom),0.5rem)] pt-2"
     >
       {TABS.map(([href, key, Icon]) => {

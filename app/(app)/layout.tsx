@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getTranslations } from 'next-intl/server';
 import { body, display } from '@/app/fonts/fonts';
+import { KeyboardGuard } from '@/components/nav/keyboard-guard';
 import { MotionTier } from '@/components/nav/motion-tier';
 import { Offline } from '@/components/nav/offline';
 import tokens from '@/design/tokens.json';
@@ -25,6 +26,7 @@ export default async function AppLayout({ children }: LayoutProps<'/'>) {
           <div className="app-frame">
             <Offline />
             <MotionTier />
+            <KeyboardGuard />
             {children}
           </div>
         </NextIntlClientProvider>

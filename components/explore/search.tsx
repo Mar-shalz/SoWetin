@@ -20,6 +20,15 @@ export function ExploreSearch({ items }: { items: Item[] }) {
         <span className="sr-only">{t('explore.search')}</span>
         <input
           type="search"
+          name="dish-search"
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="none"
+          spellCheck={false}
+          enterKeyHint="search"
+          inputMode="search"
+          data-lpignore="true"
+          data-1p-ignore
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder={t('explore.search')}
@@ -27,11 +36,11 @@ export function ExploreSearch({ items }: { items: Item[] }) {
         />
       </label>
       {query && (
-        <div aria-live="polite" className="flex flex-wrap gap-3">
+        <div aria-live="polite" className="grid grid-cols-2 gap-3">
           {hits.length ? (
-            hits.map((i) => <DishCard key={i.id} item={i} minutes={t('plate.why.time', { minutes: i.minutes })} />)
+            hits.map((i) => <DishCard fill key={i.id} item={i} minutes={t('plate.why.time', { minutes: i.minutes })} />)
           ) : (
-            <p className="text-ink-2">{t('explore.noResults')}</p>
+            <p className="col-span-2 text-ink-2">{t('explore.noResults')}</p>
           )}
         </div>
       )}
