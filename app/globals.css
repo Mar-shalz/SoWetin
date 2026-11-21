@@ -22,6 +22,11 @@ body {
 .sw-field:focus-visible {
   outline: none;
 }
+/* Close button: no blue ring when a sheet opens and focuses it (Victor). Focus shows as a dark border instead. */
+.sw-close:focus-visible {
+  outline: none;
+  border-color: var(--color-ink);
+}
 
 /* Motion tiers (doc 10, section 2). MotionTier sets <html data-motion="full|lite|reduced">. Before it runs, the
    phone's own reduced-motion setting still applies. Transform and opacity only (doc 12). */
@@ -36,9 +41,11 @@ body {
     opacity: 0;
   }
 }
+/* A short rise with a fade: a full-height slide on the fast enter curve read as up, down, up on phones. */
 @keyframes sw-sheet {
   from {
-    transform: translateY(var(--sw-sheet-travel, 100%));
+    opacity: 0;
+    transform: translateY(var(--sw-sheet-travel, 32px));
   }
 }
 @keyframes sw-land {
@@ -84,13 +91,13 @@ html[data-motion='full'] .sw-deal > article:nth-of-type(3) {
 
 /* M-13 sheets rise and the scrim fades; Lite travels less. M-11 the saved heart pops. */
 dialog[open] {
-  animation: sw-sheet var(--sw-duration-slow) var(--ease-enter);
+  animation: sw-sheet var(--sw-duration-base) var(--ease-standard) both;
 }
 dialog[open]::backdrop {
-  animation: sw-fade var(--sw-duration-slow) var(--ease-enter);
+  animation: sw-fade var(--sw-duration-base) linear;
 }
 html[data-motion='lite'] dialog[open] {
-  --sw-sheet-travel: 40%;
+  --sw-sheet-travel: 16px;
 }
 .sw-heart[aria-pressed='true'] {
   animation: sw-heart 420ms var(--ease-standard);

@@ -64,74 +64,83 @@ export function AskChef({ component, dish, people, en }: { component: string; di
       <dialog
         ref={dialog}
         aria-labelledby={`chef-${component}`}
-        className="mx-auto mb-0 mt-auto max-h-[85dvh] w-full max-w-app rounded-t-xl border-2 border-ink bg-surface p-5 text-ink backdrop:bg-overlay"
+        className="mx-auto mb-0 mt-auto max-h-[85dvh] w-full max-w-app overflow-hidden rounded-t-xl border-2 border-ink bg-surface p-0 text-ink backdrop:bg-overlay"
       >
-        <div className="sticky top-0 z-10 -mx-5 -mt-5 flex items-center justify-between gap-3 bg-surface px-5 pb-5 pt-5">
-          <h2 id={`chef-${component}`} className="type-title-l">
-            {dish}
-          </h2>
-          <CloseButton label={t('chef.close')} />
-        </div>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            void ask(q);
-          }}
-          className="mt-1 flex gap-2"
-        >
-          <input {...NO_AUTOFILL}
-            value={q}
-            maxLength={C.CHEF_QUESTION_MAX_CHARS}
-            onChange={(e) => setQ(e.target.value)}
-            aria-label={t('chef.placeholder')}
-            placeholder={t('chef.placeholder')}
-            className="min-h-12 min-w-0 flex-1 rounded-md border border-ink-3 bg-sunken px-3 type-input"
-          />
-          <button disabled={!q.trim() || busy} className={`${pill} shrink-0 border-ink bg-palm disabled:border-ink-3 disabled:bg-sunken disabled:text-ink-3`}>
-            {t('chef.send')}
-          </button>
-        </form>
-        <div aria-live="polite" className="mt-4 grid gap-3">
-          {busy && <p className="text-ink-2">{t('chef.thinking')}</p>}
-          {reply?.state === 'busy' && <p>{t('chef.busy')}</p>}
-          {reply?.state === 'quota' && <p>{t('ai.quota')}</p>}
-          {reply?.state === 'ok' && (
-            <article className="rounded-md bg-sunken p-3">
-              <p className="type-caption text-ink-2">{t('chef.label')}</p>
-              <p className="mt-1 type-label">{asked}</p>
-              {reply.declined && <Both className="mt-2" text={t('chef.medical')} en={en?.medical} />}
-              <p className="mt-2 whitespace-pre-line">{reply.answer}</p>
-              {!!reply.new_allergens.length && (
-                <div role="note" className="mt-3 rounded-md border-2 border-scotch bg-surface p-3">
-                  <Both
-                    text={t('chef.allergyWarning', { allergens: reply.new_allergens.map(label).join(', ') })}
-                    en={en?.allergy.replace('{allergens}', reply.new_allergens.map((a) => en.allergens[a] ?? a).join(', '))}
-                  />
-                </div>
+        {/* Header stays put; only the body scrolls, so the field starts below the header and only slides under it on scroll. */}
+        <div className="flex max-h-[85dvh] flex-col">
+          <div className="flex shrink-0 items-center justify-between gap-3 border-b border-ink-3 px-5 pb-4 pt-5">
+            <h2 id={`chef-${component}`} className="type-title-l">
+              {dish}
+            </h2>
+            <CloseButton label={t('chef.close')} />
+          </div>
+          <div className="overflow-y-auto overscroll-contain px-5 pb-5">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                void ask(q);
+              }}
+              className="mt-4 flex gap-2"
+            >
+              <input
+                {...NO_AUTOFILL}
+                value={q}
+                maxLength={C.CHEF_QUESTION_MAX_CHARS}
+                onChange={(e) => setQ(e.target.value)}
+                aria-label={t('chef.placeholder')}
+                placeholder={t('chef.placeholder')}
+                className="min-h-12 min-w-0 flex-1 rounded-md border border-ink-3 bg-sunken px-3 type-input"
+              />
+              <button
+                disabled={!q.trim() || busy}
+                className={`${pill} shrink-0 border-ink bg-palm disabled:border-ink-3 disabled:bg-sunken disabled:text-ink-3`}
+              >
+                {t('chef.send')}
+              </button>
+            </form>
+            <div aria-live="polite" className="mt-4 grid gap-3">
+              {busy && <p className="text-ink-2">{t('chef.thinking')}</p>}
+              {reply?.state === 'busy' && <p>{t('chef.busy')}</p>}
+              {reply?.state === 'quota' && <p>{t('ai.quota')}</p>}
+              {reply?.state === 'ok' && (
+                <article className="rounded-md bg-sunken p-3">
+                  <p className="type-caption text-ink-2">{t('chef.label')}</p>
+                  <p className="mt-1 type-label">{asked}</p>
+                  {reply.declined && <Both className="mt-2" text={t('chef.medical')} en={en?.medical} />}
+                  <p className="mt-2 whitespace-pre-line">{reply.answer}</p>
+                  {!!reply.new_allergens.length && (
+                    <div role="note" className="mt-3 rounded-md border-2 border-scotch bg-surface p-3">
+                      <Both
+                        text={t('chef.allergyWarning', { allergens: reply.new_allergens.map(label).join(', ') })}
+                        en={en?.allergy.replace('{allergens}', reply.new_allergens.map((a) => en.allergens[a] ?? a).join(', '))}
+                      />
+                    </div>
+                  )}
+                  {!!reply.substitutions.length && (
+                    <ul className="mt-3 grid gap-2">
+                      {reply.substitutions.map((s) => {
+                        const on = swaps[s.replace]?.with === s.with;
+                        return (
+                          <li key={`${s.replace}-${s.with}`}>
+                            <button
+                              type="button"
+                              aria-pressed={on}
+                              onClick={() => setSwap(component, s.replace, on ? null : { with: s.with, withName: s.with_name })}
+                              className={`${pill} ${on ? 'border-ink bg-palm-100' : 'border-ink-3 bg-surface'}`}
+                            >
+                              {t('chef.swap.use', { with: s.with_name, replace: s.replace_name })}
+                            </button>
+                            {s.note && <p className="mt-1 type-caption text-ink-2">{s.note}</p>}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
+                  <Both className="mt-3 type-caption text-ink-2" text={t('ai.note.chef')} en={en?.note} />
+                </article>
               )}
-              {!!reply.substitutions.length && (
-                <ul className="mt-3 grid gap-2">
-                  {reply.substitutions.map((s) => {
-                    const on = swaps[s.replace]?.with === s.with;
-                    return (
-                      <li key={`${s.replace}-${s.with}`}>
-                        <button
-                          type="button"
-                          aria-pressed={on}
-                          onClick={() => setSwap(component, s.replace, on ? null : { with: s.with, withName: s.with_name })}
-                          className={`${pill} ${on ? 'border-ink bg-palm-100' : 'border-ink-3 bg-surface'}`}
-                        >
-                          {t('chef.swap.use', { with: s.with_name, replace: s.replace_name })}
-                        </button>
-                        {s.note && <p className="mt-1 type-caption text-ink-2">{s.note}</p>}
-                      </li>
-                    );
-                  })}
-                </ul>
-              )}
-              <Both className="mt-3 type-caption text-ink-2" text={t('ai.note.chef')} en={en?.note} />
-            </article>
-          )}
+            </div>
+          </div>
         </div>
       </dialog>
     </>
