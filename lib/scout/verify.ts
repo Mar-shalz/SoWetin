@@ -39,6 +39,8 @@ const FACTOR: Record<string, [number, 'g' | 'ml']> = {
   ml: [1, 'ml'],
 };
 
+const MARKET_WORD = /\b(paint|tuber|bag|carton|derica|cup|tin|bottle|wrap|heap|crate|pack|basket|keg)s?\b/;
+
 // The unit in the ingredient's own measure (g, ml or piece): a market unit we know, a stated size, or a crate or dozen.
 export function unitQty(unitText: string, info: IngredientInfo): number | null {
   const text = normalise(unitText);
@@ -58,7 +60,7 @@ export function unitQty(unitText: string, info: IngredientInfo): number | null {
   }
   // Market words ("a paint", "big bag", "per tuber") map to our own unit with that word, so the size comes from
   // market_units (admin-editable), never from a guess here. Several matches: the size word decides, else the middle one.
-  const word = text.match(/\b(paint|tuber|bag|carton|derica|cup|tin|bottle|wrap|heap|crate|pack|basket|keg)s?\b/)?.[1];
+  const word = text.match(MARKET_WORD)?.[1];
   const found = word ? info.units.filter((u) => normalise(u.label).includes(word)).sort((a, b) => a.qty - b.qty) : [];
   if (found.length) {
     const size = text.match(/\b(small|medium|big|large)\b/)?.[1];
@@ -75,10 +77,13 @@ export function unitQty(unitText: string, info: IngredientInfo): number | null {
 }
 
 // The quote's own size ("Carrot 5 kg", "(Paint Bucket)") beats the unit word the AI chose, so a 5 kg pack never
-// lands as a heap. Also run on stored scout rows at every rebuild.
+// lands as a heap. With no size in the quote, a market word in the unit ("heap", "cup") must be in the quote too,
+// so a shop line never turns into a heap the page never said. Also run on stored scout rows at every rebuild.
 export function unitAgrees(unitText: string, quote: string, info: IngredientInfo): boolean {
   const said = unitQty(quote, info);
-  return !said || said === unitQty(unitText, info);
+  if (said) return said === unitQty(unitText, info);
+  const word = normalise(unitText).match(MARKET_WORD)?.[1];
+  return !word || new RegExp(`\\b${word}s?\\b`).test(normalise(quote));
 }
 
 // A month ("2026-09") counts from its middle, so a report for September is neither too young nor too old.

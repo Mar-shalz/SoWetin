@@ -56,6 +56,9 @@ describe('price scout checks (doc 04, section 6.3)', () => {
     expect(unitAgrees('paint bucket', 'Beans - White (Paint Bucket) ₦8,700', beans)).toBe(true);
     expect(unitAgrees('50kg bag', 'Local rice: N105,000 per 50kg bag', rice)).toBe(true);
     expect(unitAgrees('heap', 'Carrots now N1,500 a heap', carrot)).toBe(true);
+    expect(unitAgrees('heap', 'Carrot (Fresh) ₦16,700', carrot)).toBe(false);
+    expect(unitAgrees('cup', 'Beans - White ₦2,990', beans)).toBe(false);
+    expect(unitAgrees('piece', 'Onions ₦420', eggs)).toBe(true);
     const page = 'Carrot 5 kg ₦15,900';
     const o = { ingredient: 'carrot', unit_text: 'heap', price_ngn: 15900, market: 'Lagos', area: 'Lagos', period: '2026-11-21', quote: page };
     expect(verify(o, page, carrot, '2026-11-21', 45)).toEqual({ ok: false, reason: 'unit differs from the quote' });
