@@ -6,7 +6,7 @@ import { ChevronIcon, LogoMark } from '@/components/ui/icons';
 export async function PersonalityCard() {
   const t = await getTranslations('persona.entry');
   return (
-    <Link href="/play" className="flex items-center gap-4 rounded-lg border-2 border-ink bg-egusi-100 p-4 shadow-button">
+    <Link href="/play" className="flex items-center gap-3.5 rounded-lg border-2 border-ink bg-egusi-100 p-3.5 shadow-button">
       <span className="grid size-14 shrink-0 place-items-center rounded-pill border-2 border-ink bg-egusi">
         <LogoMark size={34} />
       </span>

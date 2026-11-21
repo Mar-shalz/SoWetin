@@ -39,15 +39,15 @@ export function PriceSheet({
       <dialog
         ref={dialog}
         aria-labelledby={titleId}
-        className="mx-auto mb-0 mt-auto max-h-[85dvh] w-full max-w-app rounded-t-xl border-2 border-ink bg-surface p-5 text-ink backdrop:bg-overlay"
+        className="mx-auto mb-0 mt-auto max-h-[85dvh] w-full max-w-app rounded-t-xl border-2 border-ink bg-surface p-3.5 text-ink backdrop:bg-overlay"
       >
         <h2 id={titleId} className="type-title-l">
           {t('sheet.title')}
         </h2>
         <p className="mt-3 type-price-l">{t2('plate.price.range', { low: formatNaira(low), high: formatNaira(high) })}</p>
         <p className="type-caption text-ink-2">{t('sheet.for', { people, area: t2('areas.lagos') })}</p>
-        <p className="mt-4">{t('sheet.explainer')}</p>
-        <p className="mt-4 type-label">{t('sheet.count', { count })}</p>
+        <p className="mt-3.5">{t('sheet.explainer')}</p>
+        <p className="mt-3.5 type-label">{t('sheet.count', { count })}</p>
         <p className="type-caption text-ink-2">
           {t('sheet.kinds', { visits: k.market_check, reports: k.press_survey, stores: k.online_store, official: k.official_stats })}
         </p>
@@ -60,10 +60,10 @@ export function PriceSheet({
             ))}
           </ul>
         )}
-        <p className="mt-4">{receipt.last_visit ? t('sheet.lastVisit', { date: day(receipt.last_visit) }) : t('sheet.noVisit')}</p>
+        <p className="mt-3.5">{receipt.last_visit ? t('sheet.lastVisit', { date: day(receipt.last_visit) }) : t('sheet.noVisit')}</p>
         {!!receipt.wide_items.length && <p className="mt-2">{t('sheet.wide', { items: receipt.wide_items.join(', ') })}</p>}
-        <p className="mt-4 rounded-md bg-sunken p-3">{t('disclaimer.full')}</p>
-        <form method="dialog" className="mt-4">
+        <p className="mt-3.5 rounded-md bg-sunken p-3">{t('disclaimer.full')}</p>
+        <form method="dialog" className="mt-3.5">
           <button className="min-h-12 w-full rounded-pill border-2 border-ink bg-surface type-label">{t('sheet.close')}</button>
         </form>
       </dialog>

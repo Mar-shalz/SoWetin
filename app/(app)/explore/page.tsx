@@ -14,7 +14,7 @@ export default async function ExplorePage() {
   const all = cat ? items(cat, lagosToday()) : [];
   const shelves = SHELF_KEYS.map((k) => [k, shelf(all, k)] as const).filter(([, list]) => list.length);
   return (
-    <main className="mx-auto flex min-h-dvh max-w-app flex-col gap-6 px-4 pt-6">
+    <main className="mx-auto flex min-h-dvh max-w-app flex-col gap-3.5 px-3.5 pt-3.5">
       <h1 className="type-display-l">{t('nav.explore')}</h1>
       <ExploreSearch items={plain(all)} />
       {!shelves.length && <p className="text-ink-2">{t('explore.empty')}</p>}
@@ -28,7 +28,7 @@ export default async function ExplorePage() {
               {t('explore.seeAll')}
             </Link>
           </div>
-          <div className="-mx-4 mt-2 flex gap-3 overflow-x-auto px-4 pb-2">
+          <div className="-mx-3.5 mt-2 flex gap-3 overflow-x-auto px-3.5 pb-2">
             {[...list]
               .sort((a, b) => b.popularity - a.popularity)
               .slice(0, SHELF_PREVIEW)

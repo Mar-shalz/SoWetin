@@ -57,7 +57,7 @@ export function MotionSetting() {
             type="button"
             aria-pressed={pref === p}
             onClick={() => choose(p)}
-            className={`min-h-12 rounded-pill border-2 px-4 type-label ${pref === p ? 'border-ink bg-palm-100' : 'border-ink-3 bg-surface'}`}
+            className={`min-h-12 rounded-pill border-2 px-3.5 type-label ${pref === p ? 'border-ink bg-palm-100' : 'border-ink-3 bg-surface'}`}
           >
             {p === 'auto' ? t('auto', { tier: t(auto) }) : t(p)}
           </button>

@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { NO_AUTOFILL } from '@/components/ui/no-autofill';
 import { CloseButton } from '@/components/ui/close-button';
+import { ChefHatIcon } from '@/components/ui/icons';
 import { useRef, useState } from 'react';
 import { setSwap, useSwaps } from '@/components/plate/swaps';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
@@ -23,10 +24,13 @@ function Both({ text, en, className }: { text: string; en?: string | null; class
 
 // S-019 Ask Chef: a bottom sheet for one dish. Free text up to CHEF_QUESTION_MAX_CHARS, the answer
 // labelled "Chef tip · AI", swaps as chips that change this recipe for this visit, an allergy box when a swap adds an
-// allergen, and the fixed Chef line under every answer.
-export function AskChef({ component, dish, people, en }: { component: string; dish: string; people: number; en: ChefEnglish }) {
+// allergen, and the fixed Chef line under every answer. One floating button per page; a plate with several dishes
+// switches dish inside the sheet's fixed header.
+export function AskChef({ dishes, people, en }: { dishes: { id: string; name: string }[]; people: number; en: ChefEnglish }) {
   const t = useTranslations();
   const dialog = useRef<HTMLDialogElement>(null);
+  const [cur, setCur] = useState(0);
+  const { id: component, name: dish } = dishes[cur];
   const [q, setQ] = useState('');
   const [busy, setBusy] = useState(false);
   const [asked, setAsked] = useState('');
@@ -55,12 +59,23 @@ export function AskChef({ component, dish, people, en }: { component: string; di
     }
   }
 
-  const pill = 'min-h-12 rounded-pill border-2 px-4 type-label';
+  const pill = 'min-h-12 rounded-pill border-2 px-3.5 type-label';
   return (
     <>
-      <button type="button" onClick={() => dialog.current?.showModal()} className={`${pill} mt-4 w-full border-ink bg-surface`}>
-        {t('detail.askChef')}
-      </button>
+      {/* Floats bottom right inside the app column; pointer-events pass through the empty part of the strip. */}
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-10 mx-auto flex max-w-app justify-end px-3.5 pb-[max(env(safe-area-inset-bottom),0.875rem)]">
+        <button
+          type="button"
+          onClick={() => dialog.current?.showModal()}
+          aria-label={t('detail.askChef')}
+          className="pointer-events-auto flex min-h-14 items-center gap-2 rounded-pill border-2 border-ink bg-egusi py-1 pl-1 pr-3.5 shadow-button type-label"
+        >
+          <span className="grid size-12 place-items-center rounded-pill bg-surface">
+            <ChefHatIcon size={26} />
+          </span>
+          <span aria-hidden="true">{t('detail.askChef')}</span>
+        </button>
+      </div>
       <dialog
         ref={dialog}
         aria-labelledby={`chef-${component}`}
@@ -68,19 +83,40 @@ export function AskChef({ component, dish, people, en }: { component: string; di
       >
         {/* Header stays put; only the body scrolls, so the field starts below the header and only slides under it on scroll. */}
         <div className="flex max-h-[85dvh] flex-col">
-          <div className="flex shrink-0 items-center justify-between gap-3 border-b border-ink-3 px-5 pb-4 pt-5">
-            <h2 id={`chef-${component}`} className="type-title-l">
-              {dish}
-            </h2>
-            <CloseButton label={t('chef.close')} />
+          <div className="shrink-0 border-b border-ink-3 px-3.5 pb-3 pt-3.5">
+            <div className="flex items-center justify-between gap-3">
+              <h2 id={`chef-${component}`} className="type-title-l">
+                {dish}
+              </h2>
+              <CloseButton label={t('chef.close')} />
+            </div>
+            {dishes.length > 1 && (
+              <div className="mt-2 flex gap-2 overflow-x-auto">
+                {dishes.map((d, i) => (
+                  <button
+                    key={d.id}
+                    type="button"
+                    aria-pressed={i === cur}
+                    onClick={() => {
+                      setCur(i);
+                      setReply(null);
+                      setAsked('');
+                    }}
+                    className={`${pill} shrink-0 ${i === cur ? 'border-ink bg-palm-100' : 'border-ink-3 bg-surface'}`}
+                  >
+                    {d.name}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
-          <div className="overflow-y-auto overscroll-contain px-5 pb-5">
+          <div className="overflow-y-auto overscroll-contain px-3.5 pb-3.5">
             <form
               onSubmit={(e) => {
                 e.preventDefault();
                 void ask(q);
               }}
-              className="mt-4 flex gap-2"
+              className="mt-3.5 flex gap-2"
             >
               <input
                 {...NO_AUTOFILL}
@@ -98,7 +134,7 @@ export function AskChef({ component, dish, people, en }: { component: string; di
                 {t('chef.send')}
               </button>
             </form>
-            <div aria-live="polite" className="mt-4 grid gap-3">
+            <div aria-live="polite" className="mt-3.5 grid gap-3">
               {busy && <p className="text-ink-2">{t('chef.thinking')}</p>}
               {reply?.state === 'busy' && <p>{t('chef.busy')}</p>}
               {reply?.state === 'quota' && <p>{t('ai.quota')}</p>}

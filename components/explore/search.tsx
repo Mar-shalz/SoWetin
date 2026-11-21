@@ -29,7 +29,7 @@ export function ExploreSearch({ items }: { items: Item[] }) {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder={t('explore.search')}
-          className="min-h-14 rounded-pill border-2 border-ink bg-surface px-4 type-input"
+          className="min-h-14 rounded-pill border-2 border-ink bg-surface px-3.5 type-input"
         />
       </label>
       {query && (

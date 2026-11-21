@@ -11,7 +11,7 @@ import { CravingChips, CravingSheet, chipsOf, clampBudget, clampPeople, withoutC
 import { PriceSheet } from '@/components/decide/price-sheet';
 import { SaveButton } from '@/components/plate/save-button';
 import { EMPTY_KITCHEN, kitchenForApi, lagosToday as today, saveKitchen, useKitchen, type Kitchen } from '@/components/decide/kitchen';
-import { BackIcon, CaretIcon, CloseIcon, HouseIcon, LogoMark, SlidersIcon, SparkleIcon } from '@/components/ui/icons';
+import { CaretIcon, CloseIcon, HouseIcon, LogoMark, SlidersIcon, SparkleIcon } from '@/components/ui/icons';
 import tokens from '@/design/tokens.json';
 import type { HouseOptions } from '@/lib/catalogue/db';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
@@ -353,12 +353,22 @@ export function Decide({ greeting, house, promo, reelItems = [] }: { greeting: R
   return (
     <>
       {onPlates ? (
-        <header className="flex min-h-14 items-center justify-between gap-2">
-          <button type="button" onClick={back} className="inline-flex min-h-12 items-center gap-1 rounded-pill border-2 border-ink bg-surface pl-2 pr-4 type-label">
-            <BackIcon size={20} />
-            {t('detail.back')}
-          </button>
-          {filtersButton}
+        <header className="sticky top-0 z-20 -mx-3.5 -mt-3.5 flex min-h-14 items-center justify-between gap-2 bg-cream px-3.5 py-2">
+          <span className="flex items-center gap-2 type-title-l">
+            <LogoMark size={30} />
+            {C.APP_NAME}
+          </span>
+          <div className="flex items-center gap-2">
+            {filtersButton}
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => pick(1)}
+              className="min-h-12 rounded-pill border-2 border-ink bg-egusi px-3.5 type-label shadow-button disabled:opacity-60"
+            >
+              {t('home.cta.pick')}
+            </button>
+          </div>
         </header>
       ) : (
         <header className="flex min-h-14 items-center justify-between gap-2">
@@ -380,7 +390,7 @@ export function Decide({ greeting, house, promo, reelItems = [] }: { greeting: R
 
       {!onPlates && (
         <>
-      <section className="mt-3 rounded-xl border-2 border-ink bg-surface p-4 shadow-button flex flex-col justify-center">
+      <section className="mt-3 rounded-xl border-2 border-ink bg-surface p-3.5 shadow-button flex flex-col justify-center">
         {greeting}
 
         <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-2 type-title-m">
@@ -398,7 +408,11 @@ export function Decide({ greeting, house, promo, reelItems = [] }: { greeting: R
                   <select
                     aria-label={t('home.sentence.edit', { value: a.label })}
                     value={a.value}
-                    onChange={(e) => a.set(e.target.value)}
+                    onChange={(e) => {
+                      // Blur first: the amount sheet hands focus back on close, and iOS would reopen this picker.
+                      if (e.target.value === 'other') e.target.blur();
+                      a.set(e.target.value);
+                    }}
                     className="absolute inset-0 cursor-pointer opacity-0"
                   >
                     {a.options.map(([v, text]) => (
@@ -419,7 +433,7 @@ export function Decide({ greeting, house, promo, reelItems = [] }: { greeting: R
       </section>
 
       {/* Two optional ways in, side by side: what's at home, and a craving in your own words. */}
-      <div className="mt-4 grid grid-cols-2 gap-3">
+      <div className="mt-3.5 grid grid-cols-2 gap-3">
         {cooking && (
           <Tile
             icon={<HouseIcon size={20} />}
@@ -448,7 +462,7 @@ export function Decide({ greeting, house, promo, reelItems = [] }: { greeting: R
       <dialog
         ref={houseSheet}
         aria-labelledby="house-title"
-        className="mx-auto mb-0 mt-auto max-h-[85dvh] w-full max-w-app rounded-t-xl border-2 border-ink bg-surface p-5 text-ink backdrop:bg-overlay"
+        className="mx-auto mb-0 mt-auto max-h-[85dvh] w-full max-w-app rounded-t-xl border-2 border-ink bg-surface px-3.5 pb-3.5 pt-0 text-ink overscroll-contain backdrop:bg-overlay"
       >
         {/* Keyed per opening, so the sheet's first-look choices (basics folded or not) are made fresh each time. */}
         <HouseSheet
@@ -468,7 +482,7 @@ export function Decide({ greeting, house, promo, reelItems = [] }: { greeting: R
           setCravingOpen(false);
           if (!cravingText.trim()) clearCraving();
         }}
-        className="mx-auto mb-0 mt-auto max-h-[85dvh] w-full max-w-app rounded-t-xl border-2 border-ink bg-surface p-5 text-ink backdrop:bg-overlay"
+        className="mx-auto mb-0 mt-auto max-h-[85dvh] w-full max-w-app rounded-t-xl border-2 border-ink bg-surface px-3.5 pb-3.5 pt-0 text-ink overscroll-contain backdrop:bg-overlay"
       >
         {cravingOpen && (
           <CravingSheet
@@ -484,21 +498,21 @@ export function Decide({ greeting, house, promo, reelItems = [] }: { greeting: R
       </dialog>
 
       {onPlates && (
-      <section ref={answer} aria-live="polite" className="sw-deal mt-4 grid scroll-mt-4 gap-4">
+      <section ref={answer} aria-live="polite" className="sw-deal mt-2 grid scroll-mt-16 gap-3">
         {reel && <Reel items={reelItems} final={reel.final} onSkip={() => skip.current?.()} />}
         {cravingNote === 'thinking' ? <p className="text-ink-2">{t('craving.thinking')}</p> : slow && <p className="text-ink-2">{t('reveal.slow')}</p>}
         {failed && <p className="text-scotch">{t('error.generic')}</p>}
         {cravingNote === 'offTopic' && (
           <div>
             <p>{t('craving.offTopic')}</p>
-            <button type="button" onClick={() => pick(1)} className="mt-2 min-h-12 rounded-pill border-2 border-ink bg-palm px-4 type-label">
+            <button type="button" onClick={() => pick(1)} className="mt-2 min-h-12 rounded-pill border-2 border-ink bg-palm px-3.5 type-label">
               {t('home.cta.pick')}
             </button>
           </div>
         )}
         {cravingNote === 'fallback' && <p className="text-ink-2">{t('craving.fallback')}</p>}
         {craving && (
-          <div className="flex items-center gap-1 self-start rounded-pill border-2 border-ink bg-palm-100 pl-4">
+          <div className="flex items-center gap-1 self-start rounded-pill border-2 border-ink bg-palm-100 pl-3.5">
             <button type="button" onClick={() => setCravingOpen(true)} className="min-h-12 type-label">
               “{cravingText}”
             </button>
@@ -536,18 +550,21 @@ export function Decide({ greeting, house, promo, reelItems = [] }: { greeting: R
         {notice && <p className="text-ink-2">{notice}</p>}
       </section>
       )}
-      {!onPlates && promo && <div className="mt-6">{promo}</div>}
+      {!onPlates && promo && <div className="mt-3.5">{promo}</div>}
 
-      <div className="sticky bottom-14 mt-auto bg-cream pb-2 pt-3">
-        <button
-          type="button"
-          disabled={busy}
-          onClick={() => pick(1)}
-          className="flex min-h-14 w-full items-center justify-center rounded-pill border-2 border-ink bg-palm shadow-button type-title-m disabled:opacity-60"
-        >
-          {t('home.cta.pick')}
-        </button>
-        <button type="button" disabled={busy} onClick={() => pick(C.DECK_SIZE)} className="mx-auto mt-1 block min-h-12 type-label underline underline-offset-4">
+      {/* Bottom offset is the nav's real height (tabs, top padding, safe area), so nothing hides under it. */}
+      <div className={`sticky bottom-[calc(4.125rem+max(env(safe-area-inset-bottom),0.5rem))] mt-auto bg-cream ${onPlates ? 'py-0.5' : 'pb-1 pt-3'}`}>
+        {!onPlates && (
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => pick(1)}
+            className="flex min-h-14 w-full items-center justify-center rounded-pill border-2 border-ink bg-palm shadow-button type-title-m disabled:opacity-60"
+          >
+            {t('home.cta.pick')}
+          </button>
+        )}
+        <button type="button" disabled={busy} onClick={() => pick(C.DECK_SIZE)} className="mx-auto block min-h-12 type-label underline underline-offset-4">
           {t('home.cta.show3Instead')}
         </button>
       </div>
@@ -561,14 +578,14 @@ function FiltersSheet({ dialog, filters, onApply }: { dialog: React.RefObject<HT
   const t = useTranslations('filters');
   const t2 = useTranslations();
   const [draft, setDraft] = useState<Filters>(filters);
-  const chip = (active: boolean) => `min-h-12 rounded-pill border-2 px-4 type-label ${active ? 'border-ink bg-palm-100' : 'border-ink-3 bg-surface'}`;
+  const chip = (active: boolean) => `min-h-12 rounded-pill border-2 px-3.5 type-label ${active ? 'border-ink bg-palm-100' : 'border-ink-3 bg-surface'}`;
   const option = (label: string, active: boolean, set: () => void) => (
     <button key={label} type="button" aria-pressed={active} onClick={set} className={chip(active)}>
       {label}
     </button>
   );
   const group = (title: string, body: ReactNode) => (
-    <fieldset className="mt-5">
+    <fieldset className="mt-3.5">
       <legend className="type-label">{title}</legend>
       <div className="mt-2 flex flex-wrap gap-2">{body}</div>
     </fieldset>
@@ -578,9 +595,9 @@ function FiltersSheet({ dialog, filters, onApply }: { dialog: React.RefObject<HT
       ref={dialog}
       aria-labelledby="filters-title"
       onClose={() => setDraft(filters)}
-      className="mx-auto mb-0 mt-auto max-h-[85dvh] w-full max-w-app rounded-t-xl border-2 border-ink bg-surface p-5 text-ink backdrop:bg-overlay"
+      className="mx-auto mb-0 mt-auto max-h-[85dvh] w-full max-w-app rounded-t-xl border-2 border-ink bg-surface px-3.5 pb-3.5 pt-0 text-ink overscroll-contain backdrop:bg-overlay"
     >
-      <div className="flex items-center justify-between">
+      <div className="sticky top-0 z-10 -mx-3.5 flex items-center justify-between gap-3 border-b border-ink-3 bg-surface px-3.5 py-2.5">
         <h2 id="filters-title" className="type-title-l">
           {t('title')}
         </h2>
@@ -606,11 +623,11 @@ function FiltersSheet({ dialog, filters, onApply }: { dialog: React.RefObject<HT
         option(t('any'), draft.spice_max === null, () => setDraft({ ...draft, spice_max: null })),
         ...([0, 1, 2, 3] as const).map((s) => option(t(`spice.${s}`), draft.spice_max === s, () => setDraft({ ...draft, spice_max: s }))),
       ])}
-      <label className="mt-5 flex min-h-12 items-center gap-3 type-label">
+      <label className="mt-3.5 flex min-h-12 items-center gap-3 type-label">
         <input type="checkbox" checked={draft.vegetarian} onChange={(e) => setDraft({ ...draft, vegetarian: e.target.checked })} className="size-6" />
         {t('vegetarian')}
       </label>
-      <div className="mt-6 flex gap-3">
+      <div className="mt-3.5 flex gap-3">
         <button type="button" onClick={() => setDraft(NO_FILTERS)} className="min-h-12 flex-1 rounded-pill border-2 border-ink bg-surface type-label">
           {t('reset')}
         </button>
@@ -653,7 +670,7 @@ function Results({
     return (
       <div>
         <p>{t('craving.none._')}</p>
-        <button type="button" onClick={onWithout} className="mt-2 min-h-12 rounded-pill border-2 border-ink bg-palm px-4 type-label">
+        <button type="button" onClick={onWithout} className="mt-2 min-h-12 rounded-pill border-2 border-ink bg-palm px-3.5 type-label">
           {t('craving.none.cta')}
         </button>
       </div>
@@ -670,10 +687,10 @@ function Results({
       ) : (
         <div>
           <h1 className="type-title-l">{t(result.plates.length > 1 ? 'plate.title.deck' : 'plate.title.single')}</h1>
-          <p className="type-caption text-ink-2">
+          <p className="mt-0.5 type-caption text-ink-2">
             {t('plate.basis._', { budget: formatNaira(budget), people: peopleLabel })}
             {inKitchen && ` · ${t('plate.basis.house')}`} ·{' '}
-            <button type="button" onClick={onChange} className="min-h-12 type-caption underline">
+            <button type="button" onClick={onChange} className="relative type-caption underline after:absolute after:-inset-x-2 after:-inset-y-3.5 after:content-['']">
               {t('plate.basis.change')}
             </button>
           </p>
@@ -736,20 +753,25 @@ function PlateCard({
   const picture = p.slots.find((s) => s.component.picture)?.component.picture;
   const sheetProps: SheetProps = { low: price.low_ngn, high: price.high_ngn, people: peopleLabel, count: price.source_count, receipt: price.receipt };
   return (
-    <article className="rounded-lg border-2 border-ink bg-surface p-4">
+    <article className="rounded-lg border-2 border-ink bg-surface p-3.5">
       {picture && (
+        <div className="relative mb-3">
         <Image
           src={picture}
           alt={p.title}
           width={640}
           height={480}
           sizes="(max-width: 480px) 100vw, 480px"
-          className="mb-3 aspect-[4/3] w-full rounded-md object-cover"
+          className="aspect-[4/3] w-full rounded-md object-cover"
         />
+          <div className="absolute right-2 top-2">
+            <SaveButton icon plateKey={p.plate_key} title={p.title} people={people} />
+          </div>
+        </div>
       )}
       <div className="flex items-start justify-between gap-3">
         <h3 className="type-title-m">{p.title}</h3>
-        <SaveButton plateKey={p.plate_key} title={p.title} people={people} />
+        {!picture && <SaveButton icon plateKey={p.plate_key} title={p.title} people={people} />}
       </div>
       <p className="mt-2 type-price-l">{t('plate.price.range', { low: formatNaira(price.low_ngn), high: formatNaira(price.high_ngn) })}</p>
       <p className="type-caption text-ink-2">{t('plate.price.today')}</p>
@@ -794,25 +816,25 @@ function PlateCard({
               disabled={busy}
               onClick={() => onSwap(s.slot)}
               aria-label={t('plate.swap.label', { component: s.component.name })}
-              className="min-h-12 shrink-0 rounded-pill border-2 border-ink bg-surface px-4 type-label disabled:opacity-60"
+              className="min-h-12 shrink-0 rounded-pill border-2 border-ink bg-surface px-3.5 type-label disabled:opacity-60"
             >
               {t('plate.swap._')}
             </button>
           </li>
         ))}
       </ul>
-      <div className="mt-4 flex gap-3">
+      <div className="mt-3.5 flex gap-3">
         <button
           type="button"
           disabled={busy}
           onClick={onNotThis}
-          className="min-h-12 flex-1 rounded-pill border-2 border-ink bg-surface px-4 type-label disabled:opacity-60"
+          className="min-h-12 flex-1 rounded-pill border-2 border-ink bg-surface px-3.5 type-label disabled:opacity-60"
         >
           {t('plate.cta.notThis')}
         </button>
         <Link
           href={`/plate/${encodeURIComponent(p.plate_key)}?people=${people}`}
-          className="flex min-h-12 flex-1 items-center justify-center rounded-pill border-2 border-ink bg-palm px-4 type-label"
+          className="flex min-h-12 flex-1 items-center justify-center rounded-pill border-2 border-ink bg-palm px-3.5 type-label"
         >
           {t('plate.cta.go')}
         </Link>
@@ -844,7 +866,7 @@ function FirstPriceNote({ sheet }: { sheet: SheetProps }) {
   return (
     <div className="mt-2 rounded-md bg-sunken p-3 type-caption">
       <p>{t('body')}</p>
-      <div className="mt-2 flex gap-4">
+      <div className="mt-2 flex gap-3.5">
         <button type="button" onClick={done} className="min-h-12 type-label underline">
           {t('ok')}
         </button>
@@ -887,7 +909,7 @@ function HouseSheet({ options, kitchen, onShow }: { options: HouseOptions; kitch
   // Basics collapse once some are chosen, decided when the sheet opens so it never folds away mid-tap.
   const [basicsOpen] = useState(!kitchen.basic.length);
   const now = today();
-  const chip = (active: boolean) => `min-h-12 rounded-pill border-2 px-4 type-label ${active ? 'border-ink bg-palm-100' : 'border-ink-3 bg-surface'}`;
+  const chip = (active: boolean) => `min-h-12 rounded-pill border-2 px-3.5 type-label ${active ? 'border-ink bg-palm-100' : 'border-ink-3 bg-surface'}`;
   const toggle = (group: 'foodstuff' | 'basic', id: string) =>
     saveKitchen({ ...kitchen, [group]: kitchen[group].includes(id) ? kitchen[group].filter((x) => x !== id) : [...kitchen[group], id] });
   const toggleCooked = (id: string) =>
@@ -911,7 +933,7 @@ function HouseSheet({ options, kitchen, onShow }: { options: HouseOptions; kitch
     ));
   return (
     <>
-      <div className="flex items-center justify-between">
+      <div className="sticky top-0 z-10 -mx-3.5 flex items-center justify-between gap-3 border-b border-ink-3 bg-surface px-3.5 py-2.5">
         <h2 id="house-title" className="type-title-l">
           {t('title')}
         </h2>
@@ -919,7 +941,7 @@ function HouseSheet({ options, kitchen, onShow }: { options: HouseOptions; kitch
       </div>
       <p className="text-ink-2">{t('subtitle')}</p>
       {!!options.cooked.length && (
-        <fieldset className="mt-5">
+        <fieldset className="mt-3.5">
           <legend className="type-label">{t('group.cooked')}</legend>
           <div className="mt-2 flex flex-wrap gap-2">
             {options.cooked.map((c) => {
@@ -934,7 +956,7 @@ function HouseSheet({ options, kitchen, onShow }: { options: HouseOptions; kitch
           </div>
         </fieldset>
       )}
-      <fieldset className="mt-5">
+      <fieldset className="mt-3.5">
         <legend className="type-label">{t('group.foodstuff')}</legend>
         <div className="mt-2 flex flex-wrap gap-2">
           {items(allFood ? options.foodstuff : options.foodstuff.slice(0, FOODSTUFF_SHOWN), 'foodstuff')}
@@ -945,14 +967,14 @@ function HouseSheet({ options, kitchen, onShow }: { options: HouseOptions; kitch
           )}
         </div>
       </fieldset>
-      <details open={basicsOpen} className="mt-5">
+      <details open={basicsOpen} className="mt-3.5">
         <summary className="min-h-12 cursor-pointer py-3 type-label">
           {kitchen.basic.length ? t('basic.collapsed', { count: kitchen.basic.length }) : t('group.basic')}
         </summary>
         <div className="mt-2 flex flex-wrap gap-2">{items(options.basic, 'basic')}</div>
       </details>
       <HouseText options={options} kitchen={kitchen} />
-      <div className="mt-6 grid gap-2">
+      <div className="mt-3.5 grid gap-2">
         <button type="button" onClick={onShow} className="min-h-14 rounded-pill border-2 border-ink bg-palm type-title-m">
           {t('cta')}
         </button>
@@ -998,10 +1020,10 @@ function HouseText({ options, kitchen }: { options: HouseOptions; kitchen: Kitch
       setBusy(false);
     }
   }
-  const chip = 'inline-flex min-h-12 items-center gap-2 rounded-pill border-2 px-4 type-label';
+  const chip = 'inline-flex min-h-12 items-center gap-2 rounded-pill border-2 px-3.5 type-label';
   const left = found?.ids.filter((id) => !have.includes(id)) ?? [];
   return (
-    <div className="mt-5">
+    <div className="mt-3.5">
       <form onSubmit={read}>
         <label htmlFor="house-text" className="type-label">
           {t('house.text.label')}
@@ -1017,7 +1039,7 @@ function HouseText({ options, kitchen }: { options: HouseOptions; kitchen: Kitch
           />
           <button
             disabled={!text.trim() || busy}
-            className="min-h-12 shrink-0 rounded-pill border-2 border-ink bg-palm px-4 type-label disabled:border-ink-3 disabled:bg-sunken disabled:text-ink-3"
+            className="min-h-12 shrink-0 rounded-pill border-2 border-ink bg-palm px-3.5 type-label disabled:border-ink-3 disabled:bg-sunken disabled:text-ink-3"
           >
             {t('craving.find')}
           </button>
@@ -1130,8 +1152,8 @@ function Reel({ items, final, onSkip }: { items: ReelItem[]; final: ReelItem[] |
     );
   return (
     // Centred over the screen while it spins (Victor, 14 November 2026). Tap to skip.
-    <div aria-hidden onClick={onSkip} className="fixed inset-0 z-30 grid place-items-center bg-overlay p-6">
-      <div className="sw-reel grid w-full max-w-app gap-2 rounded-xl border-2 border-ink bg-surface p-4 shadow-button">
+    <div aria-hidden onClick={onSkip} className="fixed inset-0 z-30 grid place-items-center bg-overlay p-3.5">
+      <div className="sw-reel grid w-full max-w-app gap-2 rounded-xl border-2 border-ink bg-surface p-3.5 shadow-button">
         {Array.from({ length: cols }, (_, i) => (
           <span key={i} className="block h-24 overflow-hidden rounded-md border-2 border-ink bg-cream">
             {final ? (
@@ -1171,9 +1193,9 @@ function BudgetSheet({ open, onClose, budget, onUse }: { open: boolean; onClose:
         setValue('');
         onClose();
       }}
-      className="mx-auto mb-0 mt-auto w-full max-w-app rounded-t-xl border-2 border-ink bg-surface p-5 text-ink backdrop:bg-overlay"
+      className="mx-auto mb-0 mt-auto w-full max-w-app rounded-t-xl border-2 border-ink bg-surface px-3.5 pb-3.5 pt-0 text-ink overscroll-contain backdrop:bg-overlay"
     >
-      <div className="flex items-center justify-between">
+      <div className="sticky top-0 z-10 -mx-3.5 flex items-center justify-between gap-3 border-b border-ink-3 bg-surface px-3.5 py-2.5">
         <h2 id="budget-title" className="type-title-l">
           {t('home.budget.title')}
         </h2>
@@ -1186,7 +1208,7 @@ function BudgetSheet({ open, onClose, budget, onUse }: { open: boolean; onClose:
           onUse(n);
           dialog.current?.close();
         }}
-        className="mt-4 grid gap-3"
+        className="mt-3.5 grid gap-3"
       >
         <label htmlFor="budget-amount" className="type-label">
           {t('home.budget.label')}
@@ -1199,7 +1221,7 @@ function BudgetSheet({ open, onClose, budget, onUse }: { open: boolean; onClose:
           placeholder={formatNaira(budget)}
           onChange={(e) => setValue(e.target.value)}
           aria-describedby="budget-range"
-          className="min-h-14 rounded-md border-2 border-ink bg-sunken px-4 type-title-m"
+          className="min-h-14 rounded-md border-2 border-ink bg-sunken px-3.5 type-title-m"
         />
         <p id="budget-range" className="type-caption text-ink-2">
           {t('home.budget.range', { min: formatNaira(C.BUDGET_MIN), max: formatNaira(C.BUDGET_MAX) })}

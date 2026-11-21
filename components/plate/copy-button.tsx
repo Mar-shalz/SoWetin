@@ -14,7 +14,7 @@ export function CopyButton({ text, label, done }: { text: string; label: string;
           () => setCopied(false),
         )
       }
-      className="min-h-12 flex-1 rounded-pill border-2 border-ink bg-surface px-4 type-label"
+      className="min-h-12 flex-1 rounded-pill border-2 border-ink bg-surface px-3.5 type-label"
       aria-live="polite"
     >
       {copied ? done : label}

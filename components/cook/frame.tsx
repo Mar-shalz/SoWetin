@@ -99,7 +99,7 @@ export function Frame({ plate, price, fonts, onDone }: { plate: string; price: F
     }, 'image/png');
 
   return (
-    <section className="grid gap-4">
+    <section className="grid gap-3.5">
       <h1 className="type-display-l">{t('frame.title')}</h1>
       <p>{t('frame.body')}</p>
       <label className="flex min-h-14 cursor-pointer items-center justify-center rounded-pill border-2 border-ink bg-palm type-title-m focus-within:outline-3 focus-within:outline-focus">

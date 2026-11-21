@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
 import { personaFor, type Persona, type Points } from '@/lib/engine/persona';
 import { store } from '@/lib/device/store';
+import { ChatIcon, DownloadIcon, LinkIcon } from '@/components/ui/icons';
 
 export type GameCard = { id: string; name: string; picture: string | null };
 // Doc 11, section 2: each personality's colour, from the design tokens.
@@ -35,7 +36,6 @@ export function Game({ cards, points, fonts }: { cards: GameCard[]; points: Reco
   const [read, setRead] = useState<string | null | undefined>(undefined);
   const [linkCopied, setLinkCopied] = useState(false);
   const [done, setDone] = useState(false);
-  const [copied, setCopied] = useState(false);
   const canvas = useRef<HTMLCanvasElement>(null);
   const answered = Object.keys(answers).length;
   const card = deck[answered];
@@ -115,7 +115,7 @@ export function Game({ cards, points, fonts }: { cards: GameCard[]; points: Reco
         URL.revokeObjectURL(a.href);
       }, 'image/png');
     return (
-      <section className="grid gap-4">
+      <section className="grid gap-3.5">
         <p className="type-label text-ink-2">{t('eyebrow')}</p>
         <h1 className="type-display-l">{t(`${persona}.name`)}</h1>
         <p className="type-body-l">{t(`${persona}.line`)}</p>
@@ -126,37 +126,37 @@ export function Game({ cards, points, fonts }: { cards: GameCard[]; points: Reco
           </div>
         )}
         <canvas ref={canvas} width={W} height={H} className="w-full rounded-lg border-2 border-ink" aria-label={t(`${persona}.name`)} role="img" />
-        <div className="grid gap-2">
-          <button type="button" onClick={save} className="min-h-14 rounded-pill border-2 border-ink bg-palm type-title-m">
+        {/* One primary action, two equal share tiles, then a quiet way to play again. */}
+        <div className="grid gap-3">
+          <button type="button" onClick={save} className="flex min-h-14 items-center justify-center gap-2 rounded-pill border-2 border-ink bg-palm shadow-button type-title-m">
+            <DownloadIcon size={22} />
             {t('save')}
           </button>
-          <button
-            type="button"
-            onClick={() => navigator.clipboard?.writeText(t('caption', { name: t(`${persona}.name`) })).then(() => setCopied(true))}
-            className="min-h-12 rounded-pill border-2 border-ink bg-surface type-label"
-          >
-            {copied ? t('copied') : t('copy')}
-          </button>
-          <a
-            href={`https://wa.me/?text=${encodeURIComponent(shareText)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex min-h-12 items-center justify-center rounded-pill border-2 border-ink bg-surface type-label"
-          >
-            {t('share.whatsapp')}
-          </a>
-          <button
-            type="button"
-            onClick={() => navigator.clipboard?.writeText(link).then(() => setLinkCopied(true))}
-            className="min-h-12 rounded-pill border-2 border-ink bg-surface type-label"
-          >
-            {linkCopied ? t('share.copied') : t('share.copy')}
-          </button>
-          <Link href="/" className="flex min-h-12 items-center justify-center rounded-pill border-2 border-ink bg-surface type-label">
-            {t('pick')}
-          </Link>
+          <div className="grid grid-cols-2 gap-3">
+            <a
+              href={`https://wa.me/?text=${encodeURIComponent(shareText)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex min-h-20 flex-col items-center justify-center gap-1 rounded-lg border-2 border-ink bg-surface px-2 type-label"
+            >
+              <span className="grid size-9 place-items-center rounded-pill bg-palm-100">
+                <ChatIcon size={20} />
+              </span>
+              {t('share.whatsapp')}
+            </a>
+            <button
+              type="button"
+              onClick={() => navigator.clipboard?.writeText(link).then(() => setLinkCopied(true))}
+              className="flex min-h-20 flex-col items-center justify-center gap-1 rounded-lg border-2 border-ink bg-surface px-2 type-label"
+            >
+              <span className="grid size-9 place-items-center rounded-pill bg-palm-100">
+                <LinkIcon size={20} />
+              </span>
+              <span aria-live="polite">{linkCopied ? t('share.copied') : t('share.copy')}</span>
+            </button>
+          </div>
           {/* A fresh deal from the server. */}
-          <Link href="/play" className="flex min-h-12 items-center justify-center type-label underline">
+          <Link href="/play" className="mx-auto flex min-h-12 items-center px-3.5 type-label underline underline-offset-4">
             {t('again')}
           </Link>
         </div>
@@ -165,11 +165,11 @@ export function Game({ cards, points, fonts }: { cards: GameCard[]; points: Reco
   }
 
   return (
-    <section className="grid gap-4">
+    <section className="grid gap-3.5">
       {/* A native progress bar: no inline style, which the strict CSP would block. */}
       <progress value={answered} max={deck.length} aria-label={t('progress', { n: answered, total: deck.length })} className="h-2 w-full accent-palm" />
       <p className="type-label text-ink-2">{t('progress', { n: answered + 1, total: deck.length })}</p>
-      <article className="grid gap-3 rounded-lg border-2 border-ink bg-surface p-4">
+      <article className="grid gap-3 rounded-lg border-2 border-ink bg-surface p-3.5">
         {card.picture ? (
           <Image src={card.picture} alt="" width={640} height={480} className="aspect-[4/3] w-full rounded-md object-cover" />
         ) : (

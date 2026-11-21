@@ -18,7 +18,7 @@ export default async function PlayPage({ searchParams }: { searchParams: Promise
   const cards = deck.map((id) => ({ id, name: cat?.display.get(id)?.name ?? POOL_BY_ID.get(id)!.name, picture: pictureUrl(cat?.display.get(id)?.picture ?? null) }));
   const points = Object.fromEntries(deck.map((id) => [id, personaPoints(POOL_BY_ID.get(id)!)]));
   return (
-    <main className="mx-auto flex min-h-dvh max-w-app flex-col gap-4 px-4 pt-6">
+    <main className="mx-auto flex min-h-dvh max-w-app flex-col gap-3.5 px-3.5 pt-3.5">
       <div>
         <h1 className="type-title-l">{t('entry.title')}</h1>
         <p className="text-ink-2">{f ? t('friend') : t('entry.body')}</p>

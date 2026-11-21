@@ -70,20 +70,20 @@ export function CravingSheet({ text, setText, busy, onFind }: { text: string; se
   const keep = (e: { preventDefault: () => void }) => e.preventDefault();
   return (
     <>
-      <div className="flex items-center justify-between gap-3">
+      <div className="sticky top-0 z-10 -mx-3.5 flex items-center justify-between gap-3 border-b border-ink-3 bg-surface px-3.5 py-2.5">
         <h2 id="craving-title" className="type-title-l">
           {t('craving.sheet.title')}
         </h2>
         <CloseButton label={t('house.close')} />
       </div>
-      <div className="mt-4 overflow-hidden rounded-xl border-2 border-ink bg-surface focus-within:border-focus focus-within:shadow-[0_0_0_1px_var(--color-focus)]">
+      <div className="mt-3.5 overflow-hidden rounded-xl border-2 border-ink bg-surface focus-within:border-focus focus-within:shadow-[0_0_0_1px_var(--color-focus)]">
         <form
           role="search"
           onSubmit={(e) => {
             e.preventDefault();
             run(text);
           }}
-          className="flex min-h-14 items-center gap-2 pl-4 pr-2"
+          className="flex min-h-14 items-center gap-2 pl-3.5 pr-2"
         >
           <SearchIcon size={20} />
           <input {...NO_AUTOFILL}
@@ -107,13 +107,13 @@ export function CravingSheet({ text, setText, busy, onFind }: { text: string; se
           <button
             type="submit"
             disabled={!text.trim() || busy}
-            className="min-h-12 shrink-0 rounded-pill border-2 border-ink bg-palm px-4 type-label disabled:border-ink-3 disabled:bg-sunken disabled:text-ink-3"
+            className="min-h-12 shrink-0 rounded-pill border-2 border-ink bg-palm px-3.5 type-label disabled:border-ink-3 disabled:bg-sunken disabled:text-ink-3"
           >
             {t('craving.find')}
           </button>
         </form>
         {focused && !text && (
-          <div className="sw-pop border-t-2 border-line px-4 pb-4 pt-3">
+          <div className="sw-pop border-t-2 border-line px-3.5 pb-3.5 pt-3">
             <p className="type-caption text-ink-2">{t('craving.try')}</p>
             <div className="mt-2 flex flex-wrap gap-2">
               {t('craving.examples')
@@ -125,7 +125,7 @@ export function CravingSheet({ text, setText, busy, onFind }: { text: string; se
                     onPointerDown={keep}
                     onMouseDown={keep}
                     onClick={() => run(e)}
-                    className="min-h-12 rounded-pill border-2 border-ink-3 bg-cream px-4 type-label"
+                    className="min-h-12 rounded-pill border-2 border-ink-3 bg-cream px-3.5 type-label"
                   >
                     {e}
                   </button>
@@ -183,7 +183,7 @@ export function CravingChips({
       // Private browsing: the offer may show again next time.
     }
   };
-  const pill = 'inline-flex min-h-12 items-center gap-2 rounded-pill border-2 px-4 type-label';
+  const pill = 'inline-flex min-h-12 items-center gap-2 rounded-pill border-2 px-3.5 type-label';
   return (
     <div className="grid gap-3">
       {offer && (

@@ -27,12 +27,12 @@ export function OrderSoon() {
       <dialog
         ref={dialog}
         aria-labelledby="order-soon-title"
-        className="mx-auto mb-0 mt-auto max-h-[85dvh] w-full max-w-app rounded-t-xl border-2 border-ink bg-surface p-5 backdrop:bg-ink/40"
+        className="mx-auto mb-0 mt-auto max-h-[85dvh] w-full max-w-app rounded-t-xl border-2 border-ink bg-surface px-3.5 pb-3.5 pt-0 overscroll-contain backdrop:bg-ink/40"
       >
-        <div className="flex justify-end">
+        <div className="sticky top-0 z-10 -mx-3.5 flex justify-end bg-surface px-3.5 py-2.5">
           <CloseButton label={t('close')} />
         </div>
-        <div className="flex flex-col items-center gap-3 pb-4 text-center">
+        <div className="flex flex-col items-center gap-3 pb-3.5 text-center">
           <span className="flex size-20 items-center justify-center rounded-pill border-2 border-ink bg-palm-100 shadow-button" aria-hidden="true">
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M5 8h14l-1 12H6L5 8Z" />
@@ -45,7 +45,7 @@ export function OrderSoon() {
           </h2>
           <p className="type-body-m text-ink-2">{t(`${kind}Body`)}</p>
           <form method="dialog" className="mt-2 w-full">
-            <button className="min-h-12 w-full rounded-pill border-2 border-ink bg-palm-100 px-4 type-label shadow-button">{t('back')}</button>
+            <button className="min-h-12 w-full rounded-pill border-2 border-ink bg-palm-100 px-3.5 type-label shadow-button">{t('back')}</button>
           </form>
         </div>
       </dialog>

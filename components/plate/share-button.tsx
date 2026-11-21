@@ -106,7 +106,7 @@ export function ShareButton({ card, fonts }: { card: ShareCard; fonts: { display
     URL.revokeObjectURL(a.href);
   }
 
-  const pill = 'flex min-h-12 items-center justify-center rounded-pill border-2 border-ink px-4 type-label';
+  const pill = 'flex min-h-12 items-center justify-center rounded-pill border-2 border-ink px-3.5 type-label';
   return (
     <>
       <button
@@ -116,7 +116,7 @@ export function ShareButton({ card, fonts }: { card: ShareCard; fonts: { display
           setCanShareFiles(!!navigator.canShare?.({ files: [new File([''], 'x.png', { type: 'image/png' })] }));
           dialog.current?.showModal();
         }}
-        className="flex min-h-12 flex-col items-start justify-center rounded-lg border-2 border-ink bg-surface px-4 py-2 text-left"
+        className="flex min-h-12 flex-col items-start justify-center rounded-lg border-2 border-ink bg-surface px-3.5 py-2 text-left"
       >
         <span className="type-label">{t('plate.more.share._')}</span>
         <span className="type-caption text-ink-2">{t('plate.more.share.hint')}</span>
@@ -125,9 +125,9 @@ export function ShareButton({ card, fonts }: { card: ShareCard; fonts: { display
         ref={dialog}
         aria-labelledby="share-title"
         onClose={() => setOpen(false)}
-        className="mx-auto mb-0 mt-auto max-h-[90dvh] w-full max-w-app rounded-t-xl border-2 border-ink bg-surface p-5 text-ink backdrop:bg-overlay"
+        className="mx-auto mb-0 mt-auto max-h-[90dvh] w-full max-w-app rounded-t-xl border-2 border-ink bg-surface px-3.5 pb-3.5 pt-0 text-ink overscroll-contain backdrop:bg-overlay"
       >
-        <div className="flex items-center justify-between">
+        <div className="sticky top-0 z-10 -mx-3.5 flex items-center justify-between gap-3 border-b border-ink-3 bg-surface px-3.5 py-2.5">
           <h2 id="share-title" className="type-title-l">
             {t('plate.more.share._')}
           </h2>
@@ -138,7 +138,7 @@ export function ShareButton({ card, fonts }: { card: ShareCard; fonts: { display
           <span className="type-label">{t('frame.name.label')}</span>
           <input {...NO_AUTOFILL} value={name} maxLength={30} onChange={(e) => setName(e.target.value)} className="min-h-12 rounded-md border border-ink-3 bg-sunken px-3 type-input" />
         </label>
-        <div className="mt-4 grid gap-2">
+        <div className="mt-3.5 grid gap-2">
           {canShareFiles && (
             <button type="button" onClick={shareSheet} className={`${pill} bg-palm`}>
               {t('plate.more.share._')}

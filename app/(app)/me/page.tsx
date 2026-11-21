@@ -19,21 +19,21 @@ export default async function MePage() {
     ['/legal/privacy', t('legal.privacy.title')],
   ] as const;
   return (
-    <main className="mx-auto flex min-h-dvh max-w-app flex-col gap-4 px-4 pt-6">
+    <main className="mx-auto flex min-h-dvh max-w-app flex-col gap-3.5 px-3.5 pt-3.5">
       <h1 className="type-display-l">{t('nav.me')}</h1>
       <p className="text-ink-2">{t('me.onPhone')}</p>
       {C.TASTE_GAME_ENABLED && <PersonalityCard />}
       <ul className="grid gap-3">
         {links.map(([href, label]) => (
           <li key={href}>
-            <Link href={href} className="flex min-h-14 items-center justify-between gap-3 rounded-lg border-2 border-ink bg-surface px-4 type-label">
+            <Link href={href} className="flex min-h-14 items-center justify-between gap-3 rounded-lg border-2 border-ink bg-surface px-3.5 type-label">
               {label}
               <ChevronIcon size={20} />
             </Link>
           </li>
         ))}
       </ul>
-      <section aria-labelledby="signup" className="rounded-lg border-2 border-dashed border-ink-3 p-4">
+      <section aria-labelledby="signup" className="rounded-lg border-2 border-dashed border-ink-3 p-3.5">
         <h2 id="signup" className="type-title-m">
           {t('me.signup.title')}
         </h2>
@@ -54,7 +54,7 @@ export default async function MePage() {
                   name="locale"
                   value={l}
                   aria-pressed={locale === l}
-                  className={`min-h-12 rounded-pill border-2 px-4 type-label ${locale === l ? 'border-ink bg-palm-100' : 'border-ink-3 bg-surface'}`}
+                  className={`min-h-12 rounded-pill border-2 px-3.5 type-label ${locale === l ? 'border-ink bg-palm-100' : 'border-ink-3 bg-surface'}`}
                 >
                   {t(l === 'pcm' ? 'settings.language.pcm' : 'settings.language.en')}
                 </button>

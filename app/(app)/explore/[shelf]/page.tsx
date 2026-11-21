@@ -20,7 +20,7 @@ export default async function ShelfPage({ params, searchParams }: { params: Prom
     sort === 'quickest' ? a.minutes - b.minutes : sort === 'cheapest' ? (a.price1 ?? Infinity) - (b.price1 ?? Infinity) : b.popularity - a.popularity,
   );
   return (
-    <main className="mx-auto flex min-h-dvh max-w-app flex-col gap-4 px-4 pt-6">
+    <main className="mx-auto flex min-h-dvh max-w-app flex-col gap-3.5 px-3.5 pt-3.5">
       <Link href="/explore" className="text-enamel underline">
         {t('detail.back')}
       </Link>
@@ -31,7 +31,7 @@ export default async function ShelfPage({ params, searchParams }: { params: Prom
             key={s}
             href={`/explore/${key}?sort=${s}`}
             aria-current={s === sort ? 'true' : undefined}
-            className={`flex min-h-12 items-center rounded-pill border-2 px-4 type-label ${s === sort ? 'border-ink bg-palm-100' : 'border-ink-3 bg-surface'}`}
+            className={`flex min-h-12 items-center rounded-pill border-2 px-3.5 type-label ${s === sort ? 'border-ink bg-palm-100' : 'border-ink-3 bg-surface'}`}
           >
             {t(`explore.sort.${s}`)}
           </Link>

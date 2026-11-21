@@ -17,7 +17,7 @@ export default async function PrivacyPage() {
   const [en, t, locale] = await Promise.all([getTranslations({ locale: 'en-NG' }), getTranslations(), getLocale()]);
   const updated = new Intl.DateTimeFormat('en-NG', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(C.PRIVACY_UPDATED));
   return (
-    <main className="mx-auto flex min-h-dvh max-w-app flex-col gap-5 px-4 py-6">
+    <main className="mx-auto flex min-h-dvh max-w-app flex-col gap-3.5 px-3.5 py-3.5">
       <Link href="/me" className="text-enamel underline">
         {t('detail.back')}
       </Link>

@@ -137,14 +137,14 @@ export function CookMode({
 
   if (framing)
     return (
-      <main className="mx-auto flex min-h-dvh max-w-app flex-col gap-4 px-4 py-4">
+      <main className="mx-auto flex min-h-dvh max-w-app flex-col gap-3.5 px-3.5 py-3.5">
         <Frame plate={title} price={price} fonts={fonts} onDone={() => router.push('/')} />
       </main>
     );
 
   const round = 'grid size-12 place-items-center rounded-pill border-2 border-ink bg-surface type-title-m disabled:opacity-40';
   return (
-    <main className="mx-auto flex min-h-dvh max-w-app flex-col gap-4 px-4 py-4">
+    <main className="mx-auto flex min-h-dvh max-w-app flex-col gap-3.5 px-3.5 py-3.5">
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-1">
           <button type="button" disabled={people <= C.PEOPLE_MIN} onClick={() => setPeople(people - 1)} aria-label={t2('detail.people.fewer')} className={round}>
@@ -157,7 +157,7 @@ export function CookMode({
             +
           </button>
         </div>
-        <button type="button" onClick={() => drawer.current?.showModal()} className="min-h-12 rounded-pill border-2 border-ink bg-surface px-4 type-label">
+        <button type="button" onClick={() => drawer.current?.showModal()} className="min-h-12 rounded-pill border-2 border-ink bg-surface px-3.5 type-label">
           {t('ingredients')}
         </button>
         <Link href={`${back}?people=${people}`} className="flex min-h-12 items-center px-2 type-label underline">
@@ -199,7 +199,7 @@ export function CookMode({
           if (Math.abs(dx) > SWIPE_PX && Math.abs(dx) > Math.abs(e.changedTouches[0].clientY - from.y)) go(at + (dx < 0 ? 1 : -1));
         }}
       >
-        <div key={at} className="sw-step flex flex-col gap-4">
+        <div key={at} className="sw-step flex flex-col gap-3.5">
           {screen.kind === 'step' && (
             <>
               <p className="type-label text-ink-2">{screen.c.name}</p>
@@ -210,7 +210,7 @@ export function CookMode({
                 <button
                   type="button"
                   onClick={() => startTimer(screen.step, screen.c.name)}
-                  className="min-h-14 self-start rounded-pill border-2 border-ink bg-surface px-5 type-label"
+                  className="min-h-14 self-start rounded-pill border-2 border-ink bg-surface px-3.5 type-label"
                 >
                   {t('timer.start', { minutes: Math.round(screen.step.timer_seconds / 60) })}
                 </button>
@@ -267,16 +267,16 @@ export function CookMode({
       <dialog
         ref={drawer}
         aria-labelledby="cook-ingredients"
-        className="mx-auto mb-0 mt-auto max-h-[85dvh] w-full max-w-app rounded-t-xl border-2 border-ink bg-surface p-5 text-ink backdrop:bg-overlay"
+        className="mx-auto mb-0 mt-auto max-h-[85dvh] w-full max-w-app rounded-t-xl border-2 border-ink bg-surface px-3.5 pb-3.5 pt-0 text-ink overscroll-contain backdrop:bg-overlay"
       >
-        <div className="flex items-center justify-between">
+        <div className="sticky top-0 z-10 -mx-3.5 flex items-center justify-between gap-3 border-b border-ink-3 bg-surface px-3.5 py-2.5">
           <h2 id="cook-ingredients" className="type-title-l">
             {t('ingredients')}
           </h2>
           <CloseButton label={t('close')} />
         </div>
         {components.map((c) => (
-          <section key={c.id} className="mt-4">
+          <section key={c.id} className="mt-3.5">
             <h3 className="type-title-m">{c.name}</h3>
             <p className="type-caption text-ink-2">{t2('recipe.ingredients', { people: servings(c) })}</p>
             <ul className="mt-1 grid gap-1">

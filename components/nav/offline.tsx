@@ -24,7 +24,7 @@ export function Offline() {
     if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') void navigator.serviceWorker.register('/sw.js').catch(() => {});
   }, []);
   return online ? null : (
-    <p role="status" className="sticky top-0 z-20 bg-ink px-4 py-2 text-center type-caption text-cream">
+    <p role="status" className="sticky top-0 z-20 bg-ink px-3.5 py-2 text-center type-caption text-cream">
       {t('offline.banner')}
     </p>
   );

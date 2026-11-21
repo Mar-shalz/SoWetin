@@ -74,7 +74,7 @@ export default async function PlatePage({ params, searchParams }: { params: Prom
     : '';
 
   return (
-    <main className="mx-auto flex min-h-dvh max-w-app flex-col gap-6 px-4 py-6">
+    <main className="mx-auto flex min-h-dvh max-w-app flex-col gap-3.5 px-3.5 pt-3.5 pb-20">
       <Link href="/" className="text-enamel underline">
         {t('detail.back')}
       </Link>
@@ -127,7 +127,7 @@ export default async function PlatePage({ params, searchParams }: { params: Prom
         </section>
       )}
 
-      <section aria-labelledby="cook" className="grid gap-5">
+      <section aria-labelledby="cook" className="grid gap-3.5">
         <h2 id="cook" className="type-title-l">
           {t('recipe.title')}
         </h2>
@@ -135,9 +135,9 @@ export default async function PlatePage({ params, searchParams }: { params: Prom
           <>
             <p>{t('recipe.order', { component: cat.display.get(cooked[0])?.name ?? cooked[0] })}</p>
             {/* S-004 component tabs as jump links: every dish stays on the page, one tap away. */}
-            <nav aria-label={t('recipe.title')} className="sticky top-0 z-10 -mx-4 flex gap-2 overflow-x-auto bg-cream px-4 py-2">
+            <nav aria-label={t('recipe.title')} className="sticky top-0 z-10 -mx-3.5 flex gap-2 overflow-x-auto bg-cream px-3.5 py-2">
               {cooked.map((id) => (
-                <a key={id} href={`#c-${id}`} className="flex min-h-12 shrink-0 items-center rounded-pill border-2 border-ink bg-surface px-4 type-label">
+                <a key={id} href={`#c-${id}`} className="flex min-h-12 shrink-0 items-center rounded-pill border-2 border-ink bg-surface px-3.5 type-label">
                   {cat.display.get(id)?.name ?? id}
                 </a>
               ))}
@@ -158,7 +158,7 @@ export default async function PlatePage({ params, searchParams }: { params: Prom
           const servings = cookServings({ id, batchServingsMin: c.batchServingsMin, lines: [] }, people);
           const steps = [...(m?.component_steps ?? [])].sort((a, b) => a.step_no - b.step_no);
           return (
-            <article key={id} id={`c-${id}`} className="scroll-mt-20 rounded-lg border-2 border-ink bg-surface p-4">
+            <article key={id} id={`c-${id}`} className="scroll-mt-20 rounded-lg border-2 border-ink bg-surface p-3.5">
               {cat.display.get(id)?.picture && (
                 <Image
                   src={pictureUrl(cat.display.get(id)!.picture)!}
@@ -184,11 +184,11 @@ export default async function PlatePage({ params, searchParams }: { params: Prom
                   </li>
                 ))}
               </ul>
-              <h4 className="mt-4 type-label">{t('recipe.steps')}</h4>
+              <h4 className="mt-3.5 type-label">{t('recipe.steps')}</h4>
               {steps.length ? (
                 <ol className="mt-1 grid list-decimal gap-3 pl-6">
                   {steps.map((s) => (
-                    <li key={s.step_no} className="type-cook-step">
+                    <li key={s.step_no} className="type-body-l">
                       {stepText(s.text, (ing) => {
                         const l = c.lines.find((x) => x.ingredientId === ing);
                         if (!l) return null;
@@ -212,14 +212,14 @@ export default async function PlatePage({ params, searchParams }: { params: Prom
               {!!steps.length && (
                 <Link
                   href={`/plate/${encodeURIComponent(decodeURIComponent(key))}/cook?people=${people}&start=${id}`}
-                  className="mt-3 flex min-h-12 items-center justify-center rounded-pill border-2 border-ink bg-surface px-4 type-label"
+                  className="mt-3 flex min-h-12 items-center justify-center rounded-pill border-2 border-ink bg-surface px-3.5 type-label"
                 >
                   {t('recipe.cookWithMe')}
                 </Link>
               )}
               {!!m?.tips.length && (
                 <>
-                  <h4 className="mt-4 type-label">{t('recipe.tips')}</h4>
+                  <h4 className="mt-3.5 type-label">{t('recipe.tips')}</h4>
                   <ul className="list-disc pl-6">
                     {m.tips.map((x) => (
                       <li key={x}>{x}</li>
@@ -229,7 +229,7 @@ export default async function PlatePage({ params, searchParams }: { params: Prom
               )}
               {!!m?.mistakes.length && (
                 <>
-                  <h4 className="mt-4 type-label">{t('recipe.mistakes')}</h4>
+                  <h4 className="mt-3.5 type-label">{t('recipe.mistakes')}</h4>
                   <ul className="list-disc pl-6">
                     {m.mistakes.map((x) => (
                       <li key={x}>{x}</li>
@@ -238,7 +238,7 @@ export default async function PlatePage({ params, searchParams }: { params: Prom
                 </>
               )}
               {m?.storage && (
-                <p className="mt-4">
+                <p className="mt-3.5">
                   <span className="type-label">{t('recipe.storage')}:</span> {m.storage}
                 </p>
               )}
@@ -247,7 +247,6 @@ export default async function PlatePage({ params, searchParams }: { params: Prom
                   <span className="type-label">{t('recipe.serve')}:</span> {m.serving_note}
                 </p>
               )}
-              {chef.on && <AskChef component={id} dish={cat.display.get(id)?.name ?? id} people={people} en={chef.en} />}
             </article>
           );
         })}
@@ -260,6 +259,7 @@ export default async function PlatePage({ params, searchParams }: { params: Prom
         />
         <AllergenLine {...allergenLine(ids, cat.snap, cat.names)} />
       </section>
+      {chef.on && <AskChef dishes={order.map((id) => ({ id, name: cat.display.get(id)?.name ?? id }))} people={people} en={chef.en} />}
 
       {cost && (
         <section aria-labelledby="market" className="grid gap-2">
@@ -286,7 +286,7 @@ export default async function PlatePage({ params, searchParams }: { params: Prom
               href={`https://wa.me/?text=${encodeURIComponent(marketText)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex min-h-12 flex-1 items-center justify-center rounded-pill border-2 border-ink bg-palm px-4 type-label"
+              className="flex min-h-12 flex-1 items-center justify-center rounded-pill border-2 border-ink bg-palm px-3.5 type-label"
             >
               {t('market.share')}
             </a>

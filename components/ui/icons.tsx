@@ -61,6 +61,13 @@ export const CompassIcon = (p: IconProps) => (
     <path d="m15.5 8.5-2 5-5 2 2-5z" />
   </Icon>
 );
+export const ChefHatIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M7 17h10v3H7z" />
+    <path d="M7 17v-4.2A4 4 0 0 1 8.5 5a4 4 0 0 1 7 0A4 4 0 0 1 17 12.8V17" />
+    <path d="M10 13v4M14 13v4" />
+  </Icon>
+);
 export const HeartIcon = (p: IconProps) => (
   <Icon {...p}>
     <path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" />
@@ -75,6 +82,21 @@ export const UserIcon = (p: IconProps) => (
 export const SparkleIcon = (p: IconProps) => (
   <Icon {...p}>
     <path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18" />
+  </Icon>
+);
+export const DownloadIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M12 4v11M7 10l5 5 5-5M5 20h14" />
+  </Icon>
+);
+export const ChatIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M4 20l1.5-4A8 8 0 1 1 8.5 19z" />
+  </Icon>
+);
+export const LinkIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" />
   </Icon>
 );
 export const CloseIcon = (p: IconProps) => (

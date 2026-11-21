@@ -148,8 +148,8 @@ export default async function DishPage({ params }: { params: Promise<{ slug: str
       : null;
 
   return (
-    <main className="mx-auto flex min-h-dvh max-w-app flex-col gap-6 px-4 py-6">
-      <Link href="/" className="flex min-h-12 items-center justify-center rounded-pill border-2 border-ink bg-palm-100 px-4 type-label">
+    <main className="mx-auto flex min-h-dvh max-w-app flex-col gap-3.5 px-3.5 pt-3.5 pb-20">
+      <Link href="/" className="flex min-h-12 items-center justify-center rounded-pill border-2 border-ink bg-palm-100 px-3.5 type-label">
         {t('dish.cta.pick')}
       </Link>
       {picture && (
@@ -219,7 +219,7 @@ export default async function DishPage({ params }: { params: Promise<{ slug: str
         {steps.length ? (
           <ol className="mt-1 grid list-decimal gap-3 pl-6">
             {steps.map((s) => (
-              <li key={s.step_no} className="type-cook-step">
+              <li key={s.step_no} className="type-body-l">
                 {said(s.text)}
                 {s.heat && <span className="block type-label text-ink-2">{t(`recipe.heat.${s.heat}`)}</span>}
                 {s.cue && <span className="block type-body-m text-ink-2">{s.cue}</span>}
@@ -260,7 +260,7 @@ export default async function DishPage({ params }: { params: Promise<{ slug: str
           <span className="type-label">{t('recipe.storage')}:</span> {dish.storage}
         </p>
       )}
-      {chef.on && c && <AskChef component={dish.id} dish={dish.name} people={people} en={chef.en} />}
+      {chef.on && c && <AskChef dishes={[{ id: dish.id, name: dish.name }]} people={people} en={chef.en} />}
       {published && (
         <p className="type-caption text-ink-2">
           {t('recipes.note.line')}{' '}
@@ -281,7 +281,7 @@ export default async function DishPage({ params }: { params: Promise<{ slug: str
           <ul className="mt-1 flex flex-wrap gap-2">
             {goesWith.map((id) => (
               <li key={id}>
-                <Link href={`/dish/${id}`} className="inline-flex min-h-12 items-center rounded-pill border-2 border-ink bg-surface px-4 type-label">
+                <Link href={`/dish/${id}`} className="inline-flex min-h-12 items-center rounded-pill border-2 border-ink bg-surface px-3.5 type-label">
                   {cat.display.get(id)!.name}
                 </Link>
               </li>

@@ -27,8 +27,8 @@ export default async function SharedPlatePage(p: Params) {
   if (!card) notFound();
   const people = t('home.sentence.people', { count: card.people });
   return (
-    <main className="mx-auto flex min-h-dvh max-w-app flex-col gap-5 px-4 py-6">
-      <article className="rounded-lg border-2 border-ink bg-surface p-4">
+    <main className="mx-auto flex min-h-dvh max-w-app flex-col gap-3.5 px-3.5 py-3.5">
+      <article className="rounded-lg border-2 border-ink bg-surface p-3.5">
         {card.picture && (
           <Image src={card.picture} alt={card.title} width={640} height={480} priority sizes="(max-width: 480px) 100vw, 480px" className="mb-3 aspect-[4/3] w-full rounded-md object-cover" />
         )}

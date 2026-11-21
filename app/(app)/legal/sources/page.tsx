@@ -23,7 +23,7 @@ export default async function SourcesPage() {
   const t = await getTranslations();
   const updated = new Intl.DateTimeFormat('en-NG', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(C.SOURCES_PAGE_UPDATED));
   return (
-    <main className="mx-auto flex min-h-dvh max-w-app flex-col gap-6 px-4 py-6">
+    <main className="mx-auto flex min-h-dvh max-w-app flex-col gap-3.5 px-3.5 py-3.5">
       <Link href="/" className="text-enamel underline">
         {t('detail.back')}
       </Link>

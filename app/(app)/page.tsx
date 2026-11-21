@@ -14,7 +14,7 @@ export default async function DecidePage() {
   const cut = greeting.search(/[.?!]\s/);
   const { cat } = await catalogueForRequest();
   return (
-    <main className="mx-auto flex min-h-dvh max-w-app flex-col px-4 pt-4">
+    <main className="mx-auto flex min-h-dvh max-w-app flex-col px-3.5 pt-3.5">
 
       <Decide
         house={cat?.house ?? { cooked: [], foodstuff: [], basic: [] }}

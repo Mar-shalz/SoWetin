@@ -41,12 +41,12 @@ export function Videos({ videos }: { videos: VideoRef[] }) {
           href={watch(first)}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex min-h-12 flex-1 items-center justify-center rounded-pill border-2 border-ink bg-palm px-4 type-label"
+          className="flex min-h-12 flex-1 items-center justify-center rounded-pill border-2 border-ink bg-palm px-3.5 type-label"
         >
           {t('video.watch')}
         </a>
         {!playing && (
-          <button type="button" onClick={() => setPlaying(true)} className="min-h-12 flex-1 rounded-pill border-2 border-ink bg-surface px-4 type-label">
+          <button type="button" onClick={() => setPlaying(true)} className="min-h-12 flex-1 rounded-pill border-2 border-ink bg-surface px-3.5 type-label">
             {t('video.play')}
           </button>
         )}
