@@ -5,3 +5,6 @@ export const stepText = (text: string, amount: (id: string) => string | null) =>
 
 // Amounts the way the method shows them: whole numbers from 10, one decimal below.
 export const roundAmount = (n: number) => (n >= 10 ? Math.round(n) : Math.round(n * 10) / 10);
+
+// Each heat gets its own token colour so a cook spots a change at a glance (dish page and cook mode).
+export const HEAT = { low: 'bg-enamel-100 text-enamel', medium: 'bg-amber-100 text-amber', high: 'bg-scotch-100 text-scotch' } as const;

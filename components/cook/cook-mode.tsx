@@ -11,7 +11,7 @@ import { SaveButton } from '@/components/plate/save-button';
 import { IngredientName } from '@/components/plate/swaps';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
 import { HISTORY, MAX_ITEMS, NO_PLATES, parsePlates, store, useStored } from '@/lib/device/store';
-import { roundAmount, stepText } from '@/lib/plates/step-text';
+import { HEAT, roundAmount, stepText } from '@/lib/plates/step-text';
 import { cookServings } from '@/lib/pricing/costPlate';
 
 export type CookStep = { text: string; cue: string | null; heat: 'low' | 'medium' | 'high' | null; timer_seconds: number | null };
@@ -204,8 +204,8 @@ export function CookMode({
             <>
               <p className="type-label text-ink-2">{screen.c.name}</p>
               <p className="type-display-l">{stepText(screen.step.text, live(screen.c))}</p>
-              {screen.step.heat && <p className="type-title-m">{t2(`recipe.heat.${screen.step.heat}`)}</p>}
-              {screen.step.cue && <p className="type-body-l text-ink-2">{screen.step.cue}</p>}
+              {screen.step.heat && <p className={`w-fit rounded-pill px-3 py-1 type-title-m ${HEAT[screen.step.heat]}`}>{t2(`recipe.heat.${screen.step.heat}`)}</p>}
+              {screen.step.cue && <p className="rounded-md border border-line bg-surface p-3 type-body-l text-ink-2">{screen.step.cue}</p>}
               {screen.step.timer_seconds && (
                 <button
                   type="button"

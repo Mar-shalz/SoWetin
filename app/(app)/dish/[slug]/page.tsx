@@ -9,12 +9,13 @@ import { APP_CONFIG as C } from '@/lib/config/app.config';
 import { pictureUrl, siteUrl } from '@/lib/db/env';
 import { AllergenLine } from '@/components/plate/allergen-line';
 import { AskChef } from '@/components/plate/ask-chef';
+import { BackButton } from '@/components/ui/back-button';
 import { chefSetup } from '@/components/plate/chef-setup';
 import { IngredientName } from '@/components/plate/swaps';
 import { OrderSoon } from '@/components/plate/order-soon';
 import { Videos, type VideoRef } from '@/components/plate/videos';
 import { allergenLine, allergenTags } from '@/lib/plates/allergens';
-import { roundAmount, stepText } from '@/lib/plates/step-text';
+import { HEAT, roundAmount, stepText } from '@/lib/plates/step-text';
 import { formatNaira } from '@/lib/i18n/money';
 import { catalogueForRequest, lagosToday } from '@/lib/plates/serve';
 import { cookServings, costPlate } from '@/lib/pricing/costPlate';
@@ -149,9 +150,12 @@ export default async function DishPage({ params }: { params: Promise<{ slug: str
 
   return (
     <main className="mx-auto flex min-h-dvh max-w-app flex-col gap-3.5 px-3.5 pt-3.5 pb-20">
-      <Link href="/" className="flex min-h-12 items-center justify-center rounded-pill border-2 border-ink bg-palm-100 px-3.5 type-label">
-        {t('dish.cta.pick')}
-      </Link>
+      <div className="sticky top-0 z-20 -mx-3.5 -mt-3.5 flex gap-2 bg-cream px-3.5 py-2">
+        <BackButton label={t('detail.back')} />
+        <Link href="/" className="flex min-h-12 flex-1 items-center justify-center rounded-pill border-2 border-ink bg-palm-100 px-3.5 type-label">
+          {t('dish.cta.pick')}
+        </Link>
+      </div>
       {picture && (
         <Image
           src={picture}
@@ -221,8 +225,8 @@ export default async function DishPage({ params }: { params: Promise<{ slug: str
             {steps.map((s) => (
               <li key={s.step_no} className="type-body-l">
                 {said(s.text)}
-                {s.heat && <span className="block type-label text-ink-2">{t(`recipe.heat.${s.heat}`)}</span>}
-                {s.cue && <span className="block type-body-m text-ink-2">{s.cue}</span>}
+                {s.heat && <span className={`mt-1 block w-fit rounded-pill px-2.5 py-0.5 type-label ${HEAT[s.heat]}`}>{t(`recipe.heat.${s.heat}`)}</span>}
+                {s.cue && <span className="mt-1 block rounded-md border border-line bg-surface p-2.5 type-body-m text-ink-2">{s.cue}</span>}
               </li>
             ))}
           </ol>

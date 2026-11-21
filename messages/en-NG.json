@@ -560,7 +560,14 @@
       "text": "I'm a {name} on SoWetin. Play the same 12 plates and see what you get: {link}",
       "whatsapp": "Send on WhatsApp",
       "copy": "Copy link",
-      "copied": "Link copied"
+      "copied": "Link copied",
+      "game": "Send this game",
+      "sheet": "Share my card",
+      "x": "Post on X",
+      "instagram": "Share to Instagram",
+      "facebook": "Share on Facebook",
+      "saved": "Card saved. Add it to your Instagram story.",
+      "close": "Close"
     },
     "friend": "Same 12 plates as the friend who sent this. See what you get."
   },

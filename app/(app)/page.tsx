@@ -21,7 +21,7 @@ export default async function DecidePage() {
         promo={C.TASTE_GAME_ENABLED && <PersonalityCard />}
         reelItems={cat ? [...cat.display.values()].slice(0, C.REEL_NAMES_MAX).map((d) => ({ name: d.name, picture: pictureUrl(d.picture) })) : []}
         greeting={
-          <h1 className="mt-2">
+          <h1>
             {cut > 0 && <span className="block type-body-l text-ink-2">{greeting.slice(0, cut + 1)}</span>}
             <span className="block type-display-l">{greeting.slice(cut + 1).trim()}</span>
           </h1>

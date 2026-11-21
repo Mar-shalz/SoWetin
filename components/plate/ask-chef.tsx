@@ -63,7 +63,7 @@ export function AskChef({ dishes, people, en }: { dishes: { id: string; name: st
   return (
     <>
       {/* Floats bottom right inside the app column; pointer-events pass through the empty part of the strip. */}
-      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-10 mx-auto flex max-w-app justify-end px-3.5 pb-[max(env(safe-area-inset-bottom),0.875rem)]">
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-10 mx-auto flex max-w-app justify-end px-3.5 pb-[calc(max(env(safe-area-inset-bottom),0.875rem)+1.5rem)]">
         <button
           type="button"
           onClick={() => dialog.current?.showModal()}

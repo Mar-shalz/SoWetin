@@ -11,7 +11,7 @@ import { CravingChips, CravingSheet, chipsOf, clampBudget, clampPeople, withoutC
 import { PriceSheet } from '@/components/decide/price-sheet';
 import { SaveButton } from '@/components/plate/save-button';
 import { EMPTY_KITCHEN, kitchenForApi, lagosToday as today, saveKitchen, useKitchen, type Kitchen } from '@/components/decide/kitchen';
-import { CaretIcon, CloseIcon, HouseIcon, LogoMark, SlidersIcon, SparkleIcon } from '@/components/ui/icons';
+import { BackIcon, CaretIcon, CloseIcon, HouseIcon, LogoMark, SlidersIcon, SparkleIcon } from '@/components/ui/icons';
 import tokens from '@/design/tokens.json';
 import type { HouseOptions } from '@/lib/catalogue/db';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
@@ -333,6 +333,41 @@ export function Decide({ greeting, house, promo, reelItems = [] }: { greeting: R
   // Punctuation right after a pill stays glued to it, so a line never starts with a comma.
   const sentence = (t.raw('home.sentence._') as string).split(/\{(\w+)\}/);
   const glued = (i: number) => (i % 2 ? (sentence[i + 1]?.match(/^[,.!?]/)?.[0] ?? '') : '');
+  const nodes = sentence.map((part, i) => {
+    if (i % 2) {
+      const a = answers[part as keyof typeof answers];
+      return (
+        <span key={i} className="inline-flex items-center">
+          <span className="relative inline-flex min-h-12 items-center gap-0.5 rounded-pill border-2 border-ink bg-palm-100 px-2.5 shadow-button focus-within:outline-3 focus-within:outline-offset-2 focus-within:outline-focus">
+            {/* Keyed by the value, so a new answer pops in (M-03). */}
+            <span key={a.value} className="sw-pop">
+              {a.label}
+            </span>
+            <CaretIcon size={16} />
+            <select
+              aria-label={t('home.sentence.edit', { value: a.label })}
+              value={a.value}
+              onChange={(e) => {
+                // Blur first: the amount sheet hands focus back on close, and iOS would reopen this picker.
+                if (e.target.value === 'other') e.target.blur();
+                a.set(e.target.value);
+              }}
+              className="absolute inset-0 cursor-pointer opacity-0"
+            >
+              {a.options.map(([v, text]) => (
+                <option key={v} value={v}>
+                  {text}
+                </option>
+              ))}
+            </select>
+          </span>
+          {glued(i)}
+        </span>
+      );
+    }
+    const words = (glued(i - 1) ? part.slice(1) : part).trim();
+    return words && <span key={i}>{words}</span>;
+  });
   const on = activeFilters(filters);
   const listed = houseNames(kitchen, house);
   const have = [...kitchen.cooked.map((c) => c.id), ...kitchen.foodstuff, ...kitchen.basic];
@@ -354,9 +389,16 @@ export function Decide({ greeting, house, promo, reelItems = [] }: { greeting: R
     <>
       {onPlates ? (
         <header className="sticky top-0 z-20 -mx-3.5 -mt-3.5 flex min-h-14 items-center justify-between gap-2 bg-cream px-3.5 py-2">
-          <span className="flex items-center gap-2 type-title-l">
+          <span className="flex min-w-0 items-center gap-2 type-title-l">
+            <button
+              type="button"
+              onClick={back}
+              aria-label={t('detail.back')}
+              className="grid size-12 shrink-0 place-items-center rounded-pill border-2 border-ink bg-surface"
+            >
+              <BackIcon size={22} />
+            </button>
             <LogoMark size={30} />
-            {C.APP_NAME}
           </span>
           <div className="flex items-center gap-2">
             {filtersButton}
@@ -390,44 +432,14 @@ export function Decide({ greeting, house, promo, reelItems = [] }: { greeting: R
 
       {!onPlates && (
         <>
-      <section className="mt-3 rounded-xl border-2 border-ink bg-surface p-3.5 shadow-button flex flex-col justify-center">
+      <section className="mt-3 flex flex-col rounded-xl border-2 border-ink bg-surface px-3.5 pb-3.5 pt-2.5 shadow-button">
         {greeting}
-
-        <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-2 type-title-m">
-        {sentence.map((part, i) => {
-          if (i % 2) {
-            const a = answers[part as keyof typeof answers];
-            return (
-              <span key={i} className="inline-flex items-center">
-                <span className="relative inline-flex min-h-12 items-center gap-1 rounded-pill border-2 border-ink bg-palm-100 px-3 shadow-button focus-within:outline-3 focus-within:outline-offset-2 focus-within:outline-focus">
-                  {/* Keyed by the value, so a new answer pops in (M-03). */}
-                  <span key={a.value} className="sw-pop">
-                    {a.label}
-                  </span>
-                  <CaretIcon size={20} />
-                  <select
-                    aria-label={t('home.sentence.edit', { value: a.label })}
-                    value={a.value}
-                    onChange={(e) => {
-                      // Blur first: the amount sheet hands focus back on close, and iOS would reopen this picker.
-                      if (e.target.value === 'other') e.target.blur();
-                      a.set(e.target.value);
-                    }}
-                    className="absolute inset-0 cursor-pointer opacity-0"
-                  >
-                    {a.options.map(([v, text]) => (
-                      <option key={v} value={v}>
-                        {text}
-                      </option>
-                    ))}
-                  </select>
-                </span>
-              </span>
-            );
-          }
-          const words = (glued(i - 1) ? part.slice(1) : part).trim();
-          return words && <span key={i}>{words}</span>;
-        })}
+        <hr className="my-3 border-line" />
+        {/* The amount and people pills sit in one no-wrap group, so they always share a line. */}
+        <p className="flex flex-wrap items-center gap-x-1.5 gap-y-2 type-title-m">
+          {nodes[0]}
+          <span className="inline-flex items-center gap-x-1.5 whitespace-nowrap">{nodes.slice(1, 4)}</span>
+          {nodes.slice(4)}
         </p>
         <p className="mt-2 type-caption text-ink-2">{t('home.sentence.hint')}</p>
       </section>

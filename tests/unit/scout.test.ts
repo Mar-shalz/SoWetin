@@ -35,6 +35,17 @@ describe('price scout checks (doc 04, section 6.3)', () => {
     expect(unitQty('bag', rice)).toBeNull();
   });
 
+  it('maps market words (paint, tuber, bag) to our own units instead of rejecting them', () => {
+    const garri: IngredientInfo = { canonicalUnit: 'g', units: [{ label: 'cup', qty: 250 }, { label: 'paint bucket', qty: 3000 }, { label: '50 kg bag', qty: 50000 }] };
+    const yam: IngredientInfo = { canonicalUnit: 'g', units: [{ label: 'small tuber', qty: 1200 }, { label: 'medium tuber', qty: 2000 }, { label: 'big tuber', qty: 3000 }] };
+    expect(unitQty('paint', garri)).toBe(3000);
+    expect(unitQty('per paint', garri)).toBe(3000);
+    expect(unitQty('big bag', garri)).toBe(50000);
+    expect(unitQty('tuber', yam)).toBe(2000);
+    expect(unitQty('small tuber', yam)).toBe(1200);
+    expect(unitQty('carton', garri)).toBeNull();
+  });
+
   it('keeps an observation only when every part checks out against the page', () => {
     const page = 'Mile 12 market, Lagos. Local rice: N105,000 per 50kg bag (October 2026).';
     const o = {

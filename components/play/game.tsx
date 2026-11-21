@@ -7,7 +7,8 @@ import { useEffect, useRef, useState } from 'react';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
 import { personaFor, type Persona, type Points } from '@/lib/engine/persona';
 import { store } from '@/lib/device/store';
-import { ChatIcon, DownloadIcon, LinkIcon } from '@/components/ui/icons';
+import { CopyIcon, DownloadIcon, ShareIcon } from '@/components/ui/icons';
+import { CloseButton } from '@/components/ui/close-button';
 
 export type GameCard = { id: string; name: string; picture: string | null };
 // Doc 11, section 2: each personality's colour, from the design tokens.
@@ -36,6 +37,9 @@ export function Game({ cards, points, fonts }: { cards: GameCard[]; points: Reco
   const [read, setRead] = useState<string | null | undefined>(undefined);
   const [linkCopied, setLinkCopied] = useState(false);
   const [done, setDone] = useState(false);
+  const [igSaved, setIgSaved] = useState(false);
+  const [loadedId, setLoadedId] = useState<string | null>(null);
+  const sheet = useRef<HTMLDialogElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const answered = Object.keys(answers).length;
   const card = deck[answered];
@@ -107,52 +111,65 @@ export function Game({ cards, points, fonts }: { cards: GameCard[]; points: Reco
   if (persona) {
     const link = `${window.location.origin}/play?d=${deck.map((c) => c.id).join('.')}&f=1`;
     const shareText = t('share.text', { name: t(`${persona}.name`), link });
-    const save = () =>
-      canvas.current?.toBlob((blob) => {
-        if (!blob) return;
-        const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: 'chop-personality.png' });
-        a.click();
-        URL.revokeObjectURL(a.href);
-      }, 'image/png');
+    const blob = () => new Promise<Blob | null>((ok) => (canvas.current ? canvas.current.toBlob(ok, 'image/png') : ok(null)));
+    const save = async () => {
+      const b = await blob();
+      if (!b) return;
+      const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(b), download: 'chop-personality.png' });
+      a.click();
+      URL.revokeObjectURL(a.href);
+    };
+    const copy = () => navigator.clipboard?.writeText(link).then(() => setLinkCopied(true));
+    // The game link: the same 12 plates, so a friend plays this exact flow.
+    const sendGame = () => (navigator.share ? navigator.share({ title: C.APP_NAME, text: shareText, url: link }).catch(() => {}) : copy());
+    // WhatsApp and Instagram get the card image with the caption, where the phone allows sharing files.
+    const shareImage = async (fallback: () => void) => {
+      const b = await blob();
+      const files = b ? [new File([b], 'chop-personality.png', { type: 'image/png' })] : [];
+      if (files.length && navigator.canShare?.({ files })) return navigator.share({ files, text: shareText }).catch(() => {});
+      fallback();
+    };
+    const open = (url: string) => window.open(url, '_blank', 'noopener,noreferrer');
+    const tile = 'flex min-h-14 items-center gap-3 rounded-md border-2 border-ink bg-surface px-3.5 type-label';
     return (
       <section className="grid gap-3.5">
-        <p className="type-label text-ink-2">{t('eyebrow')}</p>
+        <hr className="border-line" />
         <h1 className="type-display-l">{t(`${persona}.name`)}</h1>
-        <p className="type-body-l">{t(`${persona}.line`)}</p>
-        {read !== null && (
-          <div aria-live="polite" className="rounded-md bg-sunken p-3">
-            <p className="type-caption text-ink-2">{t('ai.label')}</p>
-            <p className="mt-1">{read ?? t('ai.loading')}</p>
-          </div>
-        )}
+        {/* The AI read takes the line's place; the fixed line shows while it loads or when there is none. */}
+        <div aria-live="polite">
+          {typeof read === 'string' && <p className="type-caption text-ink-2">{t('ai.label')}</p>}
+          <p className="type-body-l">{typeof read === 'string' ? read : t(`${persona}.line`)}</p>
+        </div>
         <canvas ref={canvas} width={W} height={H} className="w-full rounded-lg border-2 border-ink" aria-label={t(`${persona}.name`)} role="img" />
-        {/* One primary action, two equal share tiles, then a quiet way to play again. */}
         <div className="grid gap-3">
-          <button type="button" onClick={save} className="flex min-h-14 items-center justify-center gap-2 rounded-pill border-2 border-ink bg-palm shadow-button type-title-m">
-            <DownloadIcon size={22} />
-            {t('save')}
-          </button>
-          <div className="grid grid-cols-2 gap-3">
-            <a
-              href={`https://wa.me/?text=${encodeURIComponent(shareText)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex min-h-20 flex-col items-center justify-center gap-1 rounded-lg border-2 border-ink bg-surface px-2 type-label"
-            >
-              <span className="grid size-9 place-items-center rounded-pill bg-palm-100">
-                <ChatIcon size={20} />
-              </span>
-              {t('share.whatsapp')}
-            </a>
+          <div className="flex gap-3">
+            <button type="button" onClick={save} className="flex min-h-14 flex-1 items-center justify-center gap-2 rounded-pill border-2 border-ink bg-palm shadow-button type-title-m">
+              <DownloadIcon size={22} />
+              {t('save')}
+            </button>
             <button
               type="button"
-              onClick={() => navigator.clipboard?.writeText(link).then(() => setLinkCopied(true))}
-              className="flex min-h-20 flex-col items-center justify-center gap-1 rounded-lg border-2 border-ink bg-surface px-2 type-label"
+              onClick={copy}
+              aria-label={linkCopied ? t('share.copied') : t('share.copy')}
+              className="grid size-14 shrink-0 place-items-center rounded-md border-2 border-ink bg-surface"
             >
-              <span className="grid size-9 place-items-center rounded-pill bg-palm-100">
-                <LinkIcon size={20} />
-              </span>
-              <span aria-live="polite">{linkCopied ? t('share.copied') : t('share.copy')}</span>
+              <CopyIcon size={22} />
+            </button>
+          </div>
+          <span aria-live="polite" className="sr-only">
+            {linkCopied ? t('share.copied') : ''}
+          </span>
+          <div className="flex gap-3">
+            <button type="button" onClick={sendGame} className="flex min-h-14 flex-1 items-center justify-center rounded-pill border-2 border-ink bg-surface type-title-m">
+              {t('share.game')}
+            </button>
+            <button
+              type="button"
+              onClick={() => sheet.current?.showModal()}
+              aria-label={t('share.sheet')}
+              className="grid size-14 shrink-0 place-items-center rounded-md border-2 border-ink bg-surface"
+            >
+              <ShareIcon size={22} />
             </button>
           </div>
           {/* A fresh deal from the server. */}
@@ -160,6 +177,50 @@ export function Game({ cards, points, fonts }: { cards: GameCard[]; points: Reco
             {t('again')}
           </Link>
         </div>
+        <dialog
+          ref={sheet}
+          aria-labelledby="share-sheet"
+          className="mx-auto mb-0 mt-auto max-h-[85dvh] w-full max-w-app rounded-t-xl border-2 border-ink bg-surface px-3.5 pb-3.5 pt-0 text-ink overscroll-contain backdrop:bg-overlay"
+        >
+          <div className="sticky top-0 flex items-center justify-between gap-3 bg-surface py-3.5">
+            <h2 id="share-sheet" className="type-title-l">
+              {t('share.sheet')}
+            </h2>
+            <CloseButton label={t('share.close')} />
+          </div>
+          <ul className="grid gap-2">
+            <li>
+              <button type="button" className={`${tile} w-full`} onClick={() => shareImage(() => open(`https://wa.me/?text=${encodeURIComponent(shareText)}`))}>
+                {t('share.whatsapp')}
+              </button>
+            </li>
+            <li>
+              <button type="button" className={`${tile} w-full`} onClick={() => open(`https://x.com/intent/post?text=${encodeURIComponent(shareText)}`)}>
+                {t('share.x')}
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                className={`${tile} w-full`}
+                onClick={() =>
+                  shareImage(() => {
+                    void save();
+                    setIgSaved(true);
+                  })
+                }
+              >
+                {t('share.instagram')}
+              </button>
+              {igSaved && <p className="mt-1 type-caption text-ink-2">{t('share.saved')}</p>}
+            </li>
+            <li>
+              <button type="button" className={`${tile} w-full`} onClick={() => open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`)}>
+                {t('share.facebook')}
+              </button>
+            </li>
+          </ul>
+        </dialog>
       </section>
     );
   }
@@ -171,13 +232,25 @@ export function Game({ cards, points, fonts }: { cards: GameCard[]; points: Reco
       <p className="type-label text-ink-2">{t('progress', { n: answered + 1, total: deck.length })}</p>
       <article className="grid gap-3 rounded-lg border-2 border-ink bg-surface p-3.5">
         {card.picture ? (
-          <Image src={card.picture} alt="" width={640} height={480} className="aspect-[4/3] w-full rounded-md object-cover" />
+          <Image
+            key={card.id}
+            src={card.picture}
+            alt=""
+            width={640}
+            height={480}
+            priority
+            onLoad={() => setLoadedId(card.id)}
+            className="aspect-[4/3] w-full rounded-md bg-sunken object-cover"
+          />
         ) : (
           <span aria-hidden className="flex aspect-[4/3] w-full items-center justify-center rounded-md bg-palm-100 type-display-l">
             {card.name.charAt(0)}
           </span>
         )}
-        <h2 className="type-display-l">{card.name}</h2>
+        {/* Loads the next card's picture now, at the same optimised URL, so it is ready on the next answer. */}
+        {deck[answered + 1]?.picture && <Image src={deck[answered + 1].picture!} alt="" width={640} height={480} priority className="hidden" />}
+        {/* The name waits for its picture, so both land together. */}
+        <h2 className={`type-display-l ${!card.picture || loadedId === card.id ? '' : 'invisible'}`}>{card.name}</h2>
       </article>
       <div className="grid grid-cols-2 gap-3">
         <button type="button" onClick={() => answer(false)} className="min-h-14 rounded-pill border-2 border-ink bg-surface type-title-m">

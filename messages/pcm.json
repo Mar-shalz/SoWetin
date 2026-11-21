@@ -560,7 +560,14 @@
       "text": "I be {name} for SoWetin. Play the same 12 plates make you see your own: {link}",
       "whatsapp": "Send for WhatsApp",
       "copy": "Copy link",
-      "copied": "Link don copy"
+      "copied": "Link don copy",
+      "game": "Send this game",
+      "sheet": "Share my card",
+      "x": "Post am for X",
+      "instagram": "Share am for Instagram",
+      "facebook": "Share am for Facebook",
+      "saved": "Card don save. Put am for your Instagram story.",
+      "close": "Close"
     },
     "friend": "Na the same 12 plates wey your padi play. See wetin you go get."
   },

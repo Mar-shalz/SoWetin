@@ -50,6 +50,15 @@ export function unitQty(unitText: string, info: IngredientInfo): number | null {
     const [factor, unit] = FACTOR[word] ?? [0, 'g'];
     return factor && unit === info.canonicalUnit ? Number(m[1]) * factor : null;
   }
+  // Market words ("a paint", "big bag", "per tuber") map to our own unit with that word, so the size comes from
+  // market_units (admin-editable), never from a guess here. Several matches: the size word decides, else the middle one.
+  const word = text.match(/\b(paint|tuber|bag|carton|derica|cup|tin|bottle|wrap|heap|crate|pack|basket|keg)s?\b/)?.[1];
+  const found = word ? info.units.filter((u) => normalise(u.label).includes(word)).sort((a, b) => a.qty - b.qty) : [];
+  if (found.length) {
+    const size = text.match(/\b(small|medium|big|large)\b/)?.[1];
+    const sized = size && found.find((u) => normalise(u.label).includes(size));
+    return (sized || found[Math.floor((found.length - 1) / 2)]).qty;
+  }
   if (info.canonicalUnit === 'piece') {
     if (/\bcrate\b/.test(text)) return 30;
     if (/\bdozen\b/.test(text)) return 12;
