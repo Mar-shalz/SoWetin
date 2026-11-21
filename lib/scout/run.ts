@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { geminiJson, geminiSchema, OUTCOME } from '@/lib/ai/gemini';
+import { OUTCOME } from '@/lib/ai/gemini';
+import { draftJson } from '@/lib/ai/draft-chain';
 import { htmlToText, robotsAllow } from './text';
 import { verify, type Extracted, type IngredientInfo, type Kept } from './verify';
 
@@ -78,7 +79,7 @@ export async function scoutPages(
   const result: ScoutResult = { kept: [], rejected: [], pagesRead: 0, calls: [] };
   const ids = [...ingredients.keys()] as [string, ...string[]];
   const schema = extractSchema(ids);
-  const jsonSchema = geminiSchema(z.toJSONSchema(schema));
+  const jsonSchema = z.toJSONSchema(schema);
   const list = ids.map((id) => `${id}: ${ingredients.get(id)!.name}`).join('\n');
   const robots = new Map<string, string>();
   const lastHit = new Map<string, number>();
@@ -108,8 +109,10 @@ export async function scoutPages(
       const page = htmlToText(await politeGet(url, cfg, fetchFn)).slice(0, MAX_PAGE_CHARS);
       lastHit.set(url.host, Date.now());
       result.pagesRead++;
-      const answer = await geminiJson(
-        { ...ai, system: SYSTEM, prompt: `Ingredient ids:\n${list}\n\n<page url="${url.href}">\n${page}\n</page>`, schema: jsonSchema },
+      // Same free chain as dish drafts (Groq, Cerebras, Mistral, then Gemini), so one provider's quota doesn't stop the scout.
+      const answer = await draftJson(
+        { system: SYSTEM, prompt: `Ingredient ids:\n${list}\n\n<page url="${url.href}">\n${page}\n</page>`, schema: jsonSchema, timeoutMs: ai.timeoutMs },
+        { key: ai.key, model: ai.model },
         fetchFn,
       );
       const parsed = answer.ok ? schema.safeParse(answer.json) : null;

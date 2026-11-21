@@ -12,7 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t('title'), description: t('description') };
 }
 
-export const viewport: Viewport = { width: 'device-width', initialScale: 1, viewportFit: 'cover', themeColor: tokens.color.cream.$value };
+export const viewport: Viewport = { width: 'device-width', initialScale: 1, viewportFit: 'cover', interactiveWidget: 'overlays-content', themeColor: tokens.color.cream.$value };
 
 // Root layout for the app itself. Public pages (dish pages, legal, shared plates) get their own
 // English-only root layout later, so reading the language cookie here never makes them dynamic.

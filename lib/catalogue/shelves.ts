@@ -1,5 +1,6 @@
 import type { Catalogue } from '@/lib/catalogue/db';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
+import { pictureUrl } from '@/lib/db/env';
 import type { EngineComponent } from '@/lib/engine/types';
 import { costPlate } from '@/lib/pricing/costPlate';
 
@@ -65,7 +66,7 @@ export function items(cat: Catalogue, today: string): (Item & { component: Engin
       name: c.name,
       localName: d?.localName ?? null,
       aliases: d?.aliases ?? [],
-      picture: d?.picture ?? null,
+      picture: pictureUrl(d?.picture ?? null), // full storage URL; a bare path breaks next/image
       minutes: c.totalMinutes,
       popularity: c.popularity,
       price1: cost?.outlayHighNgn ?? null,
