@@ -66,6 +66,12 @@ export const APP_CONFIG = {
   AI_QUOTA_USER_DAILY: 60,
   // T3 drafts run on Gemini's free tier (Victor, 9 November 2026). The free limits show in Google AI Studio.
   AI_MODEL_AUTHORING: 'gemini-3.6-flash',
+  // Free drafting providers tried before Gemini (Groq, then Mistral Experiment). Model ids: check each provider's free model list.
+  AI_GROQ_MODEL: 'llama-3.3-70b-versatile',
+  AI_CEREBRAS_MODEL: 'gpt-oss-120b', // Cerebras production model per its docs, Nov 2026 (llama3.1-8b was scheduled for retirement)
+  AI_CLOUDFLARE_MODEL: '@cf/meta/llama-3.3-70b-instruct-fp8-fast',
+  AI_MISTRAL_MODEL: 'mistral-small-latest',
+  AI_DRAFT_TEMPERATURE: 0.4,
   // Tap-time AI (craving parse T1, Chef T2) on the same free tier, thinking kept minimal for speed (D-36).
   AI_MODEL_RUNTIME: 'gemini-3.6-flash',
   AI_RUNTIME_THINKING: 'minimal' as const,

@@ -126,8 +126,10 @@ type DraftOutcome = 'ok' | 'quota' | 'failed' | 'not_configured';
 
 // One T3 call for one dish: logged in ai_calls (doc 03, 7.0 rule 8); a valid answer is kept as a draft for review.
 async function draftOne(supabase: Db, userId: string, id: string): Promise<DraftOutcome> {
-  const key = process.env.GEMINI_API_KEY;
-  if (!key) return 'not_configured';
+  const key = process.env.GEMINI_API_KEY ?? '';
+  const cloudflare = process.env.CLOUDFLARE_API_KEY && process.env.CLOUDFLARE_ACCOUNT_ID;
+  const free = process.env.GROQ_API_KEY || process.env.CEREBRAS_API_KEY || cloudflare || process.env.MISTRAL_API_KEY;
+  if (!key && !free) return 'not_configured';
   const { data: dish } = await supabase.from('components').select(DISH_FOR_AI).eq('id', id).maybeSingle();
   if (!dish) return 'failed';
   const r = await t3Draft(dish as unknown as T3Dish, { key, model: C.AI_MODEL_AUTHORING, timeoutMs: C.AI_DRAFT_TIMEOUT_MS });

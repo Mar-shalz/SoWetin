@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { GROUPS, HEATS, LANGS } from '@/lib/admin/method';
-import { geminiJson, geminiSchema } from './gemini';
+import { draftJson } from './draft-chain';
 
 // T3 content drafting (doc 03, section 7.3): a first draft of a dish's method for a human to review, edit and
 // cook before anything is published. The model only sees catalogue data, never anything about a person.
@@ -123,7 +123,7 @@ export function t3Prompt(d: T3Dish): string {
 
 export async function t3Draft(d: T3Dish, opts: { key: string; model: string; timeoutMs: number }, fetchFn: typeof fetch = fetch) {
   const schema = draftSchema(d.component_ingredients.map((l) => l.ingredient_id));
-  const res = await geminiJson({ ...opts, system: T3_SYSTEM, prompt: t3Prompt(d), schema: geminiSchema(z.toJSONSchema(schema)) }, fetchFn);
+  const res = await draftJson({ system: T3_SYSTEM, prompt: t3Prompt(d), schema: z.toJSONSchema(schema), timeoutMs: opts.timeoutMs }, { key: opts.key, model: opts.model }, fetchFn);
   if (!res.ok) return res;
   const draft = schema.safeParse(res.json);
   if (!draft.success) return { ok: false as const, reason: 'invalid' as const, stop: res.stop, latencyMs: res.latencyMs, usage: res.usage };
