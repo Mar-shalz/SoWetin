@@ -13,6 +13,7 @@ import { unitAgrees, type IngredientInfo } from '@/lib/scout/verify';
 
 // A-04 (doc 04, sections 3 and 7). Admins only; the database checks the same (migration 20261109030000).
 const MAX_CSV_BYTES = 500_000;
+const PAGE = 1000; // the Supabase API's default row cap per query
 export type ImportState = { csv?: string; rows?: number; problems?: string[]; flagged?: string[]; ok?: string; error?: string };
 
 const today = () => new Intl.DateTimeFormat('en-CA', { timeZone: C.TIMEZONE }).format(new Date());
@@ -48,15 +49,25 @@ function view(r: Report): Pick<ImportState, 'rows' | 'problems' | 'flagged'> {
 // shortcut: runs on import and on the rebuild button only; the nightly job comes with the jobs work (doc 06).
 async function recompute(supabase: Db, ingredientIds: string[]) {
   if (!ingredientIds.length) return 0;
-  const [{ data: obs }, { data: ings }] = await Promise.all([
-    supabase
+  // The API returns at most 1,000 rows a query, so observations are read in pages; a cut list left some points stale.
+  const obs: Record<string, unknown>[] = [];
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await supabase
       .from('price_observations')
       .select(
         'ingredient_id, area_id, price_ngn, unit_canonical_qty, unit_label, observed_on, market, source, source_id, source_quote, confirmed_outlier, price_sources(name, kind, weight, bias_factor)',
       )
-      .in('ingredient_id', ingredientIds),
-    supabase.from('ingredients').select('id, retail_factor, canonical_unit, market_units(label, canonical_qty, area_id)').in('id', ingredientIds),
-  ]);
+      .in('ingredient_id', ingredientIds)
+      .order('id')
+      .range(from, from + PAGE - 1);
+    if (error) throw new Error(error.message);
+    obs.push(...(data ?? []));
+    if ((data ?? []).length < PAGE) break;
+  }
+  const { data: ings } = await supabase
+    .from('ingredients')
+    .select('id, retail_factor, canonical_unit, market_units(label, canonical_qty, area_id)')
+    .in('id', ingredientIds);
   const factor = new Map((ings ?? []).map((i) => [i.id, i.retail_factor === null ? null : Number(i.retail_factor)]));
   const info = new Map(
     (ings ?? []).map((i) => [
@@ -68,7 +79,7 @@ async function recompute(supabase: Db, ingredientIds: string[]) {
     ]),
   );
   const groups = new Map<string, ObservationRow[]>();
-  for (const o of (obs ?? []) as unknown as (ObservationRow & { ingredient_id: string; area_id: string; source_quote: string | null })[]) {
+  for (const o of obs as unknown as (ObservationRow & { ingredient_id: string; area_id: string; source_quote: string | null })[]) {
     // Scout rows saved before the quote-size check (8f46268) can't be edited here, so the rebuild skips the wrong ones.
     const i = info.get(o.ingredient_id);
     const bad = o.source === 'ai_scout' && o.source_quote && i && !unitAgrees(o.unit_label ?? '', o.source_quote, i);
@@ -137,9 +148,13 @@ export async function importPrices(_: ImportState, form: FormData): Promise<Impo
 export async function recomputeAll(): Promise<Msg> {
   const { supabase, role } = await requireStaff();
   if (role !== 'admin') return { error: t('prices.adminOnly') };
-  const { data } = await supabase.from('price_observations').select('ingredient_id');
+  // Every ingredient, not the observation list: that list stops at 1,000 rows and missed some ingredients.
+  const { data } = await supabase.from('ingredients').select('id');
   try {
-    const points = await recompute(supabase, [...new Set((data ?? []).map((o) => o.ingredient_id as string))]);
+    const ids = (data ?? []).map((o) => o.id as string);
+    let points = 0;
+    // Batches of 100 keep the id list inside the request URL limit.
+    for (let i = 0; i < ids.length; i += 100) points += await recompute(supabase, ids.slice(i, i + 100));
     revalidatePath('/admin/prices');
     return { ok: t('prices.rebuilt', { points }) };
   } catch (e) {
