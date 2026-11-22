@@ -39,7 +39,7 @@ const H = 1920;
 // S-018 Teach me your taste: 12 cards, Yum or Nah by button or arrow keys, "Finish now" after TASTE_GAME_MIN_ANSWERS.
 // S-028 Chop Personality: the card drawn on the phone, saved as an image, never with prices or a name (BR-152).
 // shortcut: no swipe, stamp motion or taste signals yet; answers stay on this phone (accounts bring signals, M3).
-export function Game({ cards, points, fonts }: { cards: GameCard[]; points: Record<string, Points>; fonts: { display: string; body: string } }) {
+export function Game({ cards, points, fonts, friend }: { cards: GameCard[]; points: Record<string, Points>; fonts: { display: string; body: string }; friend: boolean }) {
   const t = useTranslations('persona');
   const [answers, setAnswers] = useState<Record<string, boolean>>({});
   const deck = cards;
@@ -53,6 +53,13 @@ export function Game({ cards, points, fonts }: { cards: GameCard[]; points: Reco
   const answered = Object.keys(answers).length;
   const card = deck[answered];
   const persona = done || !card ? personaFor(answers, C, points) : null;
+
+  const intro = (
+    <div>
+      <h1 className="type-title-l">{t('entry.title')}</h1>
+      <p className="text-ink-2">{friend ? t('friend') : t('entry.body')}</p>
+    </div>
+  );
 
   const answer = (yum: boolean) => card && setAnswers({ ...answers, [card.id]: yum });
   useEffect(() => {
@@ -151,13 +158,15 @@ export function Game({ cards, points, fonts }: { cards: GameCard[]; points: Reco
     const square = 'grid size-14 shrink-0 place-items-center rounded-md border-2 border-ink bg-surface';
     return (
       <section className="grid gap-3.5">
-        {/* Home sits where Back would, and stays on screen while the card scrolls. */}
-        <div className="sticky top-0 z-20 -mx-3.5 bg-cream px-3.5 py-2">
+        {/* Home sits where Back would, above the page title, and stays on screen while the card scrolls. */}
+        <div className="sticky top-0 z-20 -mx-3.5 -mt-3.5 bg-cream px-3.5 py-2">
           <Link href="/" aria-label={t('home')} className="grid size-12 place-items-center rounded-pill border-2 border-ink bg-surface">
             <HouseIcon size={22} />
           </Link>
         </div>
-        <h1 className={`type-display-l ${TITLE[COLOUR[persona]]}`}>{t(`${persona}.name`)}</h1>
+        {intro}
+        <hr className="border-line" />
+        <h2 className={`type-display-l ${TITLE[COLOUR[persona]]}`}>{t(`${persona}.name`)}</h2>
         {/* The AI read takes the line's place; the fixed line shows while it loads or when there is none. */}
         <div aria-live="polite" className={`rounded-md p-3 ${TINT[COLOUR[persona]]}`}>
           {typeof read === 'string' && <p className="type-caption text-ink-2">{t('ai.label')}</p>}
@@ -248,6 +257,7 @@ export function Game({ cards, points, fonts }: { cards: GameCard[]; points: Reco
 
   return (
     <section className="grid gap-3.5">
+      {intro}
       {/* A native progress bar: no inline style, which the strict CSP would block. */}
       <progress value={answered} max={deck.length} aria-label={t('progress', { n: answered, total: deck.length })} className="h-2 w-full accent-palm" />
       <p className="type-label text-ink-2">{t('progress', { n: answered + 1, total: deck.length })}</p>

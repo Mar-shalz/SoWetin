@@ -129,6 +129,11 @@
         "_": "Share this plate",
         "hint": "Card for your Status"
       }
+    },
+    "deck": {
+      "label": "{total} plates for you",
+      "of": "Plate {n} out of {total}: {title}",
+      "hint": "Press number or swipe to see each plate."
     }
   },
   "deck": {

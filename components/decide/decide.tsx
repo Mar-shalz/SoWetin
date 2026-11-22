@@ -56,6 +56,11 @@ export function Decide({ greeting, house, promo, reelItems = [] }: { greeting: R
   const [slow, setSlow] = useState(false);
   const [failed, setFailed] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  useEffect(() => {
+    if (!notice) return;
+    const id = setTimeout(() => setNotice(null), C.NOTICE_MS);
+    return () => clearTimeout(id);
+  }, [notice]);
   const [craving, setCraving] = useState<ActiveCraving | null>(null);
   const [cravingNote, setCravingNote] = useState<'thinking' | 'offTopic' | 'fallback' | null>(null);
   const [cravingRuns, setCravingRuns] = useState(0);
@@ -556,9 +561,15 @@ export function Decide({ greeting, house, promo, reelItems = [] }: { greeting: R
             onChange={back}
           />
         )}
-        {notice && <p className="text-ink-2">{notice}</p>}
       </section>
       )}
+      {/* "Nothing else fits" shows as a toast above the bottom buttons, so it is seen right where Swap or Not this was tapped. */}
+      <p
+        role="status"
+        className={`pointer-events-none fixed inset-x-3.5 bottom-[calc(8.5rem+max(env(safe-area-inset-bottom),0.5rem))] z-30 mx-auto w-fit max-w-app rounded-md bg-ink px-3.5 py-2.5 text-center type-label text-cream shadow-button ${notice ? '' : 'sr-only'}`}
+      >
+        {notice}
+      </p>
       {!onPlates && promo && <div className="mt-3.5">{promo}</div>}
 
       {/* Bottom offset is the nav's real height (tabs, top padding, safe area), so nothing hides under it. */}
@@ -705,21 +716,75 @@ function Results({
           </p>
         </div>
       )}
-      {result.plates.map((p, i) => (
-        <PlateCard
-          key={p.plate_key}
-          plate={p}
-          budget={budget}
-          people={people}
-          peopleLabel={peopleLabel}
-          tight={result.state === 'tight'}
-          first={i === 0}
-          onNotThis={() => onNotThis(i)}
-          onSwap={(slot) => onSwap(i, slot)}
-          busy={busy}
-        />
-      ))}
+      {(() => {
+        const cards = result.plates.map((p, i) => (
+          <PlateCard
+            key={p.plate_key}
+            plate={p}
+            budget={budget}
+            people={people}
+            peopleLabel={peopleLabel}
+            tight={result.state === 'tight'}
+            first={i === 0}
+            onNotThis={() => onNotThis(i)}
+            onSwap={(slot) => onSwap(i, slot)}
+            busy={busy}
+          />
+        ));
+        return cards.length > 1 ? <Deck titles={result.plates.map((p) => p.title)}>{cards}</Deck> : cards;
+      })()}
     </>
+  );
+}
+
+// Show me 3: numbered tabs name all three plates up front, and the cards sit side by side with the next one peeking in,
+// so it is clear there are three without scrolling down (Victor, 22 November 2026). Tap a tab or swipe.
+function Deck({ titles, children }: { titles: string[]; children: ReactNode[] }) {
+  const t = useTranslations('plate.deck');
+  const rail = useRef<HTMLDivElement>(null);
+  const [at, setAt] = useState(0);
+  const go = (i: number) => {
+    const card = rail.current?.children[i] as HTMLElement | undefined;
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    rail.current?.scrollTo({ left: (card?.offsetLeft ?? 0) - (rail.current.firstElementChild as HTMLElement).offsetLeft, behavior: still ? 'auto' : 'smooth' });
+  };
+  const onScroll = () => {
+    const r = rail.current;
+    if (!r) return;
+    const step = (r.firstElementChild as HTMLElement).offsetWidth;
+    setAt(Math.min(titles.length - 1, Math.round(r.scrollLeft / step)));
+  };
+  return (
+    <div className="grid gap-3">
+      <div role="tablist" aria-label={t('label', { total: titles.length })} className="grid grid-cols-3 gap-2">
+        {titles.map((title, i) => (
+          <button
+            key={title + i}
+            type="button"
+            role="tab"
+            aria-selected={i === at}
+            aria-label={t('of', { n: i + 1, total: titles.length, title })}
+            onClick={() => go(i)}
+            className={`flex min-h-14 items-center gap-1.5 rounded-md border-2 px-2 py-1.5 text-left ${i === at ? 'border-ink bg-egusi shadow-button' : 'border-ink-3 bg-surface'}`}
+          >
+            <span className={`grid size-6 shrink-0 place-items-center rounded-pill type-label ${i === at ? 'bg-ink text-cream' : 'border-2 border-ink-3'}`}>{i + 1}</span>
+            <span className="line-clamp-2 type-caption">{title}</span>
+          </button>
+        ))}
+      </div>
+      <p className="type-caption text-ink-2">{t('hint')}</p>
+      <div
+        ref={rail}
+        onScroll={onScroll}
+        className="-mx-3.5 flex snap-x snap-mandatory items-start gap-3 overflow-x-auto overscroll-x-contain px-3.5 scroll-px-3.5 [scrollbar-width:none]"
+      >
+        {children.map((card, i) => (
+          <div key={i} role="tabpanel" aria-label={t('of', { n: i + 1, total: titles.length, title: titles[i] })} className="w-[86%] shrink-0 snap-start">
+            {card}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
