@@ -584,9 +584,12 @@ export function Decide({ greeting, house, promo, reelItems = [] }: { greeting: R
             {t('home.cta.pick')}
           </button>
         )}
-        <button type="button" disabled={busy} onClick={() => pick(C.DECK_SIZE)} className="mx-auto block min-h-12 type-label underline underline-offset-4">
-          {t('home.cta.show3Instead')}
-        </button>
+        {/* With 3 plates already on screen the link would offer what is shown, so it goes. */}
+        {!(onPlates && (result?.plates.length ?? 0) > 1) && (
+          <button type="button" disabled={busy} onClick={() => pick(C.DECK_SIZE)} className="mx-auto block min-h-12 type-label underline underline-offset-4">
+            {t('home.cta.show3Instead')}
+          </button>
+        )}
       </div>
     </>
   );
