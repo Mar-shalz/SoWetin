@@ -6,7 +6,7 @@ import { verify, type Extracted, type IngredientInfo, type Kept } from './verify
 
 // The price scout (doc 04, section 6.3), free-tier version (D-35): an admin gives this week's report pages instead of a
 // web search; our code fetches each page politely, the AI lists the prices it states, and our code checks every one.
-export const SCOUT_PROMPT_VERSION = 'scout-v1';
+export const SCOUT_PROMPT_VERSION = 'scout-v2';
 export type Source = { id: string; name: string; domain: string; kind?: string };
 export type Rejected = { url: string; quote?: string; reason: string };
 // calls: one entry per AI read, for the ai_calls log (doc 03, 7.0 rule 8).
@@ -19,6 +19,8 @@ Rules:
 - Only list a price the page states in plain words. Never estimate, convert or average.
 - quote is the exact sentence or table row from the page that holds the price, copied character for character.
 - ingredient must be one of the ids given. Skip anything that doesn't clearly match one.
+- Only plain staples as Lagos home cooks buy them. Skip packs from foreign supermarket brands (such as Tesco or Hovis), organic, gluten free, canned, ready-made and specialty kinds (bread flour, self raising, chapati or atta flour, cannellini or lima beans).
+- market is the market or shop the page names. If the page names none, use the website's own name. Never guess a market.
 - unit_text is the unit as the page writes it ("50kg bag", "5 litre", "crate", "derica").
 - price_ngn is the price in whole naira, low end if the page gives a range.
 - period is the month the price is for, as YYYY-MM, or the exact date as YYYY-MM-DD.
