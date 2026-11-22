@@ -5,7 +5,7 @@ import { requireStaff } from '@/lib/admin/guard';
 import { t } from '@/lib/admin/t';
 import { APP_CONFIG as C } from '@/lib/config/app.config';
 import { formatNaira } from '@/lib/i18n/money';
-import { addSource, recomputeAll, runScout, setSourceActive } from './actions';
+import { addSource, excludeObservations, recomputeAll, runScout, setSourceActive } from './actions';
 
 // A scout run reads a few pages with a pause between each, so it gets the longest function time the plan allows.
 export const maxDuration = 300;
@@ -102,6 +102,13 @@ export default async function PricesPage() {
               />
             </div>
             <ActionForm quiet action={recomputeAll} submit={t('prices.rebuild')} pending={t('prices.rebuilding')} className="mt-4" />
+
+            <h3 className="mt-6 type-label">{t('prices.exclude.title')}</h3>
+            <p className="text-ink-2">{t('prices.exclude.hint')}</p>
+            <ActionForm action={excludeObservations} submit={t('prices.exclude.submit')} pending={t('prices.exclude.pending')} className="mt-2 grid gap-3">
+              <Area label={t('prices.exclude.ids')} name="ids" rows={3} required />
+              <Input label={t('prices.exclude.reason')} name="reason" maxLength={200} />
+            </ActionForm>
           </section>
         ) : null}
         {role === 'admin' && (

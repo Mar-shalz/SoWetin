@@ -55,7 +55,7 @@ async function recompute(supabase: Db, ingredientIds: string[]) {
     const { data, error } = await supabase
       .from('price_observations')
       .select(
-        'ingredient_id, area_id, price_ngn, unit_canonical_qty, unit_label, observed_on, market, source, source_id, source_quote, confirmed_outlier, price_sources(name, kind, weight, bias_factor)',
+        'ingredient_id, area_id, price_ngn, unit_canonical_qty, unit_label, observed_on, market, source, source_id, source_quote, confirmed_outlier, excluded_reason, price_sources(name, kind, weight, bias_factor)',
       )
       .in('ingredient_id', ingredientIds)
       .order('id')
@@ -79,14 +79,15 @@ async function recompute(supabase: Db, ingredientIds: string[]) {
     ]),
   );
   const groups = new Map<string, ObservationRow[]>();
-  for (const o of obs as unknown as (ObservationRow & { ingredient_id: string; area_id: string; source_quote: string | null })[]) {
+  for (const o of obs as unknown as (ObservationRow & { ingredient_id: string; area_id: string; source_quote: string | null; excluded_reason: string | null })[]) {
     // Scout rows saved before the quote-size check (8f46268) can't be edited here, so the rebuild skips the wrong ones.
     const i = info.get(o.ingredient_id);
     const bad =
-      o.source === 'ai_scout' &&
+      !!o.excluded_reason ||
+      (o.source === 'ai_scout' &&
       o.source_quote &&
       i &&
-      (!unitAgrees(o.unit_label ?? '', o.source_quote, i) || processed(o.ingredient_id, o.source_quote));
+        (!unitAgrees(o.unit_label ?? '', o.source_quote, i) || processed(o.ingredient_id, o.source_quote)));
     // An empty group still runs below, so a price point built only from bad rows is deleted.
     const key = `${o.ingredient_id}|${o.area_id}`;
     groups.set(key, bad ? (groups.get(key) ?? []) : [...(groups.get(key) ?? []), o]);
@@ -165,6 +166,32 @@ export async function recomputeAll(): Promise<Msg> {
     console.error('recomputeAll', e);
     return { error: t('errors.save') };
   }
+}
+
+// Sets wrong observations aside (doc 04, section 9): the rows stay, the rebuild skips them. An empty reason puts them back.
+export async function excludeObservations(_: Msg, form: FormData): Promise<Msg> {
+  const { supabase, role } = await requireStaff();
+  if (role !== 'admin') return { error: t('prices.adminOnly') };
+  const ids = [...new Set(String(form.get('ids') ?? '').match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi) ?? [])];
+  const reason = String(form.get('reason') ?? '').trim();
+  if (!ids.length || ids.length > 200 || (reason && (reason.length < 3 || reason.length > 200))) return { error: t('prices.exclude.invalid') };
+  const { data, error } = await supabase
+    .from('price_observations')
+    .update({ excluded_reason: reason || null })
+    .in('id', ids)
+    .select('ingredient_id');
+  if (error) {
+    console.error('excludeObservations', error);
+    return { error: t('errors.save') };
+  }
+  try {
+    await recompute(supabase, [...new Set((data ?? []).map((r) => r.ingredient_id as string))]);
+  } catch (e) {
+    console.error('excludeObservations recompute', e);
+    return { error: t('errors.save') };
+  }
+  revalidatePath('/admin/prices');
+  return { ok: t(reason ? 'prices.exclude.done' : 'prices.exclude.restored', { count: data?.length ?? 0 }) };
 }
 
 // Price sources (doc 04, section 6.2): an admin adds a website only after checking its terms allow automated reading.

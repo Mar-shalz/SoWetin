@@ -218,6 +218,17 @@
     "rebuild": "Rebuild all prices",
     "rebuilding": "Rebuilding…",
     "rebuilt": "{points, plural, =0 {No prices to rebuild yet.} one {Rebuilt # price.} other {Rebuilt # prices.}}",
+    "exclude": {
+      "title": "Set aside wrong rows",
+      "hint": "Paste row ids from the rows export (/admin/prices/observations?i=ingredient-id). The rows stay saved and the rebuild skips them. Leave the reason empty to put them back.",
+      "ids": "Row ids",
+      "reason": "Reason",
+      "submit": "Set aside",
+      "pending": "Saving…",
+      "invalid": "Paste between 1 and 200 row ids. A reason needs 3 to 200 characters.",
+      "done": "{count, plural, =0 {No rows matched.} one {Set aside # row.} other {Set aside # rows.}} Prices rebuilt.",
+      "restored": "{count, plural, =0 {No rows matched.} one {Put back # row.} other {Put back # rows.}} Prices rebuilt."
+    },
     "empty": "Choose a CSV file or paste the sheet first.",
     "tooBig": "That file is too big. Split it into smaller sheets.",
     "nothing": "No rows are ready to publish. Fix the rows listed above.",

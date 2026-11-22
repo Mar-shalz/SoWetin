@@ -8,11 +8,11 @@ export async function GET(req: Request) {
   const id = new URL(req.url).searchParams.get('i') ?? '';
   const { data, error } = await supabase
     .from('price_observations')
-    .select('id, area_id, unit_label, unit_canonical_qty, price_ngn, observed_on, market, source, source_url, source_quote, confirmed_outlier')
+    .select('id, area_id, unit_label, unit_canonical_qty, price_ngn, observed_on, market, source, source_url, source_quote, confirmed_outlier, excluded_reason')
     .eq('ingredient_id', id)
     .order('id');
   if (error) return new Response(error.message, { status: 500 });
-  const cols = ['id', 'area_id', 'unit_label', 'unit_canonical_qty', 'price_ngn', 'observed_on', 'market', 'source', 'source_url', 'source_quote', 'confirmed_outlier'] as const;
+  const cols = ['id', 'area_id', 'unit_label', 'unit_canonical_qty', 'price_ngn', 'observed_on', 'market', 'source', 'source_url', 'source_quote', 'confirmed_outlier', 'excluded_reason'] as const;
   const cell = (v: unknown) => {
     const s = v === null || v === undefined ? '' : String(v);
     return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
